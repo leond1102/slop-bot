@@ -21,7 +21,8 @@
     "slop_sensors": {
       "cmake-args": [
         "-DPython3_EXECUTABLE=/usr/bin/python3",
-        "-DPYTHON_EXECUTABLE=/usr/bin/python3"
+        "-DPYTHON_EXECUTABLE=/usr/bin/python3",
+        "-DCMAKE_BUILD_TYPE=Release"
       ]
     },
     "realsense2_camera_msgs": {

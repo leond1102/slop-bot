@@ -15,6 +15,10 @@
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>tf2_msgs</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+  <!-- open3d: per pip (~/.local), kein rosdep-Schlüssel -->
   <exec_depend>fast_lio</exec_depend>
   <exec_depend>slop_sensors</exec_depend>
   <exec_depend>rviz2</exec_depend>

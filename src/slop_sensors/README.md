@@ -28,6 +28,31 @@ Sensor-IMUs (Roboter still und waagrecht halten), x/y/z/yaw kommen aus `config/m
 (noch Platzhalter, nachmessen). Die Blickrichtung (yaw) ist aus der Schwerkraft nicht bestimmbar.
 Neu messen: `ros2 service call /mount_tf/recalibrate std_srvs/srv/Trigger`.
 Abschalten: `mount_from_gravity:=false`.
+In RViz (beide Ansichten, Anzeige „Schwerkraft (mount_tf)“ auf `/mount_tf/markers`): orange Pfeil = live
+gemessene Schwerkraft im Sensor, grüner Pfeil = senkrecht laut base_footprint, Text = Status, roll/pitch und
+Abweichung live. Liegen beide Pfeile übereinander, passt die Montage.
+
+## Kürzungen der Sensordaten
+
+Alle Einstellungen, die Datenmenge kosten oder sparen (Auflösung und Bildrate der RealSense, Rate des Lidars,
+Ausdünnung und Reichweiten in FAST-LIO, mount_calib und lio_map), stehen zentral in
+[config/data_reduction.yaml](config/data_reduction.yaml), mit Begründung. Die Launch-Dateien laden sie nach der
+jeweiligen Node-Config (Werte dort gewinnen). Nach Änderungen `colcon build --packages-select slop_sensors`.
+
+## Rechenzeit (gemessen 2026-11-03, lio.launch.py ohne RViz, 100 % = 1 Kern von 8)
+
+| Node | vorher | jetzt | Maßnahme |
+|---|---|---|---|
+| mount_calib | 125 % | 30 % | ICP nach dem ersten Treffer nur alle 10 s, open3d höchstens 2 Threads |
+| mount_tf | 38–47 % | 10–13 % | IMUs vorab in C++ auf 25 Hz gedrosselt (Container `sensor_helpers`, +8 %), Rohempfang |
+| lio_map | 22 % | 13–15 % | nur jeder 2. Scan, Binärsuche im Raster |
+| fast_lio + livox_lidar_publisher | 92 % | 46 % | beide in einem Container (`lio_container`), Punktwolken intra-process statt serialisiert |
+| camera (RealSense) | 17 % | – | |
+
+Gesamt: ~2,6 → ~1,4 Kerne. Composable Nodes helfen nur, wenn Sender und Empfänger im selben Prozess sind: daher
+Livox + FAST-LIO zusammen (lio.launch.py), die RealSense bleibt eigener Prozess (ihre Empfänger sind Python-Nodes
+und RViz). Der Livox-Treiber stürzt beim Beenden ab und beendet dann den ganzen `lio_container` (harmlos).
+Ohne Container: `lio.launch.py composable:=false`.
 
 ## Hardware
 

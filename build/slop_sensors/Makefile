@@ -128,6 +128,18 @@ install/local/fast: preinstall/fast
 	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local/fast
 
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
 # The main all target
 all: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles /home/jetson/slop-bot_ws/build/slop_sensors//CMakeFiles/progress.marks
@@ -186,6 +198,32 @@ slop_sensors_uninstall/fast:
 .PHONY : slop_sensors_uninstall/fast
 
 #=============================================================================
+# Target rules for targets named imu_throttle
+
+# Build rule for target.
+imu_throttle: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 imu_throttle
+.PHONY : imu_throttle
+
+# fast build rule for target.
+imu_throttle/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_throttle.dir/build.make CMakeFiles/imu_throttle.dir/build
+.PHONY : imu_throttle/fast
+
+#=============================================================================
+# Target rules for targets named imu_throttle_node
+
+# Build rule for target.
+imu_throttle_node: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 imu_throttle_node
+.PHONY : imu_throttle_node
+
+# fast build rule for target.
+imu_throttle_node/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_throttle_node.dir/build.make CMakeFiles/imu_throttle_node.dir/build
+.PHONY : imu_throttle_node/fast
+
+#=============================================================================
 # Target rules for targets named ament_cmake_python_copy_slop_sensors
 
 # Build rule for target.
@@ -211,6 +249,54 @@ ament_cmake_python_build_slop_sensors_egg/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/build.make CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/build
 .PHONY : ament_cmake_python_build_slop_sensors_egg/fast
 
+rclcpp_components/node_main_imu_throttle_node.o: rclcpp_components/node_main_imu_throttle_node.cpp.o
+.PHONY : rclcpp_components/node_main_imu_throttle_node.o
+
+# target to build an object file
+rclcpp_components/node_main_imu_throttle_node.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_throttle_node.dir/build.make CMakeFiles/imu_throttle_node.dir/rclcpp_components/node_main_imu_throttle_node.cpp.o
+.PHONY : rclcpp_components/node_main_imu_throttle_node.cpp.o
+
+rclcpp_components/node_main_imu_throttle_node.i: rclcpp_components/node_main_imu_throttle_node.cpp.i
+.PHONY : rclcpp_components/node_main_imu_throttle_node.i
+
+# target to preprocess a source file
+rclcpp_components/node_main_imu_throttle_node.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_throttle_node.dir/build.make CMakeFiles/imu_throttle_node.dir/rclcpp_components/node_main_imu_throttle_node.cpp.i
+.PHONY : rclcpp_components/node_main_imu_throttle_node.cpp.i
+
+rclcpp_components/node_main_imu_throttle_node.s: rclcpp_components/node_main_imu_throttle_node.cpp.s
+.PHONY : rclcpp_components/node_main_imu_throttle_node.s
+
+# target to generate assembly for a file
+rclcpp_components/node_main_imu_throttle_node.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_throttle_node.dir/build.make CMakeFiles/imu_throttle_node.dir/rclcpp_components/node_main_imu_throttle_node.cpp.s
+.PHONY : rclcpp_components/node_main_imu_throttle_node.cpp.s
+
+src/imu_throttle.o: src/imu_throttle.cpp.o
+.PHONY : src/imu_throttle.o
+
+# target to build an object file
+src/imu_throttle.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_throttle.dir/build.make CMakeFiles/imu_throttle.dir/src/imu_throttle.cpp.o
+.PHONY : src/imu_throttle.cpp.o
+
+src/imu_throttle.i: src/imu_throttle.cpp.i
+.PHONY : src/imu_throttle.i
+
+# target to preprocess a source file
+src/imu_throttle.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_throttle.dir/build.make CMakeFiles/imu_throttle.dir/src/imu_throttle.cpp.i
+.PHONY : src/imu_throttle.cpp.i
+
+src/imu_throttle.s: src/imu_throttle.cpp.s
+.PHONY : src/imu_throttle.s
+
+# target to generate assembly for a file
+src/imu_throttle.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/imu_throttle.dir/build.make CMakeFiles/imu_throttle.dir/src/imu_throttle.cpp.s
+.PHONY : src/imu_throttle.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -220,6 +306,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... install"
 	@echo "... install/local"
+	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
@@ -227,6 +314,14 @@ help:
 	@echo "... ament_cmake_python_copy_slop_sensors"
 	@echo "... slop_sensors_uninstall"
 	@echo "... uninstall"
+	@echo "... imu_throttle"
+	@echo "... imu_throttle_node"
+	@echo "... rclcpp_components/node_main_imu_throttle_node.o"
+	@echo "... rclcpp_components/node_main_imu_throttle_node.i"
+	@echo "... rclcpp_components/node_main_imu_throttle_node.s"
+	@echo "... src/imu_throttle.o"
+	@echo "... src/imu_throttle.i"
+	@echo "... src/imu_throttle.s"
 .PHONY : help
 
 

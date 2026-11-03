@@ -55,6 +55,8 @@ class LioTfNode(Node):
             ('lidar_frame', 'livox_frame'),
             ('extrinsic_T', [-0.011, -0.02329, 0.04412]),   # Lidar im IMU-Frame, wie FAST-LIO mapping.extrinsic_T
             ('wheel_timeout', 0.5),                          # s ohne fremdes odom → base_footprint = keine Radodometrie
+            ('freeze_map_after', 10.0),   # s: danach bleibt map → camera_init fest, spätere Montage-Korrekturen
+                                          # (mount_calib) verschieben den Roboter in map, nicht die Karte
         ]:
             self.declare_parameter(name, default)
 
@@ -62,12 +64,16 @@ class LioTfNode(Node):
         self.T_lidar_imu = Transform(t=(-ext[0], -ext[1], -ext[2]))   # IMU-Ursprung im Lidar-Frame (R = I)
 
         self.tf_buffer = Buffer()
-        self.tf_listener = TransformListener(self.tf_buffer, self)
+        # TF in eigener Node mit eigenem Thread: Warten auf TF blockiert sonst den Empfang
+        self.tf_node = rclpy.create_node('lio_tf_listener', use_global_arguments=False)   # sonst benennt -r __node:= sie mit um
+        self.tf_listener = TransformListener(self.tf_buffer, self.tf_node, spin_thread=True)
         self.tf_pub = TransformBroadcaster(self)
         self.static_pub = StaticTransformBroadcaster(self)
         self.odom_pub = self.create_publisher(Odometry, '/lio/odom', 10)
 
         self.T_map_ci = None
+        self.first_time = None
+        self.frozen = False
         self.own_stamps = collections.deque(maxlen=50)   # eigene odom → base_footprint, um fremde zu erkennen
         self.last_wheel = None
         self.mode = None
@@ -101,7 +107,13 @@ class LioTfNode(Node):
         T_base_imu = T_base_lidar * self.T_lidar_imu
         p, o = msg.pose.pose.position, msg.pose.pose.orientation
         T_ci_body = Transform((o.x, o.y, o.z, o.w), (p.x, p.y, p.z))
-        T_map_ci = T_base_imu
+        now = self.get_clock().now()
+        if self.first_time is None:
+            self.first_time = now
+        if not self.frozen and now - self.first_time > Duration(seconds=self._p('freeze_map_after')):
+            self.frozen = True
+            self.get_logger().info('map festgelegt (map → camera_init bleibt jetzt fest)')
+        T_map_ci = self.T_map_ci if self.frozen else T_base_imu
         T_map_base = T_map_ci * T_ci_body * T_base_imu.inverse()
 
         # map → camera_init nur neu senden, wenn sich die Montage geändert hat (z. B. nach der Schwerkraftmessung)
@@ -162,5 +174,6 @@ def main(args=None):
     except (KeyboardInterrupt, ExternalShutdownException):
         pass
     finally:
+        node.tf_node.destroy_node()
         node.destroy_node()
         rclpy.try_shutdown()

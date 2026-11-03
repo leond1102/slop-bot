@@ -1,0 +1,16 @@
+# Von slop_slam/mount_calib aus LIO nachgeführt, von slop_sensors/mount_tf beim Start geladen.
+# Löschen = wieder mit mounts.yaml anfangen. Frame → x/y/z [m], roll/pitch/yaw [rad]
+livox_frame:
+  x: 0.0
+  y: 0.0
+  z: 0.3
+  roll: -0.00708
+  pitch: 0.02182
+  yaw: 0.0
+camera_link:
+  x: -0.12
+  y: 0.06
+  z: 0.4
+  roll: 0.01387
+  pitch: -0.14398
+  yaw: -0.06706

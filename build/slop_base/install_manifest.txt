@@ -7,6 +7,7 @@
 /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/cl57e_bus.py
 /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/kinematics.py
 /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/__init__.py
+/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/senders.py
 /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/diff_drive_node.py
 /home/jetson/slop-bot_ws/install/slop_base/lib/slop_base/diff_drive
 /home/jetson/slop-bot_ws/install/slop_base/lib/slop_base/with_netcaps

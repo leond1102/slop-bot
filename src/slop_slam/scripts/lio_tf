@@ -1,4 +1,15 @@
 #!/usr/bin/python3
-from slop_slam.lio_tf_node import main
+import glob
+import os
+import sys
+
+# Python-Modul des Pakets auch finden, wenn das Terminal install/setup.bash geladen hat, bevor das Paket
+# ein Python-Modul hatte (sonst: ModuleNotFoundError, Node stirbt sofort mit exit code 1)
+_prefix = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+for _p in glob.glob(os.path.join(_prefix, 'local', 'lib', 'python3*', 'dist-packages')):
+    if _p not in sys.path:
+        sys.path.append(_p)
+
+from slop_slam.lio_tf_node import main  # noqa: E402
 
 main()

@@ -45,6 +45,7 @@ from tf2_ros import TransformBroadcaster
 from slop_base.cl57e_bus import (PARAM_DIV, PARAM_MAX_CURRENT, PARAM_RUN_MODE, PARAM_SENSOR_ERR,
                                  Cl57eBus, Cl57eError)
 from slop_base.kinematics import Odometry2D, limit_wheel_speeds, wheel_speeds
+from slop_base.senders import SenderCheck
 
 TWO_PI = 2.0 * math.pi
 
@@ -90,6 +91,7 @@ class DiffDriveNode(Node):
             ('lock_topic', '/safety/remote_lock'),   # '' = keine Fahrsperre
             ('lock_timeout', 1.0),         # s ohne Nachricht auf lock_topic → gesperrt
             ('allowed_cmd_vel_nodes', ['twist_mux']),  # leere Liste = nicht prüfen
+            ('unknown_sender_grace', 3.0),  # s: Publisher ohne Namen (Startphase) erst danach als Fehler melden
             ('rate', 50.0),                # Hz: Sollwerte, Odometrie, Publisher
             ('odom_frame', 'odom'),
             ('base_frame', 'base_footprint'),
@@ -148,7 +150,10 @@ class DiffDriveNode(Node):
         self.locked = True
         self.lock_reason = ''
         self.allowed_senders = set(self._p('allowed_cmd_vel_nodes'))
+        self.sender_check = SenderCheck(self.allowed_senders, self._p('unknown_sender_grace'))
         self.foreign_senders = []
+        self.senders_blocked = False
+        self.senders_waiting = False
         self.last_sender_check = None
 
         self.odom_pub = self.create_publisher(Odometry, '/odom', 10)
@@ -251,19 +256,27 @@ class DiffDriveNode(Node):
         """Einmal pro Sekunde: sendet außer den erlaubten Nodes jemand auf /cmd_vel?"""
         if not self.allowed_senders:
             return False
-        if self.last_sender_check is None or (now - self.last_sender_check).nanoseconds > 1e9:
+        # sonst 1×/s, solange ein Name noch unbekannt ist alle 0,2 s (Startphase schneller vorbei)
+        period = 0.2e9 if self.senders_waiting else 1e9
+        if self.last_sender_check is None or (now - self.last_sender_check).nanoseconds > period:
             self.last_sender_check = now
-            names = sorted({i.node_name for i in self.get_publishers_info_by_topic('/cmd_vel')})
-            foreign = [n for n in names if n not in self.allowed_senders]
+            names = [i.node_name for i in self.get_publishers_info_by_topic('/cmd_vel')]
+            blocked, foreign, waiting = self.sender_check.check(names, now.nanoseconds * 1e-9)
+            if waiting and not self.senders_waiting:
+                self.get_logger().info('Publisher auf /cmd_vel noch ohne Namen (Startphase, meist twist_mux) – '
+                                       'warte, bis ROS ihn kennt')
             if foreign and foreign != self.foreign_senders:
                 self.get_logger().error(f'Fremde Publisher auf /cmd_vel: {foreign} → Stopp. Nur über twist_mux '
                                         'fahren (z. B. teleop mit -r cmd_vel:=teleop/cmd_vel)')
-            elif not foreign and self.foreign_senders:
-                self.get_logger().info('Keine fremden Publisher mehr auf /cmd_vel')
+            elif not blocked and self.senders_blocked:
+                self.get_logger().info('Keine fremden Publisher mehr auf /cmd_vel' if self.foreign_senders
+                                       else 'Publisher auf /cmd_vel geprüft: nur twist_mux')
                 self.armed = False
                 self.arm_since = now
             self.foreign_senders = foreign
-        return bool(self.foreign_senders)
+            self.senders_blocked = blocked
+            self.senders_waiting = waiting
+        return self.senders_blocked
 
     def enable_callback(self, request, response):
         if request.data:

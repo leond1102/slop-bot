@@ -25,6 +25,18 @@ Visualization Manager:
       Show Arrows: false
       Marker Scale: 0.3
       Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Name: Schwerkraft (mount_tf)
+      Enabled: true
+      Topic:
+        Value: /mount_tf/markers
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Namespaces:
+        {}
+      Value: true
     - Class: rviz_default_plugins/PointCloud2
       Name: Livox Mid-360s
       Enabled: true
@@ -91,7 +103,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Fixed Frame: odom
-    Frame Rate: 30
+    Frame Rate: 15
   Name: root
   Tools:
     - Class: rviz_default_plugins/Interact

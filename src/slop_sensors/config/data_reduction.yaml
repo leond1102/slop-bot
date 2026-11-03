@@ -1,0 +1,80 @@
+# Slop-Bot: ALLE Kürzungen der Sensordaten an einer Stelle (Auflösung, Rate, Reichweite, Ausdünnung).
+#
+# Normale ROS-Parameterdatei, ein Abschnitt je Node. Geladen von slop_sensors/sensors.launch.py
+# (camera, livox_lidar_publisher) und slop_slam/lio.launch.py (fast_lio, mount_calib, lio_map), jeweils NACH der
+# eigenen Config des Nodes, Werte hier gewinnen also. Andere Datei: Launch-Argument data_config:=/pfad/zu.yaml
+#
+# Nach Änderungen: colcon build --packages-select slop_sensors   (die Datei wird nach install/ kopiert)
+# Aktiven Wert prüfen:  ros2 param get /<node> <name>     z. B.  ros2 param get /camera depth_module.depth_profile
+#
+# Nicht hier (kein ROS-Parameter):
+#   - Kamera-Punktwolke an/aus: Launch-Argument camera_pointcloud (lio.launch.py: an, wenn RViz läuft)
+#   - RViz-Bildrate: "Frame Rate" in slop_sensors/rviz/sensors.rviz und slop_slam/rviz/lio.rviz (15)
+
+# ---------------------------------------------------------------- RealSense D435i (realsense2_camera)
+camera:
+  ros__parameters:
+    # 424×240 bei 15 Hz (Breite,Höhe,fps). Reicht für Anzeige und Montage-ICP, ~6× weniger Punkte als
+    # 640×480 bei 30 Hz. Mit 640×480/30 kam RViz auf dem Jetson nicht hinterher und hing (2026-11-03).
+    # Mögliche Werte: ros2 run realsense2_camera ... oder rs-enumerate-devices
+    rgb_camera.color_profile: 424,240,15
+    depth_module.depth_profile: 424,240,15
+    # Tiefe zusätzlich aufs Farbbild umrechnen (/camera/aligned_depth_to_color/image_raw), kostet CPU
+    align_depth.enable: true
+    # Filter der Tiefe (decimation verkleinert das Tiefenbild, spatial/temporal glätten), alle aus
+    decimation_filter.enable: false
+    spatial_filter.enable: false
+    temporal_filter.enable: false
+
+# ---------------------------------------------------------------- Montage-TFs (slop_sensors/mount_tf)
+mount_tf:
+  ros__parameters:
+    live_every: 1                # nach der Schwerkraftmessung nur jede n-te IMU-Nachricht auswerten (Anzeige in RViz)
+
+# IMU-Drosseln für mount_tf (C++-Komponenten im Container sensor_helpers): /livox/imu → /livox/imu/slow usw.
+# mount_tf mittelt 2 s und braucht ≥ 50 Messungen → nicht unter 25 Hz gehen. Die Treiber-Topics selbst
+# (/livox/imu für FAST-LIO, /camera/imu) bleiben bei voller Rate.
+livox_imu_throttle:
+  ros__parameters:
+    rate: 25.0                   # Hz
+camera_imu_throttle:
+  ros__parameters:
+    rate: 25.0                   # Hz
+
+# ---------------------------------------------------------------- Livox Mid-360s (livox_ros_driver2)
+livox_lidar_publisher:
+  ros__parameters:
+    # Punktwolken pro Sekunde. 10 Hz ≈ 20 000 Punkte je Wolke; FAST-LIO ist auf scan_rate 10 eingestellt
+    # (slop_slam/config/fast_lio_mid360s.yaml, preprocess.scan_rate), beides zusammen ändern.
+    publish_freq: 10.0
+
+# ---------------------------------------------------------------- FAST-LIO2 (slop_slam/lio.launch.py)
+fast_lio:
+  ros__parameters:
+    point_filter_num: 3          # nur jeden n-ten Lidar-Punkt verwenden
+    filter_size_surf: 0.3        # m, Voxelgröße des Scans für die Registrierung (Original 0.5, Innenräume feiner)
+    filter_size_map: 0.3         # m, Voxelgröße der internen Karte
+    preprocess:
+      blind: 0.5                 # m, nähere Punkte ignorieren (eigener Roboter)
+    mapping:
+      det_range: 50.0            # m, weiter entfernte Punkte ignorieren
+    publish:
+      dense_publish_en: true     # /cloud_registered mit allen Punkten (für lio_map und RViz); false = ausgedünnt
+
+# ---------------------------------------------------------------- Montage nachführen (slop_slam/mount_calib)
+mount_calib:
+  ros__parameters:
+    period: 2.0                  # s zwischen zwei Kamera-ICP-Läufen, bis die Kamera einmal gut passt
+    period_tracking: 10.0        # s danach (ICP belegt kurz bis zu 2 Kerne; Montage ändert sich kaum)
+    map_window: 3.0              # s Lidar-Scans als Referenz
+    voxel: 0.03                  # m, Ausdünnung von Kamera- und Lidar-Punkten vor dem ICP
+    depth_stride: 2              # jedes n-te Pixel des Tiefenbilds (bei 424×240 → ~25 000 Punkte)
+    depth_min: 0.3               # m
+    depth_max: 3.0               # m, weiter weg ist der Tiefenfehler der D435i zu groß (mehrere cm)
+
+# ---------------------------------------------------------------- Karte für RViz/Speichern (slop_slam/lio_map)
+lio_map:
+  ros__parameters:
+    voxel: 0.05                  # m, ein Punkt je Voxel
+    scan_every: 2                # nur jeden n-ten Scan einrechnen (10 Hz → 5 Hz)
+    period: 2.0                  # s zwischen zwei Veröffentlichungen von /lio/map

@@ -1,0 +1,14 @@
+#!/usr/bin/python3
+import glob
+import os
+import sys
+
+# Python-Modul des Pakets auch finden, wenn das Terminal install/setup.bash vor dem Bauen geladen hat
+_prefix = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+for _p in glob.glob(os.path.join(_prefix, 'local', 'lib', 'python3*', 'dist-packages')):
+    if _p not in sys.path:
+        sys.path.append(_p)
+
+from slop_slam.mount_calib_node import main  # noqa: E402
+
+main()

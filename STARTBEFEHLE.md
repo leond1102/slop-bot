@@ -1,6 +1,6 @@
 # Slop-Bot – Startbefehle
 
-Jedes neue Terminal zuerst:
+Jedes neue Terminal zuerst (und nach jedem Bauen in offenen Terminals neu):
 source ~/slop-bot_ws/install/setup.bash
 
 ## Antrieb + Sicherheit (bestromt Motoren, fragt nach sudo-Passwort, Fahren nur mit RustDesk-Sitzung)
@@ -38,13 +38,13 @@ ros2 service call /mount_tf/recalibrate std_srvs/srv/Trigger
 ## Sensoren mit Neigung nur aus mounts.yaml
 ros2 launch slop_sensors sensors.launch.py mount_from_gravity:=false
 
-## Sensoren + RViz (Welt fest, braucht laufenden Antrieb)
+## Nur Sensoren + RViz ohne LIO (Welt fest über Radodometrie, braucht Antrieb)
 ros2 launch slop_sensors view.launch.py
 
 ## Sensoren + RViz ohne Antrieb (Ansicht fest am Roboter)
 ros2 launch slop_sensors view.launch.py fixed_frame:=base_footprint
 
-## LIO / SLAM: Sensoren + FAST-LIO + RViz (beim Start 2-3 s still und waagrecht stehen lassen)
+## ALLES in RViz: Lidar, Kamera, Karte, LIO, Montage (2-3 s still und waagrecht starten; NICHT zusätzlich view.launch.py)
 ros2 launch slop_slam lio.launch.py
 
 ## LIO ohne RViz / ohne Kamera
@@ -52,7 +52,16 @@ ros2 launch slop_slam lio.launch.py rviz:=false
 ros2 launch slop_slam lio.launch.py camera:=false
 
 ## LIO-Karte speichern (nach ~/slop-bot_ws/maps/lio_map.pcd)
-ros2 service call /map_save std_srvs/srv/Trigger
+ros2 service call /lio_map/save std_srvs/srv/Trigger
+
+## LIO mit Livox und FAST-LIO als getrennte Prozesse (statt gemeinsamem Container)
+ros2 launch slop_slam lio.launch.py composable:=false
+
+## LIO ohne Montage-Nachführung
+ros2 launch slop_slam lio.launch.py calibrate:=false
+
+## Gespeicherte Montage-Kalibrierung verwerfen (beim nächsten Start wieder mounts.yaml)
+rm ~/slop-bot_ws/calib/mounts_lio.yaml
 
 ## IMUs plotten
 ros2 run rqt_plot rqt_plot /livox/imu/linear_acceleration/z /camera/imu/linear_acceleration/y
@@ -68,6 +77,13 @@ sudo ~/ethercat_venv/bin/python3 diff_motor_test.py jog --rpm 10 --time 3
 
 ## Hängende Prozesse beenden
 pkill -9 -x livox_ros_drive; pkill -x realsense2_came; pkill -x static_transfor; pkill -x rviz2
+
+## Kürzungen der Sensordaten ändern (Auflösung, Raten, Ausdünnung): Datei bearbeiten, dann bauen
+src/slop_sensors/config/data_reduction.yaml
+cd ~/slop-bot_ws && colcon build --packages-select slop_sensors && source install/setup.bash
+
+## Aktiven Wert prüfen (Beispiel)
+ros2 param get /camera depth_module.depth_profile
 
 ## Bauen
 cd ~/slop-bot_ws && colcon build && source install/setup.bash

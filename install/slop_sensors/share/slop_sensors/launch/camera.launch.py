@@ -25,14 +25,17 @@ def ld_path_without_mvs():
 
 
 def generate_launch_description():
-    default_config = os.path.join(get_package_share_directory('slop_sensors'), 'config', 'realsense.yaml')
+    share = get_package_share_directory('slop_sensors')
+    default_config = os.path.join(share, 'config', 'realsense.yaml')
     return LaunchDescription([
+        DeclareLaunchArgument('data_config', default_value=os.path.join(share, 'config', 'data_reduction.yaml'),
+                              description='zentrale Kürzungen der Sensordaten (Auflösung, Raten, ...)'),
         DeclareLaunchArgument('camera_config', default_value=default_config,
                               description='Parameterdatei der RealSense'),
         DeclareLaunchArgument('camera_pointcloud', default_value='false',
                               description='Farbige Punktwolke /camera/depth/color/points (kostet CPU)'),
         Node(package='realsense2_camera', executable='realsense2_camera_node', name='camera', namespace='',
              output='screen', additional_env={'LD_LIBRARY_PATH': ld_path_without_mvs()},
-             parameters=[LaunchConfiguration('camera_config'),
+             parameters=[LaunchConfiguration('camera_config'), LaunchConfiguration('data_config'),
                          {'pointcloud__neon_.enable': ParameterValue(LaunchConfiguration('camera_pointcloud'), value_type=bool)}]),
     ])

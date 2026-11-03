@@ -5,11 +5,14 @@
 #   und waagrecht stehen). Die Werte roll/pitch hier gelten dann nur, bis die Messung fertig ist.
 #   Neu messen: ros2 service call /mount_tf/recalibrate std_srvs/srv/Trigger
 # yaw (Blickrichtung) und x/y/z sind aus der Schwerkraft NICHT bestimmbar → hier eintragen.
+# x/y/z gelten immer von hier (auch mit LIO-Kalibrierung); die Drehung führt LIO nach.
 #
 # TODO: x/y/z und yaw am Roboter nachmessen – die Werte hier sind Platzhalter!
+# Mit lio.launch.py führt slop_slam/mount_calib die Montage aus LIO nach und speichert sie in
+# ~/slop-bot_ws/calib/mounts_lio.yaml; die Datei hat beim Start Vorrang vor x/y/z/yaw hier.
 livox:
   frame: livox_frame
-  imu_topic: /livox/imu       # IMU im Lidar, gleiche Achsen wie die Punktwolke
+  imu_topic: /livox/imu/slow  # IMU im Lidar (gleiche Achsen wie die Punktwolke), auf ~25 Hz gedrosselt
   gravity: true
   x: 0.0
   y: 0.0
@@ -19,11 +22,12 @@ livox:
   yaw: 0.0
 camera:
   frame: camera_link
-  imu_topic: /camera/imu      # liegt im camera_imu_optical_frame, wird über die Treiber-TF gedreht
+  imu_topic: /camera/imu/slow # camera_imu_optical_frame (über die Treiber-TF gedreht), auf ~25 Hz gedrosselt
   gravity: true
-  x: 0.15
-  y: 0.0
-  z: 0.20
+  # grob aus dem ICP-Abgleich mit dem Lidar (2026-11-03, auf ~5–10 cm), mit dem Zollstock nachmessen!
+  x: -0.12
+  y: 0.06
+  z: 0.40
   roll: 0.0
   pitch: 0.0
   yaw: 0.0

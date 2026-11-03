@@ -18,6 +18,7 @@ install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
 if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
   ament_add_pytest_test(test_kinematics test/test_kinematics.py)
+  ament_add_pytest_test(test_senders test/test_senders.py)
   ament_add_pytest_test(test_cl57e_bus test/test_cl57e_bus.py)
 endif()
 

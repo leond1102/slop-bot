@@ -37,15 +37,27 @@ Visualization Manager:
         camera_link:
           Value: true
       Value: true
-    - Class: rviz_default_plugins/PointCloud2
-      Name: Karte (/Laser_map)
+    - Class: rviz_default_plugins/MarkerArray
+      Name: Schwerkraft (mount_tf)
       Enabled: true
       Topic:
-        Value: /Laser_map
-        Depth: 1
+        Value: /mount_tf/markers
+        Depth: 5
         Durability Policy: Volatile
         History Policy: Keep Last
-        Reliability Policy: Best Effort
+        Reliability Policy: Reliable
+      Namespaces:
+        {}
+      Value: true
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Karte (/lio/map)
+      Enabled: true
+      Topic:
+        Value: /lio/map
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
       Style: Points
       Size (Pixels): 2
       Color Transformer: AxisColor
@@ -143,7 +155,7 @@ Visualization Manager:
   Global Options:
     Background Color: 30; 30; 30
     Fixed Frame: map
-    Frame Rate: 30
+    Frame Rate: 15
   Name: root
   Tools:
     - Class: rviz_default_plugins/Interact

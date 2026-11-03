@@ -1,3 +1,5 @@
+/home/jetson/slop-bot_ws/install/slop_sensors/lib/slop_sensors/imu_throttle_node
+/home/jetson/slop-bot_ws/install/slop_sensors/lib/libimu_throttle.so
 /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/environment/pythonpath.sh
 /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/environment/pythonpath.dsv
 /home/jetson/slop-bot_ws/install/slop_sensors/local/lib/python3.10/dist-packages/slop_sensors-0.1.0-py3.10.egg-info/top_level.txt
@@ -10,6 +12,7 @@
 /home/jetson/slop-bot_ws/install/slop_sensors/lib/slop_sensors/mount_tf
 /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/config/MID360s_config.json
 /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/config/realsense.yaml
+/home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/config/data_reduction.yaml
 /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/config/mounts.yaml
 /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/launch/camera.launch.py
 /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/launch/view.launch.py
@@ -28,6 +31,7 @@
 /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/local_setup.dsv
 /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/package.dsv
 /home/jetson/slop-bot_ws/install/slop_sensors/share/ament_index/resource_index/packages/slop_sensors
+/home/jetson/slop-bot_ws/install/slop_sensors/share/ament_index/resource_index/rclcpp_components/slop_sensors
 /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/cmake/slop_sensorsConfig.cmake
 /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/cmake/slop_sensorsConfig-version.cmake
 /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/package.xml

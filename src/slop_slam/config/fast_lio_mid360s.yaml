@@ -4,10 +4,9 @@
 /**:
     ros__parameters:
         feature_extract_enable: false
-        point_filter_num: 3
+        # point_filter_num, filter_size_surf/map, preprocess.blind, mapping.det_range, publish.dense_publish_en:
+        # zentral in slop_sensors/config/data_reduction.yaml (Abschnitt fast_lio, lio.launch.py lädt sie danach)
         max_iteration: 3
-        filter_size_surf: 0.3        # m, Voxelgröße des Scans (Original 0.5, für Innenräume feiner)
-        filter_size_map: 0.3         # m, Voxelgröße der Karte
         cube_side_length: 1000.0
         runtime_pos_log_enable: false
         map_file_path: ""            # kommt aus lio.launch.py
@@ -21,7 +20,6 @@
         preprocess:
             lidar_type: 1            # Livox CustomMsg
             scan_line:  4
-            blind: 0.5               # m, nähere Punkte (eigener Roboter) ignorieren
             timestamp_unit: 3
             scan_rate: 10
 
@@ -31,7 +29,6 @@
             b_acc_cov: 0.0001
             b_gyr_cov: 0.0001
             fov_degree:    360.0
-            det_range:     50.0      # m
             extrinsic_est_en: false
             # Lidar im IMU-Frame (Mid-360, gleiche Werte in slop_slam/lio_tf: extrinsic_T)
             extrinsic_T: [ -0.011, -0.02329, 0.04412 ]
@@ -42,11 +39,10 @@
         publish:
             path_en: true
             effect_map_en: false
-            map_en: true             # /Laser_map: jede Sekunde ein Scan dazu (wächst unbegrenzt)
+            map_en: false            # /Laser_map aus: wächst unbegrenzt, macht RViz zäh → slop_slam/lio_map (/lio/map)
             scan_publish_en: true
-            dense_publish_en: false  # /cloud_registered ausgedünnt
-            scan_bodyframe_pub_en: false
+            scan_bodyframe_pub_en: true   # /cloud_registered_body: volle Scans im IMU-Frame (für mount_calib)
 
         pcd_save:
-            pcd_save_en: true        # Speichern per Service /map_save (schreibt /Laser_map nach map_file_path)
+            pcd_save_en: false       # Speichern stattdessen: ros2 service call /lio_map/save std_srvs/srv/Trigger
             interval: -1

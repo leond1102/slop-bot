@@ -9,11 +9,7 @@ camera:
     enable_depth: true
     enable_infra1: false
     enable_infra2: false
-    rgb_camera.color_profile: 640,480,30
-    depth_module.depth_profile: 640,480,30
-
-    # Tiefe auf Farbbild ausgerichtet: /camera/aligned_depth_to_color/image_raw
-    align_depth.enable: true
+    # Auflösung, Bildrate, align_depth und Tiefenfilter: zentral in config/data_reduction.yaml
     # Punktwolke /camera/depth/color/points (kostet CPU). Auf dem Jetson heißt der Filter
     # "Pointcloud (NEON)" → Parameter pointcloud__neon_.* statt pointcloud.* (ein-/ausschalten
     # per Launch-Argument camera_pointcloud:=true, überschreibt diesen Wert).
@@ -30,10 +26,6 @@ camera:
     # 50-Hz-Netz (Deutschland): 1 = 50 Hz, gegen Flackern unter Kunstlicht
     rgb_camera.power_line_frequency: 1
 
-    # Filter gegen Löcher/Rauschen in der Tiefe
-    decimation_filter.enable: false
-    spatial_filter.enable: false
-    temporal_filter.enable: false
 
     publish_tf: true
     tf_publish_rate: 0.0

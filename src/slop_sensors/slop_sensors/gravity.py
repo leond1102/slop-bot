@@ -29,6 +29,15 @@ def quat_from_rpy(roll, pitch, yaw):
             cr * cp * cy + sr * sp * sy)
 
 
+def rpy_from_quat(q):
+    """Quaternion (x, y, z, w) → (roll, pitch, yaw), Gegenstück zu quat_from_rpy."""
+    x, y, z, w = q
+    roll = math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y))
+    pitch = math.asin(max(-1.0, min(1.0, 2 * (w * y - z * x))))
+    yaw = math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
+    return roll, pitch, yaw
+
+
 def rotate(q, v):
     """Vektor v mit Quaternion q = (x, y, z, w) drehen."""
     x, y, z, w = q

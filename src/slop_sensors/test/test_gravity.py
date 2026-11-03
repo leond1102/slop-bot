@@ -35,6 +35,12 @@ def test_round_trip_independent_of_yaw(roll, pitch, yaw):
     assert roll_pitch_from_up(*up_in_sensor(roll, pitch, yaw)) == pytest.approx((roll, pitch), abs=1e-9)
 
 
+@pytest.mark.parametrize('rpy', [(0.1, -0.2, 0.3), (-1.0, 0.5, -2.8), (3.0, 0.0, 1.0)])
+def test_rpy_from_quat_round_trip(rpy):
+    from slop_sensors.gravity import rpy_from_quat
+    assert rpy_from_quat(quat_from_rpy(*rpy)) == pytest.approx(rpy)
+
+
 def test_quat_matches_known_values():
     # 90° um z
     assert quat_from_rpy(0, 0, math.pi / 2) == pytest.approx((0, 0, math.sqrt(0.5), math.sqrt(0.5)))

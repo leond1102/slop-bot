@@ -1,6 +1,9 @@
 source;share/slop_sensors/hook/cmake_prefix_path.ps1
 source;share/slop_sensors/hook/cmake_prefix_path.dsv
 source;share/slop_sensors/hook/cmake_prefix_path.sh
+source;share/slop_sensors/hook/ld_library_path_lib.ps1
+source;share/slop_sensors/hook/ld_library_path_lib.dsv
+source;share/slop_sensors/hook/ld_library_path_lib.sh
 source;share/slop_sensors/local_setup.bash
 source;share/slop_sensors/local_setup.dsv
 source;share/slop_sensors/local_setup.ps1
