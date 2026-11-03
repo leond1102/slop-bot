@@ -185,6 +185,32 @@ slop_sensors_uninstall/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/slop_sensors_uninstall.dir/build.make CMakeFiles/slop_sensors_uninstall.dir/build
 .PHONY : slop_sensors_uninstall/fast
 
+#=============================================================================
+# Target rules for targets named ament_cmake_python_copy_slop_sensors
+
+# Build rule for target.
+ament_cmake_python_copy_slop_sensors: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ament_cmake_python_copy_slop_sensors
+.PHONY : ament_cmake_python_copy_slop_sensors
+
+# fast build rule for target.
+ament_cmake_python_copy_slop_sensors/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/build.make CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/build
+.PHONY : ament_cmake_python_copy_slop_sensors/fast
+
+#=============================================================================
+# Target rules for targets named ament_cmake_python_build_slop_sensors_egg
+
+# Build rule for target.
+ament_cmake_python_build_slop_sensors_egg: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ament_cmake_python_build_slop_sensors_egg
+.PHONY : ament_cmake_python_build_slop_sensors_egg
+
+# fast build rule for target.
+ament_cmake_python_build_slop_sensors_egg/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/build.make CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/build
+.PHONY : ament_cmake_python_build_slop_sensors_egg/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -197,6 +223,8 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
+	@echo "... ament_cmake_python_build_slop_sensors_egg"
+	@echo "... ament_cmake_python_copy_slop_sensors"
 	@echo "... slop_sensors_uninstall"
 	@echo "... uninstall"
 .PHONY : help

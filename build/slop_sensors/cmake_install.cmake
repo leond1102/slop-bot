@@ -38,9 +38,38 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/slop_sensors/environment" TYPE FILE FILES "/home/jetson/slop-bot_ws/build/slop_sensors/ament_cmake_environment_hooks/pythonpath.sh")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/slop_sensors/environment" TYPE FILE FILES "/home/jetson/slop-bot_ws/build/slop_sensors/ament_cmake_environment_hooks/pythonpath.dsv")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/local/lib/python3.10/dist-packages/slop_sensors-0.1.0-py3.10.egg-info" TYPE DIRECTORY FILES "/home/jetson/slop-bot_ws/build/slop_sensors/ament_cmake_python/slop_sensors/slop_sensors.egg-info/")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/local/lib/python3.10/dist-packages/slop_sensors" TYPE DIRECTORY FILES "/home/jetson/slop-bot_ws/src/slop_sensors/slop_sensors/" REGEX "/[^/]*\\.pyc$" EXCLUDE REGEX "/\\_\\_pycache\\_\\_$" EXCLUDE)
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  execute_process(
+        COMMAND
+        "/usr/bin/python3" "-m" "compileall"
+        "/home/jetson/slop-bot_ws/install/slop_sensors/local/lib/python3.10/dist-packages/slop_sensors"
+      )
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/slop_sensors" TYPE PROGRAM FILES "/home/jetson/slop-bot_ws/src/slop_sensors/scripts/mount_tf")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/slop_sensors" TYPE DIRECTORY FILES
     "/home/jetson/slop-bot_ws/src/slop_sensors/config"
     "/home/jetson/slop-bot_ws/src/slop_sensors/launch"
+    "/home/jetson/slop-bot_ws/src/slop_sensors/rviz"
     )
 endif()
 

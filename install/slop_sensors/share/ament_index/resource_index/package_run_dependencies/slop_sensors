@@ -1,1 +1,1 @@
-livox_ros_driver2;realsense2_camera;tf2_ros;ament_index_python;launch;launch_ros
+livox_ros_driver2;realsense2_camera;rclpy;geometry_msgs;sensor_msgs;std_srvs;tf2_ros;python3-yaml;ament_index_python;launch;launch_ros;ament_cmake_pytest;python3-pytest

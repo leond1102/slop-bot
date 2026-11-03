@@ -23,6 +23,36 @@
         "-DPython3_EXECUTABLE=/usr/bin/python3",
         "-DPYTHON_EXECUTABLE=/usr/bin/python3"
       ]
+    },
+    "realsense2_camera_msgs": {
+      "cmake-args": [
+        "-DPython3_EXECUTABLE=/usr/bin/python3",
+        "-DPYTHON_EXECUTABLE=/usr/bin/python3",
+        "-DCMAKE_BUILD_TYPE=Release"
+      ]
+    },
+    "realsense2_camera": {
+      "cmake-args": [
+        "-DPython3_EXECUTABLE=/usr/bin/python3",
+        "-DPYTHON_EXECUTABLE=/usr/bin/python3",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DBUILD_TESTING=OFF",
+        "-Drealsense2_DIR=/home/jetson/librealsense-rsusb/install/lib/cmake/realsense2",
+        "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,--no-as-needed -lyaml-cpp -Wl,--as-needed"
+      ]
+    },
+    "fast_lio": {
+      "cmake-args": [
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
+        "-DPython3_EXECUTABLE=/usr/bin/python3",
+        "-DPYTHON_EXECUTABLE=/usr/bin/python3"
+      ]
+    },
+    "slop_slam": {
+      "cmake-args": [
+        "-DPython3_EXECUTABLE=/usr/bin/python3"
+      ]
     }
   }
 }

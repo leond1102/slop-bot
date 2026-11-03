@@ -63,11 +63,11 @@ CMAKE_BINARY_DIR = /home/jetson/slop-bot_ws/build/slop_sensors
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all:
+all: CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
-codegen:
+codegen: CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
@@ -77,6 +77,8 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/uninstall.dir/clean
 clean: CMakeFiles/slop_sensors_uninstall.dir/clean
+clean: CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/clean
+clean: CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -142,6 +144,70 @@ CMakeFiles/slop_sensors_uninstall.dir/codegen:
 CMakeFiles/slop_sensors_uninstall.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/slop_sensors_uninstall.dir/build.make CMakeFiles/slop_sensors_uninstall.dir/clean
 .PHONY : CMakeFiles/slop_sensors_uninstall.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/ament_cmake_python_copy_slop_sensors.dir
+
+# All Build rule for target.
+CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/build.make CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/build.make CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles --progress-num= "Built target ament_cmake_python_copy_slop_sensors"
+.PHONY : CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles 0
+.PHONY : CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/rule
+
+# Convenience name for target.
+ament_cmake_python_copy_slop_sensors: CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/rule
+.PHONY : ament_cmake_python_copy_slop_sensors
+
+# codegen rule for target.
+CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/build.make CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles --progress-num= "Finished codegen for target ament_cmake_python_copy_slop_sensors"
+.PHONY : CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/codegen
+
+# clean rule for target.
+CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/build.make CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/clean
+.PHONY : CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir
+
+# All Build rule for target.
+CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/all: CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/build.make CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/build.make CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles --progress-num= "Built target ament_cmake_python_build_slop_sensors_egg"
+.PHONY : CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles 0
+.PHONY : CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/rule
+
+# Convenience name for target.
+ament_cmake_python_build_slop_sensors_egg: CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/rule
+.PHONY : ament_cmake_python_build_slop_sensors_egg
+
+# codegen rule for target.
+CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/codegen: CMakeFiles/ament_cmake_python_copy_slop_sensors.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/build.make CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles --progress-num= "Finished codegen for target ament_cmake_python_build_slop_sensors_egg"
+.PHONY : CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/codegen
+
+# clean rule for target.
+CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/build.make CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/clean
+.PHONY : CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

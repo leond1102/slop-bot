@@ -14,15 +14,17 @@ camera:
 
     # Tiefe auf Farbbild ausgerichtet: /camera/aligned_depth_to_color/image_raw
     align_depth.enable: true
-    # Punktwolke /camera/depth/color/points (kostet CPU, bei Bedarf einschalten)
-    pointcloud.enable: false
+    # Punktwolke /camera/depth/color/points (kostet CPU). Auf dem Jetson heißt der Filter
+    # "Pointcloud (NEON)" → Parameter pointcloud__neon_.* statt pointcloud.* (ein-/ausschalten
+    # per Launch-Argument camera_pointcloud:=true, überschreibt diesen Wert).
+    pointcloud__neon_.enable: false
 
-    # IMU der Kamera aus: Der Jetson-Kernel hat kein HID-Sensor-Hub (CONFIG_HID_SENSOR_HUB),
-    # daher meldet librealsense "No HID info provided, IMU is disabled". Für LiDAR-SLAM reicht
-    # die IMU des Mid-360s. Wer die Kamera-IMU braucht: librealsense mit FORCE_RSUSB_BACKEND bauen.
-    # Dann hier true setzen → Gyro + Accel vereint auf /camera/imu (2 = linear interpoliert).
-    enable_gyro: false
-    enable_accel: false
+    # IMU: Gyro + Accel vereint auf /camera/imu (unite_imu_method 2 = linear interpoliert).
+    # Geht nur, weil realsense2_camera hier gegen librealsense mit RSUSB-Backend gebaut ist
+    # (~/librealsense-rsusb, siehe colcon.meta): Der Jetson-Kernel hat kein HID-Sensor-Hub,
+    # mit der apt-Version (/opt/ros/humble) meldet der Node "No HID info provided, IMU is disabled".
+    enable_gyro: true
+    enable_accel: true
     unite_imu_method: 2
 
     # 50-Hz-Netz (Deutschland): 1 = 50 Hz, gegen Flackern unter Kunstlicht

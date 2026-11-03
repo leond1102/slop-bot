@@ -1,5 +1,7 @@
 /home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles/uninstall.dir
 /home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles/slop_sensors_uninstall.dir
+/home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles/ament_cmake_python_copy_slop_sensors.dir
+/home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles/ament_cmake_python_build_slop_sensors_egg.dir
 /home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles/test.dir
 /home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles/edit_cache.dir
 /home/jetson/slop-bot_ws/build/slop_sensors/CMakeFiles/rebuild_cache.dir

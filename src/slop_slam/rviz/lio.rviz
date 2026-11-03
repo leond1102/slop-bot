@@ -1,0 +1,175 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Help Height: 0
+    Tree Height: 400
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Reference Frame: <Fixed Frame>
+      Plane Cell Count: 40
+      Cell Size: 0.5
+      Color: 160; 160; 164
+      Alpha: 0.3
+      Value: true
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: true
+      Show Names: true
+      Show Axes: true
+      Show Arrows: false
+      Marker Scale: 0.3
+      Frames:
+        All Enabled: false
+        map:
+          Value: true
+        odom:
+          Value: true
+        base_footprint:
+          Value: true
+        livox_frame:
+          Value: true
+        camera_link:
+          Value: true
+      Value: true
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Karte (/Laser_map)
+      Enabled: true
+      Topic:
+        Value: /Laser_map
+        Depth: 1
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Style: Points
+      Size (Pixels): 2
+      Color Transformer: AxisColor
+      Axis: Z
+      Use Fixed Frame: true
+      Decay Time: 0
+      Alpha: 0.8
+      Position Transformer: XYZ
+      Queue Size: 2
+      Selectable: false
+      Value: true
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Aktueller Scan (/cloud_registered)
+      Enabled: true
+      Topic:
+        Value: /cloud_registered
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Style: Points
+      Size (Pixels): 3
+      Color Transformer: FlatColor
+      Color: 255; 255; 255
+      Decay Time: 0
+      Alpha: 1
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: false
+      Value: true
+    - Class: rviz_default_plugins/Path
+      Name: Weg (/path)
+      Enabled: true
+      Topic:
+        Value: /path
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Line Style: Lines
+      Color: 25; 255; 0
+      Alpha: 1
+      Value: true
+    - Class: rviz_default_plugins/Odometry
+      Name: Roboter (/lio/odom)
+      Enabled: true
+      Topic:
+        Value: /lio/odom
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Keep: 1
+      Shape:
+        Value: Arrow
+        Color: 255; 25; 0
+        Alpha: 1
+        Shaft Length: 0.4
+        Shaft Radius: 0.03
+        Head Length: 0.12
+        Head Radius: 0.07
+      Covariance:
+        Value: false
+      Value: true
+    - Class: rviz_default_plugins/PointCloud2
+      Name: RealSense Punktwolke
+      Enabled: true
+      Topic:
+        Value: /camera/depth/color/points
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Style: Points
+      Size (Pixels): 2
+      Color Transformer: RGB8
+      Decay Time: 0
+      Alpha: 1
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: false
+      Value: true
+    - Class: rviz_default_plugins/Image
+      Name: Farbbild
+      Enabled: true
+      Topic:
+        Value: /camera/color/image_raw
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Normalize Range: true
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 30; 30; 30
+    Fixed Frame: map
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/Measure
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Name: Current View
+      Target Frame: base_footprint
+      Distance: 10
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0
+      Pitch: 0.8
+      Yaw: 3.6
+      Near Clip Distance: 0.01
+      Value: Orbit (rviz)
+    Saved: ~
+Window Geometry:
+  Width: 1600
+  Height: 950
+  Displays:
+    collapsed: false
+  Views:
+    collapsed: true
