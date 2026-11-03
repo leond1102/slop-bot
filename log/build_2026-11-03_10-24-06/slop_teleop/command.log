@@ -1,0 +1,2 @@
+Invoking command in '/home/jetson/slop-bot_ws/build/slop_teleop': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble VIRTUAL_ENV_PROMPT=(.venv) /usr/bin/cmake /home/jetson/slop-bot_ws/src/slop_teleop -DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/slop_teleop
+Invoked command in '/home/jetson/slop-bot_ws/build/slop_teleop' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble VIRTUAL_ENV_PROMPT=(.venv) /usr/bin/cmake /home/jetson/slop-bot_ws/src/slop_teleop -DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/slop_teleop

@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/jetson/slop-bot_ws/build/slop_base/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

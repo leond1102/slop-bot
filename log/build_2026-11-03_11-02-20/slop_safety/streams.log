@@ -1,0 +1,67 @@
+[0.031s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_safety': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/jetson/slop-bot_ws/src/slop_safety -DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/slop_safety
+[0.039s] [0mCMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+[0.040s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.040s]   CMake.
+[0.040s] 
+[0.040s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.040s]   to tell CMake that the project requires at least <min> but has been updated
+[0.040s]   to work with policies introduced by <max> or earlier.
+[0.040s] 
+[0.041s] [0m
+[0.050s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.428s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter
+[0.885s] -- Found ament_cmake_pytest: 1.3.14 (/opt/ros/humble/share/ament_cmake_pytest/cmake)
+[2.553s] -- Configuring done (2.5s)
+[2.568s] -- Generating done (0.0s)
+[2.577s] -- Build files have been written to: /home/jetson/slop-bot_ws/build/slop_safety
+[2.582s] Invoked command in '/home/jetson/slop-bot_ws/build/slop_safety' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/jetson/slop-bot_ws/src/slop_safety -DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/slop_safety
+[2.585s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_safety': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_safety -- -j8 -l8
+[2.629s] Built target ament_cmake_python_copy_slop_safety
+[3.133s] running egg_info
+[3.134s] creating slop_safety.egg-info
+[3.134s] writing slop_safety.egg-info/PKG-INFO
+[3.135s] writing dependency_links to slop_safety.egg-info/dependency_links.txt
+[3.135s] writing top-level names to slop_safety.egg-info/top_level.txt
+[3.135s] writing manifest file 'slop_safety.egg-info/SOURCES.txt'
+[3.139s] reading manifest file 'slop_safety.egg-info/SOURCES.txt'
+[3.140s] writing manifest file 'slop_safety.egg-info/SOURCES.txt'
+[3.217s] Built target ament_cmake_python_build_slop_safety_egg
+[3.231s] Invoked command in '/home/jetson/slop-bot_ws/build/slop_safety' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_safety -- -j8 -l8
+[3.245s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_safety': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_safety
+[3.254s] -- Install configuration: ""
+[3.254s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/pythonpath.sh
+[3.254s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/pythonpath.dsv
+[3.255s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info
+[3.255s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info/top_level.txt
+[3.255s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info/SOURCES.txt
+[3.255s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info/dependency_links.txt
+[3.255s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info/PKG-INFO
+[3.255s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety
+[3.256s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/remote_guard.py
+[3.257s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/__init__.py
+[3.257s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/remote_guard_node.py
+[3.324s] Listing '/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety'...
+[3.325s] Compiling '/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/__init__.py'...
+[3.325s] Compiling '/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/remote_guard.py'...
+[3.325s] Compiling '/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/remote_guard_node.py'...
+[3.341s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/lib/slop_safety/remote_guard
+[3.341s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/config
+[3.342s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/config/twist_mux.yaml
+[3.342s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/launch
+[3.343s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/launch/safety.launch.py
+[3.344s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/ament_index/resource_index/package_run_dependencies/slop_safety
+[3.345s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/ament_index/resource_index/parent_prefix_path/slop_safety
+[3.345s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/ament_prefix_path.sh
+[3.345s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/ament_prefix_path.dsv
+[3.346s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/path.sh
+[3.347s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/path.dsv
+[3.348s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/local_setup.bash
+[3.349s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/local_setup.sh
+[3.352s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/local_setup.zsh
+[3.355s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/local_setup.dsv
+[3.356s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.dsv
+[3.357s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/ament_index/resource_index/packages/slop_safety
+[3.357s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/cmake/slop_safetyConfig.cmake
+[3.358s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/cmake/slop_safetyConfig-version.cmake
+[3.358s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.xml
+[3.425s] Invoked command in '/home/jetson/slop-bot_ws/build/slop_safety' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_safety

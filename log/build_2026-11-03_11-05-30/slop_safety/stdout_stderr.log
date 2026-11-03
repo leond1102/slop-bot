@@ -1,0 +1,61 @@
+[0mCMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+
+[0m
+-- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter
+-- Found ament_cmake_pytest: 1.3.14 (/opt/ros/humble/share/ament_cmake_pytest/cmake)
+-- Configuring done (2.5s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/jetson/slop-bot_ws/build/slop_safety
+Built target ament_cmake_python_copy_slop_safety
+running egg_info
+creating slop_safety.egg-info
+writing slop_safety.egg-info/PKG-INFO
+writing dependency_links to slop_safety.egg-info/dependency_links.txt
+writing top-level names to slop_safety.egg-info/top_level.txt
+writing manifest file 'slop_safety.egg-info/SOURCES.txt'
+reading manifest file 'slop_safety.egg-info/SOURCES.txt'
+writing manifest file 'slop_safety.egg-info/SOURCES.txt'
+Built target ament_cmake_python_build_slop_safety_egg
+-- Install configuration: ""
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/pythonpath.sh
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/pythonpath.dsv
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info/top_level.txt
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info/SOURCES.txt
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info/dependency_links.txt
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info/PKG-INFO
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/remote_guard.py
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/__init__.py
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/remote_guard_node.py
+Listing '/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety'...
+Compiling '/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/__init__.py'...
+Compiling '/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/remote_guard.py'...
+Compiling '/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/remote_guard_node.py'...
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/lib/slop_safety/remote_guard
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/config
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/config/twist_mux.yaml
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/launch
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/launch/safety.launch.py
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/ament_index/resource_index/package_run_dependencies/slop_safety
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/ament_index/resource_index/parent_prefix_path/slop_safety
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/ament_prefix_path.sh
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/ament_prefix_path.dsv
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/path.sh
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/path.dsv
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/local_setup.bash
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/local_setup.sh
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/local_setup.zsh
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/local_setup.dsv
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.dsv
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/ament_index/resource_index/packages/slop_safety
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/cmake/slop_safetyConfig.cmake
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/cmake/slop_safetyConfig-version.cmake
+-- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.xml

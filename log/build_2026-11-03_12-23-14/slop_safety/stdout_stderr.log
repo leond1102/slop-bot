@@ -1,0 +1,8 @@
+Built target ament_cmake_python_copy_slop_safety
+running egg_info
+writing slop_safety.egg-info/PKG-INFO
+writing dependency_links to slop_safety.egg-info/dependency_links.txt
+writing top-level names to slop_safety.egg-info/top_level.txt
+reading manifest file 'slop_safety.egg-info/SOURCES.txt'
+writing manifest file 'slop_safety.egg-info/SOURCES.txt'
+Built target ament_cmake_python_build_slop_safety_egg

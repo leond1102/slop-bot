@@ -1,0 +1,38 @@
+# Parameter für realsense2_camera (D435i, Seriennummer 262722070636).
+# Topics landen unter /camera/... (Node-Name "camera", kein Namespace).
+camera:
+  ros__parameters:
+    camera_name: camera
+    base_frame_id: link   # wird zu <camera_name>_link = camera_link (Montage-TF in mounts.yaml)
+
+    enable_color: true
+    enable_depth: true
+    enable_infra1: false
+    enable_infra2: false
+    rgb_camera.color_profile: 640,480,30
+    depth_module.depth_profile: 640,480,30
+
+    # Tiefe auf Farbbild ausgerichtet: /camera/aligned_depth_to_color/image_raw
+    align_depth.enable: true
+    # Punktwolke /camera/depth/color/points (kostet CPU, bei Bedarf einschalten)
+    pointcloud.enable: false
+
+    # IMU der Kamera aus: Der Jetson-Kernel hat kein HID-Sensor-Hub (CONFIG_HID_SENSOR_HUB),
+    # daher meldet librealsense "No HID info provided, IMU is disabled". Für LiDAR-SLAM reicht
+    # die IMU des Mid-360s. Wer die Kamera-IMU braucht: librealsense mit FORCE_RSUSB_BACKEND bauen.
+    # Dann hier true setzen → Gyro + Accel vereint auf /camera/imu (2 = linear interpoliert).
+    enable_gyro: false
+    enable_accel: false
+    unite_imu_method: 2
+
+    # 50-Hz-Netz (Deutschland): 1 = 50 Hz, gegen Flackern unter Kunstlicht
+    rgb_camera.power_line_frequency: 1
+
+    # Filter gegen Löcher/Rauschen in der Tiefe
+    decimation_filter.enable: false
+    spatial_filter.enable: false
+    temporal_filter.enable: false
+
+    publish_tf: true
+    tf_publish_rate: 0.0
+    initial_reset: false

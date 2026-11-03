@@ -1,0 +1,9 @@
+[0.042s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_teleop': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_teleop -- -j8 -l8
+[0.155s] Built target ament_cmake_python_copy_slop_teleop
+[0.690s] running egg_info
+[0.691s] writing slop_teleop.egg-info/PKG-INFO
+[0.692s] writing dependency_links to slop_teleop.egg-info/dependency_links.txt
+[0.693s] writing top-level names to slop_teleop.egg-info/top_level.txt
+[0.698s] reading manifest file 'slop_teleop.egg-info/SOURCES.txt'
+[0.698s] writing manifest file 'slop_teleop.egg-info/SOURCES.txt'
+[0.766s] Built target ament_cmake_python_build_slop_teleop_egg

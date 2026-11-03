@@ -1,0 +1,996 @@
+[0.000000] (-) TimerEvent: {}
+[0.000245] (-) JobUnselected: {'identifier': 'slop_base'}
+[0.000520] (-) JobUnselected: {'identifier': 'slop_safety'}
+[0.001018] (-) JobUnselected: {'identifier': 'slop_teleop'}
+[0.001296] (livox_sdk2) JobQueued: {'identifier': 'livox_sdk2', 'dependencies': OrderedDict()}
+[0.001574] (livox_ros_driver2) JobQueued: {'identifier': 'livox_ros_driver2', 'dependencies': OrderedDict([('livox_sdk2', '/home/jetson/slop-bot_ws/install/livox_sdk2')])}
+[0.001674] (slop_sensors) JobQueued: {'identifier': 'slop_sensors', 'dependencies': OrderedDict([('livox_sdk2', '/home/jetson/slop-bot_ws/install/livox_sdk2'), ('livox_ros_driver2', '/home/jetson/slop-bot_ws/install/livox_ros_driver2')])}
+[0.001753] (livox_sdk2) JobStarted: {'identifier': 'livox_sdk2'}
+[0.021688] (livox_sdk2) JobProgress: {'identifier': 'livox_sdk2', 'progress': 'cmake'}
+[0.023656] (livox_sdk2) JobProgress: {'identifier': 'livox_sdk2', 'progress': 'build'}
+[0.024878] (livox_sdk2) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/jetson/slop-bot_ws/build/livox_sdk2', '--', '-j8', '-l8'], 'cwd': '/home/jetson/slop-bot_ws/build/livox_sdk2', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/jetson/slop-bot_ws'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('AI_AGENT', 'claude-code_2-1-314_agent'), ('USER', 'jetson'), ('CLAUDE_CODE_ENTRYPOINT', 'claude-vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('GIT_EDITOR', 'true'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'x11'), ('ALLUSERSPROFILE', '/opt/MVS/MVFG'), ('CLAUDE_AGENT_SDK_VERSION', '0.3.314'), ('CLAUDE_CODE_SESSION_ATTENDED', '1'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib:/opt/MVS/lib/aarch64:/usr/local/cuda-12.6/lib64:/opt/MVS/lib/aarch64:/opt/MVS/lib/aarch64:'), ('CLAUDE_CODE_MESSAGING_TOKEN', 'ef2d6536f069dba12f06ef0576e50619'), ('HOME', '/home/jetson'), ('CHROME_DESKTOP', 'com.microsoft.VSCode.desktop'), ('OLDPWD', '/home/jetson'), ('DESKTOP_SESSION', 'ubuntu'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-ed92d0d2-1.14-main.sock'), ('JETSON_L4T', '36.4.7'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('JETSON_MODEL', 'NVIDIA Jetson Orin NX Engineering Reference Developer Kit'), ('CLAUDE_CODE_CHILD_SESSION', '1'), ('COPILOT_OTEL_FILE_EXPORTER_PATH', '/dev/null'), ('MANAGERPID', '1947'), ('SYSTEMD_EXEC_PID', '2909'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3809'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/jetson/slop-bot_ws/install:/home/jetson/ros2_ws/install'), ('APPLICATION_INSIGHTS_NO_STATSBEAT', 'true'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'jetson'), ('JETSON_MODULE', 'NVIDIA Jetson Orin NX (16GB ram)'), ('JETSON_SERIAL_NUMBER', '1422525087275'), ('CLAUDE_CODE_EMIT_STARTUP_TIMING', '1'), ('JOURNAL_STREAM', '8:55587'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('CLAUDE_CODE_QUESTION_PREVIEW_FORMAT', 'markdown'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'jetson'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '1'), ('WINDOWPATH', '2'), ('MVCAM_SDK_PATH', '/opt/MVS'), ('MCP_CONNECTION_NONBLOCKING', 'true'), ('PATH', '/home/jetson/ethercat_venv/bin:/home/jetson/.local/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/opt/ros/humble/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2670,unix/ubuntu:/tmp/.ICE-unix/2670'), ('INVOCATION_ID', 'f11a0846954541da9650ff1402193b6b'), ('MVCAM_GENICAM_CLPROTOCOL', '/opt/MVS/lib/CLProtocol'), ('VSCODE_NODE_COMPILE_CACHE_ROOT', '/usr/share/code/resources/app/node-compile-cache'), ('COREPACK_ENABLE_AUTO_PIN', '0'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('CLAUDE_EFFORT', 'high'), ('DISPLAY', ':0'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('CLAUDE_PID', '7633'), ('NoDefaultCurrentDirectoryInExePath', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('IBUS_DISABLE_SNOOPER', '1'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('JETSON_SOC', 'tegra234'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:22e895b8-4389-40cf-a967-58c9c0950171'), ('CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '1'), ('MXC_BIN_DIR', '/usr/share/code/resources/app/node_modules.asar.unpacked/@microsoft/mxc-sdk/bin'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING', 'true'), ('CLAUDE_CODE_SESSION_ID', '1c697e8f-dd4f-4e5c-b241-6697ec2e7c21'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('CLAUDECODE', '1'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('VIRTUAL_ENV', '/home/jetson/ethercat_venv'), ('QT_IM_MODULE', 'ibus'), ('JETSON_CUDA_ARCH_BIN', '8.7'), ('PWD', '/home/jetson/slop-bot_ws/build/livox_sdk2'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('VSCODE_CODE_CACHE_PATH', '/home/jetson/.config/Code/CachedData/2a59476c9bfcb90b3ddc372c36762471b7dfad1c'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLAUDE_CODE_EXECPATH', '/home/jetson/.vscode/extensions/anthropic.claude-code-2.1.314-linux-arm64/resources/native-binary/claude'), ('PYTHONPATH', '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_chain_drive/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_base/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('CLAUDE_CODE_ENABLE_TASKS', '0'), ('COLCON', '1'), ('COPILOT_CLI_ENABLED_FEATURE_FLAGS', 'SHELL_SPAWN_BACKEND'), ('VTE_VERSION', '6800'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('CLAUDE_CODE_MESSAGING_SOCKET', '/run/user/1000/cc-socks/7633.sock'), ('CMAKE_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup'), ('VSCODE_PID', '6735'), ('MVCAM_COMMON_RUNENV', '/opt/MVS/lib'), ('JETSON_P_NUMBER', 'p3767-0000')]), 'shell': False}
+[0.099371] (-) TimerEvent: {}
+[0.107772] (livox_sdk2) StdoutLine: {'line': b'[ 75%] Built target livox_lidar_sdk_shared\n'}
+[0.108367] (livox_sdk2) StdoutLine: {'line': b'[ 81%] Built target livox_lidar_sdk_static\n'}
+[0.139832] (livox_sdk2) StdoutLine: {'line': b'[ 86%] Built target livox_lidar_quick_start\n'}
+[0.140245] (livox_sdk2) StdoutLine: {'line': b'[ 86%] Built target multi_lidars_upgrade\n'}
+[0.140577] (livox_sdk2) StdoutLine: {'line': b'[ 89%] Built target logger\n'}
+[0.140734] (livox_sdk2) StdoutLine: {'line': b'[ 90%] Built target livox_lidar_ip_set\n'}
+[0.144285] (livox_sdk2) StdoutLine: {'line': b'[ 92%] Built target lidar_cmd_observer\n'}
+[0.147236] (livox_sdk2) StdoutLine: {'line': b'[ 94%] Built target debug_point_cloud\n'}
+[0.150283] (livox_sdk2) StdoutLine: {'line': b'[ 96%] Built target livox_lidar_info_get\n'}
+[0.152483] (livox_sdk2) StdoutLine: {'line': b'[100%] Built target livox_lidar_rmc_time_sync\n'}
+[0.167137] (livox_sdk2) CommandEnded: {'returncode': 0}
+[0.168996] (livox_sdk2) JobProgress: {'identifier': 'livox_sdk2', 'progress': 'install'}
+[0.178306] (livox_sdk2) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/jetson/slop-bot_ws/build/livox_sdk2'], 'cwd': '/home/jetson/slop-bot_ws/build/livox_sdk2', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/jetson/slop-bot_ws'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('AI_AGENT', 'claude-code_2-1-314_agent'), ('USER', 'jetson'), ('CLAUDE_CODE_ENTRYPOINT', 'claude-vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('GIT_EDITOR', 'true'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'x11'), ('ALLUSERSPROFILE', '/opt/MVS/MVFG'), ('CLAUDE_AGENT_SDK_VERSION', '0.3.314'), ('CLAUDE_CODE_SESSION_ATTENDED', '1'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib:/opt/MVS/lib/aarch64:/usr/local/cuda-12.6/lib64:/opt/MVS/lib/aarch64:/opt/MVS/lib/aarch64:'), ('CLAUDE_CODE_MESSAGING_TOKEN', 'ef2d6536f069dba12f06ef0576e50619'), ('HOME', '/home/jetson'), ('CHROME_DESKTOP', 'com.microsoft.VSCode.desktop'), ('OLDPWD', '/home/jetson'), ('DESKTOP_SESSION', 'ubuntu'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-ed92d0d2-1.14-main.sock'), ('JETSON_L4T', '36.4.7'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('JETSON_MODEL', 'NVIDIA Jetson Orin NX Engineering Reference Developer Kit'), ('CLAUDE_CODE_CHILD_SESSION', '1'), ('COPILOT_OTEL_FILE_EXPORTER_PATH', '/dev/null'), ('MANAGERPID', '1947'), ('SYSTEMD_EXEC_PID', '2909'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3809'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/jetson/slop-bot_ws/install:/home/jetson/ros2_ws/install'), ('APPLICATION_INSIGHTS_NO_STATSBEAT', 'true'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'jetson'), ('JETSON_MODULE', 'NVIDIA Jetson Orin NX (16GB ram)'), ('JETSON_SERIAL_NUMBER', '1422525087275'), ('CLAUDE_CODE_EMIT_STARTUP_TIMING', '1'), ('JOURNAL_STREAM', '8:55587'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('CLAUDE_CODE_QUESTION_PREVIEW_FORMAT', 'markdown'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'jetson'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '1'), ('WINDOWPATH', '2'), ('MVCAM_SDK_PATH', '/opt/MVS'), ('MCP_CONNECTION_NONBLOCKING', 'true'), ('PATH', '/home/jetson/ethercat_venv/bin:/home/jetson/.local/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/opt/ros/humble/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2670,unix/ubuntu:/tmp/.ICE-unix/2670'), ('INVOCATION_ID', 'f11a0846954541da9650ff1402193b6b'), ('MVCAM_GENICAM_CLPROTOCOL', '/opt/MVS/lib/CLProtocol'), ('VSCODE_NODE_COMPILE_CACHE_ROOT', '/usr/share/code/resources/app/node-compile-cache'), ('COREPACK_ENABLE_AUTO_PIN', '0'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('CLAUDE_EFFORT', 'high'), ('DISPLAY', ':0'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('CLAUDE_PID', '7633'), ('NoDefaultCurrentDirectoryInExePath', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('IBUS_DISABLE_SNOOPER', '1'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('JETSON_SOC', 'tegra234'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:22e895b8-4389-40cf-a967-58c9c0950171'), ('CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '1'), ('MXC_BIN_DIR', '/usr/share/code/resources/app/node_modules.asar.unpacked/@microsoft/mxc-sdk/bin'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING', 'true'), ('CLAUDE_CODE_SESSION_ID', '1c697e8f-dd4f-4e5c-b241-6697ec2e7c21'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('CLAUDECODE', '1'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('VIRTUAL_ENV', '/home/jetson/ethercat_venv'), ('QT_IM_MODULE', 'ibus'), ('JETSON_CUDA_ARCH_BIN', '8.7'), ('PWD', '/home/jetson/slop-bot_ws/build/livox_sdk2'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('VSCODE_CODE_CACHE_PATH', '/home/jetson/.config/Code/CachedData/2a59476c9bfcb90b3ddc372c36762471b7dfad1c'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLAUDE_CODE_EXECPATH', '/home/jetson/.vscode/extensions/anthropic.claude-code-2.1.314-linux-arm64/resources/native-binary/claude'), ('PYTHONPATH', '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_chain_drive/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_base/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('CLAUDE_CODE_ENABLE_TASKS', '0'), ('COLCON', '1'), ('COPILOT_CLI_ENABLED_FEATURE_FLAGS', 'SHELL_SPAWN_BACKEND'), ('VTE_VERSION', '6800'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('CLAUDE_CODE_MESSAGING_SOCKET', '/run/user/1000/cc-socks/7633.sock'), ('CMAKE_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup'), ('VSCODE_PID', '6735'), ('MVCAM_COMMON_RUNENV', '/opt/MVS/lib'), ('JETSON_P_NUMBER', 'p3767-0000')]), 'shell': False}
+[0.188729] (livox_sdk2) StdoutLine: {'line': b'-- Install configuration: "Release"\n'}
+[0.189536] (livox_sdk2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_sdk2/lib/liblivox_lidar_sdk_static.a\n'}
+[0.189683] (livox_sdk2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_sdk2/include/livox_lidar_def.h\n'}
+[0.189796] (livox_sdk2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_sdk2/include/livox_lidar_api.h\n'}
+[0.189976] (livox_sdk2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_sdk2/include/livox_lidar_cfg.h\n'}
+[0.190079] (livox_sdk2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_sdk2/lib/liblivox_lidar_sdk_shared.so\n'}
+[0.192202] (livox_sdk2) CommandEnded: {'returncode': 0}
+[0.199763] (-) TimerEvent: {}
+[0.219174] (livox_sdk2) JobEnded: {'identifier': 'livox_sdk2', 'rc': 0}
+[0.222179] (livox_ros_driver2) JobStarted: {'identifier': 'livox_ros_driver2'}
+[0.236364] (livox_ros_driver2) JobProgress: {'identifier': 'livox_ros_driver2', 'progress': 'cmake'}
+[0.237735] (livox_ros_driver2) Command: {'cmd': ['/usr/bin/cmake', '/home/jetson/slop-bot_ws/src/third_party/livox_ros_driver2', '-DROS_EDITION=ROS2', '-DDISTRO_ROS=humble', '-DCMAKE_BUILD_TYPE=Release', '-DCMAKE_POLICY_VERSION_MINIMUM=3.5', '-DPython3_EXECUTABLE=/usr/bin/python3', '-DLIVOX_LIDAR_SDK_LIBRARY=/home/jetson/slop-bot_ws/install/livox_sdk2/lib/liblivox_lidar_sdk_shared.so', '-DLIVOX_LIDAR_SDK_INCLUDE_DIR=/home/jetson/slop-bot_ws/install/livox_sdk2/include', '-DPYTHON_EXECUTABLE=/usr/bin/python3', '-DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/livox_ros_driver2'], 'cwd': '/home/jetson/slop-bot_ws/build/livox_ros_driver2', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/jetson/slop-bot_ws'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('AI_AGENT', 'claude-code_2-1-314_agent'), ('USER', 'jetson'), ('CLAUDE_CODE_ENTRYPOINT', 'claude-vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('GIT_EDITOR', 'true'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'x11'), ('ALLUSERSPROFILE', '/opt/MVS/MVFG'), ('CLAUDE_AGENT_SDK_VERSION', '0.3.314'), ('CLAUDE_CODE_SESSION_ATTENDED', '1'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/jetson/slop-bot_ws/install/livox_sdk2/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib:/opt/MVS/lib/aarch64:/usr/local/cuda-12.6/lib64:/opt/MVS/lib/aarch64:/opt/MVS/lib/aarch64'), ('CLAUDE_CODE_MESSAGING_TOKEN', 'ef2d6536f069dba12f06ef0576e50619'), ('HOME', '/home/jetson'), ('CHROME_DESKTOP', 'com.microsoft.VSCode.desktop'), ('OLDPWD', '/home/jetson'), ('DESKTOP_SESSION', 'ubuntu'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-ed92d0d2-1.14-main.sock'), ('JETSON_L4T', '36.4.7'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('JETSON_MODEL', 'NVIDIA Jetson Orin NX Engineering Reference Developer Kit'), ('CLAUDE_CODE_CHILD_SESSION', '1'), ('COPILOT_OTEL_FILE_EXPORTER_PATH', '/dev/null'), ('MANAGERPID', '1947'), ('SYSTEMD_EXEC_PID', '2909'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3809'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/jetson/slop-bot_ws/install:/home/jetson/ros2_ws/install'), ('APPLICATION_INSIGHTS_NO_STATSBEAT', 'true'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'jetson'), ('JETSON_MODULE', 'NVIDIA Jetson Orin NX (16GB ram)'), ('JETSON_SERIAL_NUMBER', '1422525087275'), ('CLAUDE_CODE_EMIT_STARTUP_TIMING', '1'), ('JOURNAL_STREAM', '8:55587'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('CLAUDE_CODE_QUESTION_PREVIEW_FORMAT', 'markdown'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'jetson'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '1'), ('WINDOWPATH', '2'), ('MVCAM_SDK_PATH', '/opt/MVS'), ('MCP_CONNECTION_NONBLOCKING', 'true'), ('PATH', '/home/jetson/ethercat_venv/bin:/home/jetson/.local/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/opt/ros/humble/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2670,unix/ubuntu:/tmp/.ICE-unix/2670'), ('INVOCATION_ID', 'f11a0846954541da9650ff1402193b6b'), ('MVCAM_GENICAM_CLPROTOCOL', '/opt/MVS/lib/CLProtocol'), ('VSCODE_NODE_COMPILE_CACHE_ROOT', '/usr/share/code/resources/app/node-compile-cache'), ('COREPACK_ENABLE_AUTO_PIN', '0'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('CLAUDE_EFFORT', 'high'), ('DISPLAY', ':0'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('CLAUDE_PID', '7633'), ('NoDefaultCurrentDirectoryInExePath', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('IBUS_DISABLE_SNOOPER', '1'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('JETSON_SOC', 'tegra234'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:22e895b8-4389-40cf-a967-58c9c0950171'), ('CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '1'), ('MXC_BIN_DIR', '/usr/share/code/resources/app/node_modules.asar.unpacked/@microsoft/mxc-sdk/bin'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING', 'true'), ('CLAUDE_CODE_SESSION_ID', '1c697e8f-dd4f-4e5c-b241-6697ec2e7c21'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('CLAUDECODE', '1'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('VIRTUAL_ENV', '/home/jetson/ethercat_venv'), ('QT_IM_MODULE', 'ibus'), ('JETSON_CUDA_ARCH_BIN', '8.7'), ('PWD', '/home/jetson/slop-bot_ws/build/livox_ros_driver2'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('VSCODE_CODE_CACHE_PATH', '/home/jetson/.config/Code/CachedData/2a59476c9bfcb90b3ddc372c36762471b7dfad1c'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLAUDE_CODE_EXECPATH', '/home/jetson/.vscode/extensions/anthropic.claude-code-2.1.314-linux-arm64/resources/native-binary/claude'), ('PYTHONPATH', '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_chain_drive/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_base/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('CLAUDE_CODE_ENABLE_TASKS', '0'), ('COLCON', '1'), ('COPILOT_CLI_ENABLED_FEATURE_FLAGS', 'SHELL_SPAWN_BACKEND'), ('VTE_VERSION', '6800'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('CLAUDE_CODE_MESSAGING_SOCKET', '/run/user/1000/cc-socks/7633.sock'), ('CMAKE_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('VSCODE_PID', '6735'), ('MVCAM_COMMON_RUNENV', '/opt/MVS/lib'), ('JETSON_P_NUMBER', 'p3767-0000')]), 'shell': False}
+[0.299967] (-) TimerEvent: {}
+[0.336796] (livox_ros_driver2) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[0.400146] (-) TimerEvent: {}
+[0.462366] (livox_ros_driver2) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[0.477123] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[0.500326] (-) TimerEvent: {}
+[0.595282] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[0.600392] (-) TimerEvent: {}
+[0.622033] (livox_ros_driver2) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[0.622615] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[0.622982] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[0.644958] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[0.700595] (-) TimerEvent: {}
+[0.773068] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[0.798075] (livox_ros_driver2) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[0.798950] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[0.800147] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[0.800605] (-) TimerEvent: {}
+[0.811630] (livox_ros_driver2) StdoutLine: {'line': b'-- livox_ros_driver2 version: 1.2.8\n'}
+[0.822381] (livox_ros_driver2) StdoutLine: {'line': b'-- Found ament_cmake_auto: 1.3.14 (/opt/ros/humble/share/ament_cmake_auto/cmake)\n'}
+[0.900799] (-) TimerEvent: {}
+[1.001165] (-) TimerEvent: {}
+[1.101544] (-) TimerEvent: {}
+[1.145826] (livox_ros_driver2) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter\n'}
+[1.201705] (-) TimerEvent: {}
+[1.302157] (-) TimerEvent: {}
+[1.402497] (-) TimerEvent: {}
+[1.502852] (-) TimerEvent: {}
+[1.583857] (livox_ros_driver2) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[1.603030] (-) TimerEvent: {}
+[1.604582] (livox_ros_driver2) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.9 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[1.703207] (-) TimerEvent: {}
+[1.725437] (livox_ros_driver2) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[1.803387] (-) TimerEvent: {}
+[1.903791] (-) TimerEvent: {}
+[1.973394] (livox_ros_driver2) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 6.1.4 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)\n'}
+[1.982569] (livox_ros_driver2) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)\n'}
+[2.003948] (-) TimerEvent: {}
+[2.104382] (-) TimerEvent: {}
+[2.178445] (livox_ros_driver2) StdoutLine: {'line': b'-- Found OpenSSL: /usr/lib/aarch64-linux-gnu/libcrypto.so (found version "3.0.2")\n'}
+[2.204469] (-) TimerEvent: {}
+[2.248743] (livox_ros_driver2) StdoutLine: {'line': b'-- Found FastRTPS: /opt/ros/humble/include\n'}
+[2.304643] (-) TimerEvent: {}
+[2.340255] (livox_ros_driver2) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[2.367573] (livox_ros_driver2) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD\n'}
+[2.404854] (-) TimerEvent: {}
+[2.491738] (livox_ros_driver2) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success\n'}
+[2.493924] (livox_ros_driver2) StdoutLine: {'line': b'-- Found Threads: TRUE\n'}
+[2.505008] (-) TimerEvent: {}
+[2.605362] (-) TimerEvent: {}
+[2.705749] (-) TimerEvent: {}
+[2.806145] (-) TimerEvent: {}
+[2.837634] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:146 (find_package):\n'}
+[2.838130] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0144 is not set: find_package uses upper-case <PACKAGENAME>_ROOT\n'}
+[2.838260] (livox_ros_driver2) StderrLine: {'line': b'  variables.  Run "cmake --help-policy CMP0144" for policy details.  Use the\n'}
+[2.838371] (livox_ros_driver2) StderrLine: {'line': b'  cmake_policy command to set the policy and suppress this warning.\n'}
+[2.838477] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[2.838576] (livox_ros_driver2) StderrLine: {'line': b'  CMake variable EIGEN_ROOT is set to:\n'}
+[2.838673] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[2.838768] (livox_ros_driver2) StderrLine: {'line': b'    /usr/include/eigen3\n'}
+[2.838865] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[2.838958] (livox_ros_driver2) StderrLine: {'line': b'  For compatibility, find_package is ignoring the variable, but code in a\n'}
+[2.839053] (livox_ros_driver2) StderrLine: {'line': b'  .cmake module might still use it.\n'}
+[2.839146] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[2.839239] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:299 (find_eigen)\n'}
+[2.839332] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:543 (find_external_library)\n'}
+[2.839425] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/ament_cmake_export_dependencies-extras.cmake:21 (find_package)\n'}
+[2.839521] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/pcl_conversionsConfig.cmake:41 (include)\n'}
+[2.839614] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_auto/cmake/ament_auto_find_build_dependencies.cmake:67 (find_package)\n'}
+[2.839704] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:225 (ament_auto_find_build_dependencies)\n'}
+[2.839797] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[2.839890] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[2.846364] (livox_ros_driver2) StdoutLine: {'line': b"-- Checking for module 'eigen3'\n"}
+[2.871507] (livox_ros_driver2) StdoutLine: {'line': b'--   Found eigen3, version 3.4.0\n'}
+[2.906312] (-) TimerEvent: {}
+[2.939922] (livox_ros_driver2) StdoutLine: {'line': b'-- Found Eigen: /usr/include/eigen3 (Required is at least version "3.1")\n'}
+[2.940534] (livox_ros_driver2) StdoutLine: {'line': b'-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)\n'}
+[2.940717] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:128 (find_package):\n'}
+[2.940857] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake\n'}
+[2.940968] (livox_ros_driver2) StderrLine: {'line': b'  --help-policy CMP0167" for policy details.  Use the cmake_policy command to\n'}
+[2.941072] (livox_ros_driver2) StderrLine: {'line': b'  set the policy and suppress this warning.\n'}
+[2.941173] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[2.941271] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[2.941368] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:297 (find_boost)\n'}
+[2.941464] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:543 (find_external_library)\n'}
+[2.941560] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/ament_cmake_export_dependencies-extras.cmake:21 (find_package)\n'}
+[2.941656] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/pcl_conversionsConfig.cmake:41 (include)\n'}
+[2.941750] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_auto/cmake/ament_auto_find_build_dependencies.cmake:67 (find_package)\n'}
+[2.941845] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:225 (ament_auto_find_build_dependencies)\n'}
+[2.941937] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[2.942031] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[3.006466] (-) TimerEvent: {}
+[3.010667] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /usr/lib/aarch64-linux-gnu/cmake/pcl/Modules/FindFLANN.cmake:44 (find_package):\n'}
+[3.010995] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0144 is not set: find_package uses upper-case <PACKAGENAME>_ROOT\n'}
+[3.011121] (livox_ros_driver2) StderrLine: {'line': b'  variables.  Run "cmake --help-policy CMP0144" for policy details.  Use the\n'}
+[3.011233] (livox_ros_driver2) StderrLine: {'line': b'  cmake_policy command to set the policy and suppress this warning.\n'}
+[3.011341] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[3.011443] (livox_ros_driver2) StderrLine: {'line': b'  CMake variable FLANN_ROOT is set to:\n'}
+[3.011542] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[3.011638] (livox_ros_driver2) StderrLine: {'line': b'    /usr\n'}
+[3.011762] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[3.011859] (livox_ros_driver2) StderrLine: {'line': b'  For compatibility, find_package is ignoring the variable, but code in a\n'}
+[3.011954] (livox_ros_driver2) StderrLine: {'line': b'  .cmake module might still use it.\n'}
+[3.012047] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[3.012140] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:256 (find_package)\n'}
+[3.012233] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:301 (find_flann)\n'}
+[3.012327] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:543 (find_external_library)\n'}
+[3.012421] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/ament_cmake_export_dependencies-extras.cmake:21 (find_package)\n'}
+[3.012517] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/pcl_conversionsConfig.cmake:41 (include)\n'}
+[3.012628] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_auto/cmake/ament_auto_find_build_dependencies.cmake:67 (find_package)\n'}
+[3.012742] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:225 (ament_auto_find_build_dependencies)\n'}
+[3.012842] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[3.012937] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[3.043640] (livox_ros_driver2) StdoutLine: {'line': b"-- Checking for module 'flann'\n"}
+[3.067925] (livox_ros_driver2) StdoutLine: {'line': b'--   Found flann, version 1.9.1\n'}
+[3.106645] (-) TimerEvent: {}
+[3.157326] (livox_ros_driver2) StdoutLine: {'line': b'-- Found FLANN: /usr/lib/aarch64-linux-gnu/libflann_cpp.so\n'}
+[3.157742] (livox_ros_driver2) StdoutLine: {'line': b'-- FLANN found (include: /usr/include, lib: /usr/lib/aarch64-linux-gnu/libflann_cpp.so)\n'}
+[3.206806] (-) TimerEvent: {}
+[3.307212] (-) TimerEvent: {}
+[3.407597] (-) TimerEvent: {}
+[3.507991] (-) TimerEvent: {}
+[3.608367] (-) TimerEvent: {}
+[3.708808] (-) TimerEvent: {}
+[3.809193] (-) TimerEvent: {}
+[3.909574] (-) TimerEvent: {}
+[4.009959] (-) TimerEvent: {}
+[4.110349] (-) TimerEvent: {}
+[4.210741] (-) TimerEvent: {}
+[4.311119] (-) TimerEvent: {}
+[4.411482] (-) TimerEvent: {}
+[4.511856] (-) TimerEvent: {}
+[4.612228] (-) TimerEvent: {}
+[4.712599] (-) TimerEvent: {}
+[4.813011] (-) TimerEvent: {}
+[4.913409] (-) TimerEvent: {}
+[5.013806] (-) TimerEvent: {}
+[5.114199] (-) TimerEvent: {}
+[5.214574] (-) TimerEvent: {}
+[5.314976] (-) TimerEvent: {}
+[5.348556] (livox_ros_driver2) StdoutLine: {'line': b"-- Checking for module 'libusb-1.0'\n"}
+[5.380225] (livox_ros_driver2) StdoutLine: {'line': b'--   Found libusb-1.0, version 1.0.25\n'}
+[5.415167] (-) TimerEvent: {}
+[5.473039] (livox_ros_driver2) StdoutLine: {'line': b'-- Found libusb: /usr/lib/aarch64-linux-gnu/libusb-1.0.so\n'}
+[5.475430] (livox_ros_driver2) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[5.515326] (-) TimerEvent: {}
+[5.602384] (livox_ros_driver2) StdoutLine: {'line': b'-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/aarch64-linux-gnu/libOpenNI2.so;libusb::libusb)\n'}
+[5.615496] (-) TimerEvent: {}
+[5.715902] (-) TimerEvent: {}
+[5.816302] (-) TimerEvent: {}
+[5.916718] (-) TimerEvent: {}
+[6.017118] (-) TimerEvent: {}
+[6.100943] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:128 (find_package):\n'}
+[6.101600] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake\n'}
+[6.101880] (livox_ros_driver2) StderrLine: {'line': b'  --help-policy CMP0167" for policy details.  Use the cmake_policy command to\n'}
+[6.102015] (livox_ros_driver2) StderrLine: {'line': b'  set the policy and suppress this warning.\n'}
+[6.102141] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[6.102248] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[6.102351] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:297 (find_boost)\n'}
+[6.102455] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:543 (find_external_library)\n'}
+[6.102561] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/ament_cmake_export_dependencies-extras.cmake:21 (find_package)\n'}
+[6.102669] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/pcl_conversionsConfig.cmake:41 (include)\n'}
+[6.102775] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_auto/cmake/ament_auto_find_build_dependencies.cmake:67 (find_package)\n'}
+[6.102882] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:225 (ament_auto_find_build_dependencies)\n'}
+[6.102982] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[6.103156] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[6.117409] (-) TimerEvent: {}
+[6.125290] (livox_ros_driver2) StdoutLine: {'line': b'-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)\n'}
+[6.137549] (livox_ros_driver2) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[6.151020] (livox_ros_driver2) StdoutLine: {'line': b'-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/aarch64-linux-gnu/libOpenNI2.so;libusb::libusb)\n'}
+[6.217478] (-) TimerEvent: {}
+[6.317890] (-) TimerEvent: {}
+[6.418333] (-) TimerEvent: {}
+[6.518761] (-) TimerEvent: {}
+[6.619155] (-) TimerEvent: {}
+[6.691209] (livox_ros_driver2) StdoutLine: {'line': b'-- Found Qhull version 8.0.2\n'}
+[6.719320] (-) TimerEvent: {}
+[6.819737] (-) TimerEvent: {}
+[6.920129] (-) TimerEvent: {}
+[7.020868] (-) TimerEvent: {}
+[7.121273] (-) TimerEvent: {}
+[7.200879] (livox_ros_driver2) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[7.221442] (-) TimerEvent: {}
+[7.322614] (-) TimerEvent: {}
+[7.423020] (-) TimerEvent: {}
+[7.523424] (-) TimerEvent: {}
+[7.623815] (-) TimerEvent: {}
+[7.724206] (-) TimerEvent: {}
+[7.726881] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_COMMON: /usr/lib/aarch64-linux-gnu/libpcl_common.so\n'}
+[7.730399] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_KDTREE: /usr/lib/aarch64-linux-gnu/libpcl_kdtree.so\n'}
+[7.733620] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_OCTREE: /usr/lib/aarch64-linux-gnu/libpcl_octree.so\n'}
+[7.744602] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_SEARCH: /usr/lib/aarch64-linux-gnu/libpcl_search.so\n'}
+[7.745086] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_SAMPLE_CONSENSUS: /usr/lib/aarch64-linux-gnu/libpcl_sample_consensus.so\n'}
+[7.747105] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_FILTERS: /usr/lib/aarch64-linux-gnu/libpcl_filters.so\n'}
+[7.748481] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_2D: /usr/include/pcl-1.12\n'}
+[7.749583] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_GEOMETRY: /usr/include/pcl-1.12\n'}
+[7.753619] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_IO: /usr/lib/aarch64-linux-gnu/libpcl_io.so\n'}
+[7.757001] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_FEATURES: /usr/lib/aarch64-linux-gnu/libpcl_features.so\n'}
+[7.760405] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_ML: /usr/lib/aarch64-linux-gnu/libpcl_ml.so\n'}
+[7.763768] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_SEGMENTATION: /usr/lib/aarch64-linux-gnu/libpcl_segmentation.so\n'}
+[7.767279] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_VISUALIZATION: /usr/lib/aarch64-linux-gnu/libpcl_visualization.so\n'}
+[7.772460] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_SURFACE: /usr/lib/aarch64-linux-gnu/libpcl_surface.so\n'}
+[7.776901] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_REGISTRATION: /usr/lib/aarch64-linux-gnu/libpcl_registration.so\n'}
+[7.781669] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_KEYPOINTS: /usr/lib/aarch64-linux-gnu/libpcl_keypoints.so\n'}
+[7.785821] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_TRACKING: /usr/lib/aarch64-linux-gnu/libpcl_tracking.so\n'}
+[7.789307] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_RECOGNITION: /usr/lib/aarch64-linux-gnu/libpcl_recognition.so\n'}
+[7.792618] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_STEREO: /usr/lib/aarch64-linux-gnu/libpcl_stereo.so\n'}
+[7.795761] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_APPS: /usr/lib/aarch64-linux-gnu/libpcl_apps.so\n'}
+[7.797558] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_IN_HAND_SCANNER: /usr/include/pcl-1.12\n'}
+[7.798643] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_MODELER: /usr/include/pcl-1.12\n'}
+[7.799895] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_POINT_CLOUD_EDITOR: /usr/include/pcl-1.12\n'}
+[7.804447] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_OUTOFCORE: /usr/lib/aarch64-linux-gnu/libpcl_outofcore.so\n'}
+[7.807873] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_PEOPLE: /usr/lib/aarch64-linux-gnu/libpcl_people.so\n'}
+[7.824375] (-) TimerEvent: {}
+[7.924806] (-) TimerEvent: {}
+[7.929997] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PkgConfig: /usr/bin/pkg-config (found version "0.29.2")\n'}
+[7.931618] (livox_ros_driver2) StdoutLine: {'line': b"-- Checking for module 'apr-1'\n"}
+[7.937439] (livox_ros_driver2) StdoutLine: {'line': b"--   No package 'apr-1' found\n"}
+[8.024954] (-) TimerEvent: {}
+[8.125351] (-) TimerEvent: {}
+[8.225718] (-) TimerEvent: {}
+[8.326143] (-) TimerEvent: {}
+[8.426607] (-) TimerEvent: {}
+[8.527894] (-) TimerEvent: {}
+[8.628357] (-) TimerEvent: {}
+[8.728774] (-) TimerEvent: {}
+[8.795023] (livox_ros_driver2) StdoutLine: {'line': b'-- Found ament_cmake_ros: 0.10.1 (/opt/ros/humble/share/ament_cmake_ros/cmake)\n'}
+[8.828957] (-) TimerEvent: {}
+[8.929327] (-) TimerEvent: {}
+[9.029672] (-) TimerEvent: {}
+[9.130044] (-) TimerEvent: {}
+[9.230381] (-) TimerEvent: {}
+[9.330722] (-) TimerEvent: {}
+[9.431097] (-) TimerEvent: {}
+[9.531532] (-) TimerEvent: {}
+[9.631939] (-) TimerEvent: {}
+[9.732307] (-) TimerEvent: {}
+[9.832663] (-) TimerEvent: {}
+[9.858141] (livox_ros_driver2) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[9.932808] (-) TimerEvent: {}
+[10.033182] (-) TimerEvent: {}
+[10.133576] (-) TimerEvent: {}
+[10.233982] (-) TimerEvent: {}
+[10.334463] (-) TimerEvent: {}
+[10.434847] (-) TimerEvent: {}
+[10.535240] (-) TimerEvent: {}
+[10.635621] (-) TimerEvent: {}
+[10.735976] (-) TimerEvent: {}
+[10.836331] (-) TimerEvent: {}
+[10.936744] (-) TimerEvent: {}
+[11.037112] (-) TimerEvent: {}
+[11.137480] (-) TimerEvent: {}
+[11.237850] (-) TimerEvent: {}
+[11.262434] (livox_ros_driver2) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[11.268008] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /opt/ros/humble/share/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake:20 (find_package):\n'}
+[11.268473] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0148 is not set: The FindPythonInterp and FindPythonLibs modules\n'}
+[11.268607] (livox_ros_driver2) StderrLine: {'line': b'  are removed.  Run "cmake --help-policy CMP0148" for policy details.  Use\n'}
+[11.268735] (livox_ros_driver2) StderrLine: {'line': b'  the cmake_policy command to set the policy and suppress this warning.\n'}
+[11.268843] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[11.268939] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[11.269034] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_execute_extensions.cmake:48 (include)\n'}
+[11.269130] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:286 (ament_execute_extensions)\n'}
+[11.269231] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:241 (rosidl_generate_interfaces)\n'}
+[11.269331] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[11.269424] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[11.327451] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PythonInterp: /usr/bin/python3 (found suitable version "3.10.12", minimum required is "3.6")\n'}
+[11.336186] (livox_ros_driver2) StdoutLine: {'line': b'-- Found python_cmake_module: 0.10.0 (/opt/ros/humble/share/python_cmake_module/cmake)\n'}
+[11.337931] (-) TimerEvent: {}
+[11.338964] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /opt/ros/humble/share/python_cmake_module/cmake/Modules/FindPythonExtra.cmake:52 (find_package):\n'}
+[11.339226] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0148 is not set: The FindPythonInterp and FindPythonLibs modules\n'}
+[11.339394] (livox_ros_driver2) StderrLine: {'line': b'  are removed.  Run "cmake --help-policy CMP0148" for policy details.  Use\n'}
+[11.339513] (livox_ros_driver2) StderrLine: {'line': b'  the cmake_policy command to set the policy and suppress this warning.\n'}
+[11.339623] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[11.339728] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[11.339832] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake:23 (find_package)\n'}
+[11.339936] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_execute_extensions.cmake:48 (include)\n'}
+[11.340040] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:286 (ament_execute_extensions)\n'}
+[11.340141] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:241 (rosidl_generate_interfaces)\n'}
+[11.340240] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[11.340338] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[11.389627] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /opt/ros/humble/share/python_cmake_module/cmake/Modules/FindPythonExtra.cmake:140 (find_package):\n'}
+[11.390331] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0148 is not set: The FindPythonInterp and FindPythonLibs modules\n'}
+[11.390507] (livox_ros_driver2) StderrLine: {'line': b'  are removed.  Run "cmake --help-policy CMP0148" for policy details.  Use\n'}
+[11.390656] (livox_ros_driver2) StderrLine: {'line': b'  the cmake_policy command to set the policy and suppress this warning.\n'}
+[11.390792] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[11.390921] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[11.391099] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake:23 (find_package)\n'}
+[11.391346] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_execute_extensions.cmake:48 (include)\n'}
+[11.391590] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:286 (ament_execute_extensions)\n'}
+[11.391829] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:241 (rosidl_generate_interfaces)\n'}
+[11.392069] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[11.392308] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[11.422925] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PythonLibs: /usr/lib/aarch64-linux-gnu/libpython3.10.so (found suitable version "3.10.12", minimum required is "3.5")\n'}
+[11.423368] (livox_ros_driver2) StdoutLine: {'line': b'-- Using PYTHON_EXECUTABLE: /usr/bin/python3\n'}
+[11.423489] (livox_ros_driver2) StdoutLine: {'line': b'-- Using PYTHON_INCLUDE_DIRS: /usr/include/python3.10\n'}
+[11.423595] (livox_ros_driver2) StdoutLine: {'line': b'-- Using PYTHON_LIBRARIES: /usr/lib/aarch64-linux-gnu/libpython3.10.so\n'}
+[11.438100] (-) TimerEvent: {}
+[11.472907] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PythonExtra: .so\n'}
+[11.538256] (-) TimerEvent: {}
+[11.638647] (-) TimerEvent: {}
+[11.738991] (-) TimerEvent: {}
+[11.839339] (-) TimerEvent: {}
+[11.939706] (-) TimerEvent: {}
+[12.013342] (livox_ros_driver2) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.12.15 (/opt/ros/humble/share/ament_lint_auto/cmake)\n'}
+[12.039903] (-) TimerEvent: {}
+[12.087615] (livox_ros_driver2) StdoutLine: {'line': b"-- Added test 'copyright' to check source files copyright and LICENSE\n"}
+[12.101347] (livox_ros_driver2) StdoutLine: {'line': b"-- Added test 'cppcheck' to perform static code analysis on C / C++ code\n"}
+[12.102559] (livox_ros_driver2) StdoutLine: {'line': b'-- Configured cppcheck include dirs: /home/jetson/slop-bot_ws/src/third_party/livox_ros_driver2/3rdparty;/home/jetson/slop-bot_ws/src/third_party/livox_ros_driver2/src\n'}
+[12.102800] (livox_ros_driver2) StdoutLine: {'line': b'-- Configured cppcheck exclude dirs and/or files: \n'}
+[12.114521] (livox_ros_driver2) StdoutLine: {'line': b"-- Added test 'cpplint' to check C / C++ code against the Google style\n"}
+[12.114825] (livox_ros_driver2) StdoutLine: {'line': b'-- Configured cpplint exclude dirs and/or files: \n'}
+[12.118251] (livox_ros_driver2) StdoutLine: {'line': b"-- Added test 'flake8' to check Python code syntax and style conventions\n"}
+[12.124226] (livox_ros_driver2) StdoutLine: {'line': b"-- Added test 'lint_cmake' to check CMake code style\n"}
+[12.128529] (livox_ros_driver2) StdoutLine: {'line': b"-- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257\n"}
+[12.139927] (livox_ros_driver2) StdoutLine: {'line': b"-- Added test 'uncrustify' to check C / C++ code style\n"}
+[12.140313] (-) TimerEvent: {}
+[12.140358] (livox_ros_driver2) StdoutLine: {'line': b'-- Configured uncrustify additional arguments: \n'}
+[12.143194] (livox_ros_driver2) StdoutLine: {'line': b"-- Added test 'xmllint' to check XML markup files\n"}
+[12.151404] (livox_ros_driver2) StdoutLine: {'line': b'-- Configuring done (11.9s)\n'}
+[12.240514] (-) TimerEvent: {}
+[12.316929] (livox_ros_driver2) StdoutLine: {'line': b'-- Generating done (0.2s)\n'}
+[12.340744] (-) TimerEvent: {}
+[12.441136] (-) TimerEvent: {}
+[12.527239] (livox_ros_driver2) StdoutLine: {'line': b'-- Build files have been written to: /home/jetson/slop-bot_ws/build/livox_ros_driver2\n'}
+[12.541303] (-) TimerEvent: {}
+[12.605432] (livox_ros_driver2) CommandEnded: {'returncode': 0}
+[12.607397] (livox_ros_driver2) JobProgress: {'identifier': 'livox_ros_driver2', 'progress': 'build'}
+[12.607519] (livox_ros_driver2) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/jetson/slop-bot_ws/build/livox_ros_driver2', '--', '-j8', '-l8'], 'cwd': '/home/jetson/slop-bot_ws/build/livox_ros_driver2', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/jetson/slop-bot_ws'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('AI_AGENT', 'claude-code_2-1-314_agent'), ('USER', 'jetson'), ('CLAUDE_CODE_ENTRYPOINT', 'claude-vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('GIT_EDITOR', 'true'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'x11'), ('ALLUSERSPROFILE', '/opt/MVS/MVFG'), ('CLAUDE_AGENT_SDK_VERSION', '0.3.314'), ('CLAUDE_CODE_SESSION_ATTENDED', '1'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/jetson/slop-bot_ws/install/livox_sdk2/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib:/opt/MVS/lib/aarch64:/usr/local/cuda-12.6/lib64:/opt/MVS/lib/aarch64:/opt/MVS/lib/aarch64'), ('CLAUDE_CODE_MESSAGING_TOKEN', 'ef2d6536f069dba12f06ef0576e50619'), ('HOME', '/home/jetson'), ('CHROME_DESKTOP', 'com.microsoft.VSCode.desktop'), ('OLDPWD', '/home/jetson'), ('DESKTOP_SESSION', 'ubuntu'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-ed92d0d2-1.14-main.sock'), ('JETSON_L4T', '36.4.7'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('JETSON_MODEL', 'NVIDIA Jetson Orin NX Engineering Reference Developer Kit'), ('CLAUDE_CODE_CHILD_SESSION', '1'), ('COPILOT_OTEL_FILE_EXPORTER_PATH', '/dev/null'), ('MANAGERPID', '1947'), ('SYSTEMD_EXEC_PID', '2909'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3809'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/jetson/slop-bot_ws/install:/home/jetson/ros2_ws/install'), ('APPLICATION_INSIGHTS_NO_STATSBEAT', 'true'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'jetson'), ('JETSON_MODULE', 'NVIDIA Jetson Orin NX (16GB ram)'), ('JETSON_SERIAL_NUMBER', '1422525087275'), ('CLAUDE_CODE_EMIT_STARTUP_TIMING', '1'), ('JOURNAL_STREAM', '8:55587'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('CLAUDE_CODE_QUESTION_PREVIEW_FORMAT', 'markdown'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'jetson'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '1'), ('WINDOWPATH', '2'), ('MVCAM_SDK_PATH', '/opt/MVS'), ('MCP_CONNECTION_NONBLOCKING', 'true'), ('PATH', '/home/jetson/ethercat_venv/bin:/home/jetson/.local/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/opt/ros/humble/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2670,unix/ubuntu:/tmp/.ICE-unix/2670'), ('INVOCATION_ID', 'f11a0846954541da9650ff1402193b6b'), ('MVCAM_GENICAM_CLPROTOCOL', '/opt/MVS/lib/CLProtocol'), ('VSCODE_NODE_COMPILE_CACHE_ROOT', '/usr/share/code/resources/app/node-compile-cache'), ('COREPACK_ENABLE_AUTO_PIN', '0'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('CLAUDE_EFFORT', 'high'), ('DISPLAY', ':0'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('CLAUDE_PID', '7633'), ('NoDefaultCurrentDirectoryInExePath', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('IBUS_DISABLE_SNOOPER', '1'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('JETSON_SOC', 'tegra234'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:22e895b8-4389-40cf-a967-58c9c0950171'), ('CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '1'), ('MXC_BIN_DIR', '/usr/share/code/resources/app/node_modules.asar.unpacked/@microsoft/mxc-sdk/bin'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING', 'true'), ('CLAUDE_CODE_SESSION_ID', '1c697e8f-dd4f-4e5c-b241-6697ec2e7c21'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('CLAUDECODE', '1'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('VIRTUAL_ENV', '/home/jetson/ethercat_venv'), ('QT_IM_MODULE', 'ibus'), ('JETSON_CUDA_ARCH_BIN', '8.7'), ('PWD', '/home/jetson/slop-bot_ws/build/livox_ros_driver2'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('VSCODE_CODE_CACHE_PATH', '/home/jetson/.config/Code/CachedData/2a59476c9bfcb90b3ddc372c36762471b7dfad1c'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLAUDE_CODE_EXECPATH', '/home/jetson/.vscode/extensions/anthropic.claude-code-2.1.314-linux-arm64/resources/native-binary/claude'), ('PYTHONPATH', '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_chain_drive/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_base/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('CLAUDE_CODE_ENABLE_TASKS', '0'), ('COLCON', '1'), ('COPILOT_CLI_ENABLED_FEATURE_FLAGS', 'SHELL_SPAWN_BACKEND'), ('VTE_VERSION', '6800'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('CLAUDE_CODE_MESSAGING_SOCKET', '/run/user/1000/cc-socks/7633.sock'), ('CMAKE_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('VSCODE_PID', '6735'), ('MVCAM_COMMON_RUNENV', '/opt/MVS/lib'), ('JETSON_P_NUMBER', 'p3767-0000')]), 'shell': False}
+[12.641490] (-) TimerEvent: {}
+[12.674352] (livox_ros_driver2) StdoutLine: {'line': b'[  1%] Generating C code for ROS interfaces\n'}
+[12.684721] (livox_ros_driver2) StdoutLine: {'line': b'[  3%] Generating C++ code for ROS interfaces\n'}
+[12.707790] (livox_ros_driver2) StdoutLine: {'line': b'[  5%] Generating Rust code for ROS interfaces\n'}
+[12.721093] (livox_ros_driver2) StdoutLine: {'line': b'[  6%] Building CXX object CMakeFiles/livox_ros_driver2_node.dir/rclcpp_components/node_main_livox_ros_driver2_node.cpp.o\n'}
+[12.722000] (livox_ros_driver2) StdoutLine: {'line': b'[  6%] Built target ament_cmake_python_copy_livox_ros_driver2\n'}
+[12.742151] (-) TimerEvent: {}
+[12.842497] (-) TimerEvent: {}
+[12.942875] (-) TimerEvent: {}
+[13.043257] (-) TimerEvent: {}
+[13.143638] (-) TimerEvent: {}
+[13.243997] (-) TimerEvent: {}
+[13.344361] (-) TimerEvent: {}
+[13.436455] (livox_ros_driver2) StdoutLine: {'line': b'running egg_info\n'}
+[13.438028] (livox_ros_driver2) StdoutLine: {'line': b'creating livox_ros_driver2.egg-info\n'}
+[13.438857] (livox_ros_driver2) StdoutLine: {'line': b'writing livox_ros_driver2.egg-info/PKG-INFO\n'}
+[13.439527] (livox_ros_driver2) StdoutLine: {'line': b'writing dependency_links to livox_ros_driver2.egg-info/dependency_links.txt\n'}
+[13.439778] (livox_ros_driver2) StdoutLine: {'line': b'writing top-level names to livox_ros_driver2.egg-info/top_level.txt\n'}
+[13.440238] (livox_ros_driver2) StdoutLine: {'line': b"writing manifest file 'livox_ros_driver2.egg-info/SOURCES.txt'\n"}
+[13.444465] (-) TimerEvent: {}
+[13.445778] (livox_ros_driver2) StdoutLine: {'line': b"reading manifest file 'livox_ros_driver2.egg-info/SOURCES.txt'\n"}
+[13.446512] (livox_ros_driver2) StdoutLine: {'line': b"writing manifest file 'livox_ros_driver2.egg-info/SOURCES.txt'\n"}
+[13.531366] (livox_ros_driver2) StdoutLine: {'line': b'[  6%] Built target ament_cmake_python_build_livox_ros_driver2_egg\n'}
+[13.537747] (livox_ros_driver2) StdoutLine: {'line': b'[  6%] Built target livox_interfaces2__rs\n'}
+[13.544637] (-) TimerEvent: {}
+[13.597758] (livox_ros_driver2) StdoutLine: {'line': b'[  6%] Built target livox_interfaces2__cpp\n'}
+[13.611076] (livox_ros_driver2) StdoutLine: {'line': b'[ 10%] Generating C++ introspection for ROS interfaces\n'}
+[13.611471] (livox_ros_driver2) StdoutLine: {'line': b'[ 10%] Generating C++ type support dispatch for ROS interfaces\n'}
+[13.611756] (livox_ros_driver2) StdoutLine: {'line': b'[ 12%] Generating C++ type support for eProsima Fast-RTPS\n'}
+[13.644925] (-) TimerEvent: {}
+[13.672285] (livox_ros_driver2) StdoutLine: {'line': b'[ 13%] Building C object CMakeFiles/livox_interfaces2__rosidl_generator_c.dir/rosidl_generator_c/livox_ros_driver2/msg/detail/custom_point__functions.c.o\n'}
+[13.675104] (livox_ros_driver2) StdoutLine: {'line': b'[ 15%] Building C object CMakeFiles/livox_interfaces2__rosidl_generator_c.dir/rosidl_generator_c/livox_ros_driver2/msg/detail/custom_msg__functions.c.o\n'}
+[13.745077] (-) TimerEvent: {}
+[13.845443] (-) TimerEvent: {}
+[13.939132] (livox_ros_driver2) StdoutLine: {'line': b'[ 17%] Linking C shared library liblivox_ros_driver2__rosidl_generator_c.so\n'}
+[13.945587] (-) TimerEvent: {}
+[14.007730] (livox_ros_driver2) StdoutLine: {'line': b'[ 17%] Built target livox_interfaces2__rosidl_generator_c\n'}
+[14.020261] (livox_ros_driver2) StdoutLine: {'line': b'[ 20%] Generating C introspection for ROS interfaces\n'}
+[14.021445] (livox_ros_driver2) StdoutLine: {'line': b'[ 20%] Generating C type support for eProsima Fast-RTPS\n'}
+[14.025510] (livox_ros_driver2) StdoutLine: {'line': b'[ 22%] Generating C type support dispatch for ROS interfaces\n'}
+[14.045737] (-) TimerEvent: {}
+[14.146149] (-) TimerEvent: {}
+[14.246696] (-) TimerEvent: {}
+[14.347103] (-) TimerEvent: {}
+[14.447616] (-) TimerEvent: {}
+[14.468480] (livox_ros_driver2) StdoutLine: {'line': b'[ 24%] Building CXX object CMakeFiles/livox_interfaces2__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/livox_ros_driver2/msg/custom_msg__type_support.cpp.o\n'}
+[14.473943] (livox_ros_driver2) StdoutLine: {'line': b'[ 25%] Building CXX object CMakeFiles/livox_interfaces2__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/livox_ros_driver2/msg/custom_point__type_support.cpp.o\n'}
+[14.483565] (livox_ros_driver2) StdoutLine: {'line': b'[ 27%] Building CXX object CMakeFiles/livox_interfaces2__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/livox_ros_driver2/msg/detail/dds_fastrtps/custom_point__type_support.cpp.o\n'}
+[14.547808] (-) TimerEvent: {}
+[14.648224] (-) TimerEvent: {}
+[14.739061] (livox_ros_driver2) StdoutLine: {'line': b'[ 29%] Building CXX object CMakeFiles/livox_interfaces2__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/livox_ros_driver2/msg/detail/custom_point__type_support.cpp.o\n'}
+[14.748394] (-) TimerEvent: {}
+[14.848864] (-) TimerEvent: {}
+[14.935594] (livox_ros_driver2) StdoutLine: {'line': b'[ 31%] Building CXX object CMakeFiles/livox_interfaces2__rosidl_typesupport_c.dir/rosidl_typesupport_c/livox_ros_driver2/msg/custom_point__type_support.cpp.o\n'}
+[14.949063] (-) TimerEvent: {}
+[15.049872] (-) TimerEvent: {}
+[15.070387] (livox_ros_driver2) StdoutLine: {'line': b'[ 32%] Building CXX object CMakeFiles/livox_interfaces2__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/livox_ros_driver2/msg/detail/custom_point__type_support_c.cpp.o\n'}
+[15.081761] (livox_ros_driver2) StdoutLine: {'line': b'[ 34%] Building CXX object CMakeFiles/livox_interfaces2__rosidl_typesupport_c.dir/rosidl_typesupport_c/livox_ros_driver2/msg/custom_msg__type_support.cpp.o\n'}
+[15.119861] (livox_ros_driver2) StdoutLine: {'line': b'[ 36%] Building C object CMakeFiles/livox_interfaces2__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/livox_ros_driver2/msg/detail/custom_point__type_support.c.o\n'}
+[15.150092] (-) TimerEvent: {}
+[15.228081] (livox_ros_driver2) StdoutLine: {'line': b'[ 37%] Linking CXX shared library liblivox_ros_driver2__rosidl_typesupport_c.so\n'}
+[15.242689] (livox_ros_driver2) StdoutLine: {'line': b'[ 39%] Building CXX object CMakeFiles/livox_interfaces2__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/livox_ros_driver2/msg/detail/custom_msg__type_support.cpp.o\n'}
+[15.244537] (livox_ros_driver2) StdoutLine: {'line': b'[ 43%] Building C object CMakeFiles/livox_interfaces2__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/livox_ros_driver2/msg/detail/custom_msg__type_support.c.o\n'}
+[15.244898] (livox_ros_driver2) StdoutLine: {'line': b'[ 43%] Linking CXX shared library liblivox_ros_driver2__rosidl_typesupport_cpp.so\n'}
+[15.250272] (-) TimerEvent: {}
+[15.330863] (livox_ros_driver2) StdoutLine: {'line': b'[ 43%] Built target livox_interfaces2__rosidl_typesupport_c\n'}
+[15.350463] (-) TimerEvent: {}
+[15.370408] (livox_ros_driver2) StdoutLine: {'line': b'[ 44%] Building CXX object CMakeFiles/livox_interfaces2__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/livox_ros_driver2/msg/detail/custom_msg__type_support_c.cpp.o\n'}
+[15.404202] (livox_ros_driver2) StdoutLine: {'line': b'[ 44%] Built target livox_interfaces2__rosidl_typesupport_cpp\n'}
+[15.421601] (livox_ros_driver2) StdoutLine: {'line': b'[ 46%] Linking C shared library liblivox_ros_driver2__rosidl_typesupport_introspection_c.so\n'}
+[15.424872] (livox_ros_driver2) StdoutLine: {'line': b'[ 48%] Building CXX object CMakeFiles/livox_interfaces2__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/livox_ros_driver2/msg/detail/dds_fastrtps/custom_msg__type_support.cpp.o\n'}
+[15.450665] (-) TimerEvent: {}
+[15.472677] (livox_ros_driver2) StdoutLine: {'line': b'[ 48%] Built target livox_interfaces2__rosidl_typesupport_introspection_c\n'}
+[15.501418] (livox_ros_driver2) StdoutLine: {'line': b'[ 50%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/livox_ros_driver2.cpp.o\n'}
+[15.510192] (livox_ros_driver2) StdoutLine: {'line': b'[ 51%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/lddc.cpp.o\n'}
+[15.551964] (-) TimerEvent: {}
+[15.652383] (-) TimerEvent: {}
+[15.752840] (-) TimerEvent: {}
+[15.826864] (livox_ros_driver2) StdoutLine: {'line': b'[ 53%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/driver_node.cpp.o\n'}
+[15.853019] (-) TimerEvent: {}
+[15.953431] (-) TimerEvent: {}
+[16.053846] (-) TimerEvent: {}
+[16.147199] (livox_ros_driver2) StdoutLine: {'line': b'[ 55%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/lds.cpp.o\n'}
+[16.154045] (-) TimerEvent: {}
+[16.254475] (-) TimerEvent: {}
+[16.354932] (-) TimerEvent: {}
+[16.411324] (livox_ros_driver2) StdoutLine: {'line': b'[ 56%] Linking CXX shared library liblivox_ros_driver2__rosidl_typesupport_fastrtps_c.so\n'}
+[16.455122] (-) TimerEvent: {}
+[16.553335] (livox_ros_driver2) StdoutLine: {'line': b'[ 58%] Linking CXX shared library liblivox_ros_driver2__rosidl_typesupport_fastrtps_cpp.so\n'}
+[16.555231] (-) TimerEvent: {}
+[16.602659] (livox_ros_driver2) StdoutLine: {'line': b'[ 60%] Linking CXX shared library liblivox_ros_driver2__rosidl_typesupport_introspection_cpp.so\n'}
+[16.655425] (-) TimerEvent: {}
+[16.729975] (livox_ros_driver2) StdoutLine: {'line': b'[ 60%] Built target livox_interfaces2__rosidl_typesupport_fastrtps_c\n'}
+[16.755603] (-) TimerEvent: {}
+[16.777482] (livox_ros_driver2) StdoutLine: {'line': b'[ 62%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/lds_lidar.cpp.o\n'}
+[16.786394] (livox_ros_driver2) StdoutLine: {'line': b'[ 62%] Built target livox_interfaces2__rosidl_typesupport_fastrtps_cpp\n'}
+[16.814722] (livox_ros_driver2) StdoutLine: {'line': b'[ 63%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/comm/comm.cpp.o\n'}
+[16.855825] (-) TimerEvent: {}
+[16.908919] (livox_ros_driver2) StdoutLine: {'line': b'[ 63%] Built target livox_interfaces2__rosidl_typesupport_introspection_cpp\n'}
+[16.956018] (-) TimerEvent: {}
+[17.028145] (livox_ros_driver2) StdoutLine: {'line': b'[ 63%] Built target livox_interfaces2\n'}
+[17.056221] (-) TimerEvent: {}
+[17.156814] (-) TimerEvent: {}
+[17.171483] (livox_ros_driver2) StdoutLine: {'line': b'[ 65%] Generating Python code for ROS interfaces\n'}
+[17.257927] (-) TimerEvent: {}
+[17.358358] (-) TimerEvent: {}
+[17.458785] (-) TimerEvent: {}
+[17.559191] (-) TimerEvent: {}
+[17.659615] (-) TimerEvent: {}
+[17.760021] (-) TimerEvent: {}
+[17.860442] (-) TimerEvent: {}
+[17.960954] (-) TimerEvent: {}
+[18.061361] (-) TimerEvent: {}
+[18.164875] (-) TimerEvent: {}
+[18.268527] (-) TimerEvent: {}
+[18.272215] (livox_ros_driver2) StdoutLine: {'line': b'[ 67%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/comm/ldq.cpp.o\n'}
+[18.368721] (-) TimerEvent: {}
+[18.374694] (livox_ros_driver2) StdoutLine: {'line': b'[ 68%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/comm/semaphore.cpp.o\n'}
+[18.468900] (-) TimerEvent: {}
+[18.569288] (-) TimerEvent: {}
+[18.669689] (-) TimerEvent: {}
+[18.773918] (-) TimerEvent: {}
+[18.874342] (-) TimerEvent: {}
+[18.974798] (-) TimerEvent: {}
+[19.075232] (-) TimerEvent: {}
+[19.146896] (livox_ros_driver2) StdoutLine: {'line': b'[ 68%] Built target livox_interfaces2__py\n'}
+[19.175456] (-) TimerEvent: {}
+[19.263670] (livox_ros_driver2) StdoutLine: {'line': b'[ 70%] Building C object CMakeFiles/livox_interfaces2__rosidl_generator_py.dir/rosidl_generator_py/livox_ros_driver2/msg/_custom_point_s.c.o\n'}
+[19.275616] (-) TimerEvent: {}
+[19.376058] (-) TimerEvent: {}
+[19.476518] (-) TimerEvent: {}
+[19.533958] (livox_ros_driver2) StdoutLine: {'line': b'[ 72%] Building C object CMakeFiles/livox_interfaces2__rosidl_generator_py.dir/rosidl_generator_py/livox_ros_driver2/msg/_custom_msg_s.c.o\n'}
+[19.576896] (-) TimerEvent: {}
+[19.593957] (livox_ros_driver2) StdoutLine: {'line': b'[ 74%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/comm/lidar_imu_data_queue.cpp.o\n'}
+[19.676897] (-) TimerEvent: {}
+[19.777349] (-) TimerEvent: {}
+[19.843314] (livox_ros_driver2) StdoutLine: {'line': b'[ 75%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/comm/cache_index.cpp.o\n'}
+[19.877543] (-) TimerEvent: {}
+[19.978678] (-) TimerEvent: {}
+[19.996943] (livox_ros_driver2) StdoutLine: {'line': b'[ 77%] Linking C shared library rosidl_generator_py/livox_ros_driver2/liblivox_interfaces2__rosidl_generator_py.so\n'}
+[20.078884] (-) TimerEvent: {}
+[20.090356] (livox_ros_driver2) StdoutLine: {'line': b'[ 79%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/comm/pub_handler.cpp.o\n'}
+[20.179076] (-) TimerEvent: {}
+[20.203251] (livox_ros_driver2) StdoutLine: {'line': b'[ 79%] Built target livox_interfaces2__rosidl_generator_py\n'}
+[20.249373] (livox_ros_driver2) StdoutLine: {'line': b'[ 81%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/parse_cfg_file/parse_cfg_file.cpp.o\n'}
+[20.279282] (-) TimerEvent: {}
+[20.379732] (-) TimerEvent: {}
+[20.447230] (livox_ros_driver2) StdoutLine: {'line': b'[ 82%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/parse_cfg_file/parse_livox_lidar_cfg.cpp.o\n'}
+[20.479920] (-) TimerEvent: {}
+[20.580379] (-) TimerEvent: {}
+[20.680875] (-) TimerEvent: {}
+[20.781280] (-) TimerEvent: {}
+[20.881688] (-) TimerEvent: {}
+[20.982117] (-) TimerEvent: {}
+[21.082580] (-) TimerEvent: {}
+[21.183021] (-) TimerEvent: {}
+[21.283461] (-) TimerEvent: {}
+[21.383901] (-) TimerEvent: {}
+[21.484979] (-) TimerEvent: {}
+[21.585549] (-) TimerEvent: {}
+[21.686000] (-) TimerEvent: {}
+[21.722938] (livox_ros_driver2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/livox_ros_driver2/src/comm/pub_handler.cpp: In member function \xe2\x80\x98void livox_ros::LidarPubHandler::ProcessDoubleEchoPoint(livox_ros::RawPacket&)\xe2\x80\x99:\n'}
+[21.723502] (livox_ros_driver2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/livox_ros_driver2/src/comm/pub_handler.cpp:466:12: warning: unused variable \xe2\x80\x98index\xe2\x80\x99 [-Wunused-variable]\n'}
+[21.723655] (livox_ros_driver2) StderrLine: {'line': b'  466 |   uint32_t index = 0;\n'}
+[21.723803] (livox_ros_driver2) StderrLine: {'line': b'      |            ^~~~~\n'}
+[21.786248] (-) TimerEvent: {}
+[21.886666] (-) TimerEvent: {}
+[21.987123] (-) TimerEvent: {}
+[22.087559] (-) TimerEvent: {}
+[22.187986] (-) TimerEvent: {}
+[22.288422] (-) TimerEvent: {}
+[22.300103] (livox_ros_driver2) StdoutLine: {'line': b'[ 84%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/call_back/lidar_common_callback.cpp.o\n'}
+[22.388635] (-) TimerEvent: {}
+[22.489226] (-) TimerEvent: {}
+[22.589793] (-) TimerEvent: {}
+[22.690227] (-) TimerEvent: {}
+[22.790920] (-) TimerEvent: {}
+[22.891394] (-) TimerEvent: {}
+[22.926396] (livox_ros_driver2) StdoutLine: {'line': b'[ 86%] Linking CXX executable livox_ros_driver2_node\n'}
+[22.991605] (-) TimerEvent: {}
+[23.092098] (-) TimerEvent: {}
+[23.192646] (-) TimerEvent: {}
+[23.293133] (-) TimerEvent: {}
+[23.348098] (livox_ros_driver2) StdoutLine: {'line': b'[ 86%] Built target livox_ros_driver2_node\n'}
+[23.393330] (-) TimerEvent: {}
+[23.472894] (livox_ros_driver2) StdoutLine: {'line': b'[ 87%] Building C object CMakeFiles/livox_ros_driver2__rosidl_typesupport_fastrtps_c__pyext.dir/rosidl_generator_py/livox_ros_driver2/_livox_ros_driver2_s.ep.rosidl_typesupport_fastrtps_c.c.o\n'}
+[23.493543] (-) TimerEvent: {}
+[23.594043] (-) TimerEvent: {}
+[23.694478] (-) TimerEvent: {}
+[23.794931] (-) TimerEvent: {}
+[23.895362] (-) TimerEvent: {}
+[23.968583] (livox_ros_driver2) StdoutLine: {'line': b'[ 89%] Linking C shared library rosidl_generator_py/livox_ros_driver2/livox_ros_driver2_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so\n'}
+[23.995554] (-) TimerEvent: {}
+[24.095981] (-) TimerEvent: {}
+[24.153420] (livox_ros_driver2) StdoutLine: {'line': b'[ 89%] Built target livox_ros_driver2__rosidl_typesupport_fastrtps_c__pyext\n'}
+[24.181621] (livox_ros_driver2) StdoutLine: {'line': b'[ 91%] Building CXX object CMakeFiles/livox_ros_driver2.dir/src/call_back/livox_lidar_callback.cpp.o\n'}
+[24.196748] (-) TimerEvent: {}
+[24.297165] (-) TimerEvent: {}
+[24.319118] (livox_ros_driver2) StdoutLine: {'line': b'[ 93%] Building C object CMakeFiles/livox_ros_driver2__rosidl_typesupport_introspection_c__pyext.dir/rosidl_generator_py/livox_ros_driver2/_livox_ros_driver2_s.ep.rosidl_typesupport_introspection_c.c.o\n'}
+[24.397362] (-) TimerEvent: {}
+[24.452348] (livox_ros_driver2) StdoutLine: {'line': b'[ 94%] Building C object CMakeFiles/livox_ros_driver2__rosidl_typesupport_c__pyext.dir/rosidl_generator_py/livox_ros_driver2/_livox_ros_driver2_s.ep.rosidl_typesupport_c.c.o\n'}
+[24.497533] (-) TimerEvent: {}
+[24.597982] (-) TimerEvent: {}
+[24.676392] (livox_ros_driver2) StdoutLine: {'line': b'[ 96%] Linking C shared library rosidl_generator_py/livox_ros_driver2/livox_ros_driver2_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so\n'}
+[24.698172] (-) TimerEvent: {}
+[24.753757] (livox_ros_driver2) StdoutLine: {'line': b'[ 96%] Built target livox_ros_driver2__rosidl_typesupport_introspection_c__pyext\n'}
+[24.762039] (livox_ros_driver2) StdoutLine: {'line': b'[ 98%] Linking C shared library rosidl_generator_py/livox_ros_driver2/livox_ros_driver2_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so\n'}
+[24.800532] (-) TimerEvent: {}
+[24.840250] (livox_ros_driver2) StdoutLine: {'line': b'[ 98%] Built target livox_ros_driver2__rosidl_typesupport_c__pyext\n'}
+[24.900804] (-) TimerEvent: {}
+[25.001428] (-) TimerEvent: {}
+[25.101842] (-) TimerEvent: {}
+[25.202279] (-) TimerEvent: {}
+[25.302680] (-) TimerEvent: {}
+[25.403091] (-) TimerEvent: {}
+[25.503835] (-) TimerEvent: {}
+[25.604267] (-) TimerEvent: {}
+[25.704949] (-) TimerEvent: {}
+[25.805359] (-) TimerEvent: {}
+[25.905806] (-) TimerEvent: {}
+[26.006251] (-) TimerEvent: {}
+[26.106689] (-) TimerEvent: {}
+[26.207125] (-) TimerEvent: {}
+[26.307567] (-) TimerEvent: {}
+[26.411449] (-) TimerEvent: {}
+[26.511874] (-) TimerEvent: {}
+[26.612297] (-) TimerEvent: {}
+[26.712738] (-) TimerEvent: {}
+[26.813171] (-) TimerEvent: {}
+[26.913650] (-) TimerEvent: {}
+[27.014096] (-) TimerEvent: {}
+[27.114599] (-) TimerEvent: {}
+[27.215080] (-) TimerEvent: {}
+[27.315768] (-) TimerEvent: {}
+[27.416249] (-) TimerEvent: {}
+[27.522028] (-) TimerEvent: {}
+[27.622575] (-) TimerEvent: {}
+[27.725437] (-) TimerEvent: {}
+[27.825867] (-) TimerEvent: {}
+[27.926645] (-) TimerEvent: {}
+[28.027109] (-) TimerEvent: {}
+[28.127557] (-) TimerEvent: {}
+[28.228006] (-) TimerEvent: {}
+[28.328410] (-) TimerEvent: {}
+[28.428915] (-) TimerEvent: {}
+[28.529326] (-) TimerEvent: {}
+[28.629978] (-) TimerEvent: {}
+[28.730507] (-) TimerEvent: {}
+[28.830981] (-) TimerEvent: {}
+[28.931554] (-) TimerEvent: {}
+[29.031936] (-) TimerEvent: {}
+[29.132377] (-) TimerEvent: {}
+[29.233719] (-) TimerEvent: {}
+[29.334191] (-) TimerEvent: {}
+[29.434662] (-) TimerEvent: {}
+[29.535095] (-) TimerEvent: {}
+[29.635605] (-) TimerEvent: {}
+[29.736084] (-) TimerEvent: {}
+[29.836636] (-) TimerEvent: {}
+[29.937091] (-) TimerEvent: {}
+[30.037501] (-) TimerEvent: {}
+[30.137926] (-) TimerEvent: {}
+[30.238347] (-) TimerEvent: {}
+[30.338760] (-) TimerEvent: {}
+[30.439191] (-) TimerEvent: {}
+[30.539598] (-) TimerEvent: {}
+[30.640000] (-) TimerEvent: {}
+[30.740407] (-) TimerEvent: {}
+[30.840852] (-) TimerEvent: {}
+[30.941258] (-) TimerEvent: {}
+[31.041648] (-) TimerEvent: {}
+[31.142062] (-) TimerEvent: {}
+[31.242472] (-) TimerEvent: {}
+[31.342873] (-) TimerEvent: {}
+[31.443285] (-) TimerEvent: {}
+[31.543675] (-) TimerEvent: {}
+[31.644082] (-) TimerEvent: {}
+[31.744484] (-) TimerEvent: {}
+[31.844851] (-) TimerEvent: {}
+[31.945255] (-) TimerEvent: {}
+[32.045654] (-) TimerEvent: {}
+[32.146063] (-) TimerEvent: {}
+[32.246466] (-) TimerEvent: {}
+[32.346870] (-) TimerEvent: {}
+[32.447292] (-) TimerEvent: {}
+[32.548197] (-) TimerEvent: {}
+[32.648751] (-) TimerEvent: {}
+[32.749398] (-) TimerEvent: {}
+[32.849916] (-) TimerEvent: {}
+[32.950609] (-) TimerEvent: {}
+[33.051059] (-) TimerEvent: {}
+[33.151502] (-) TimerEvent: {}
+[33.251915] (-) TimerEvent: {}
+[33.352331] (-) TimerEvent: {}
+[33.452875] (-) TimerEvent: {}
+[33.553346] (-) TimerEvent: {}
+[33.653807] (-) TimerEvent: {}
+[33.754275] (-) TimerEvent: {}
+[33.854731] (-) TimerEvent: {}
+[33.955723] (-) TimerEvent: {}
+[34.056160] (-) TimerEvent: {}
+[34.156777] (-) TimerEvent: {}
+[34.257169] (-) TimerEvent: {}
+[34.357558] (-) TimerEvent: {}
+[34.458185] (-) TimerEvent: {}
+[34.558610] (-) TimerEvent: {}
+[34.659042] (-) TimerEvent: {}
+[34.759457] (-) TimerEvent: {}
+[34.859849] (-) TimerEvent: {}
+[34.960257] (-) TimerEvent: {}
+[35.060741] (-) TimerEvent: {}
+[35.161162] (-) TimerEvent: {}
+[35.261620] (-) TimerEvent: {}
+[35.362034] (-) TimerEvent: {}
+[35.462483] (-) TimerEvent: {}
+[35.562896] (-) TimerEvent: {}
+[35.663609] (-) TimerEvent: {}
+[35.764025] (-) TimerEvent: {}
+[35.864417] (-) TimerEvent: {}
+[35.964991] (-) TimerEvent: {}
+[36.065433] (-) TimerEvent: {}
+[36.165871] (-) TimerEvent: {}
+[36.266254] (-) TimerEvent: {}
+[36.366668] (-) TimerEvent: {}
+[36.467442] (-) TimerEvent: {}
+[36.568201] (-) TimerEvent: {}
+[36.668645] (-) TimerEvent: {}
+[36.769205] (-) TimerEvent: {}
+[36.869720] (-) TimerEvent: {}
+[36.970184] (-) TimerEvent: {}
+[37.070587] (-) TimerEvent: {}
+[37.171011] (-) TimerEvent: {}
+[37.271424] (-) TimerEvent: {}
+[37.371860] (-) TimerEvent: {}
+[37.472322] (-) TimerEvent: {}
+[37.572802] (-) TimerEvent: {}
+[37.673274] (-) TimerEvent: {}
+[37.773742] (-) TimerEvent: {}
+[37.874217] (-) TimerEvent: {}
+[37.974674] (-) TimerEvent: {}
+[38.075121] (-) TimerEvent: {}
+[38.175587] (-) TimerEvent: {}
+[38.276071] (-) TimerEvent: {}
+[38.376551] (-) TimerEvent: {}
+[38.477065] (-) TimerEvent: {}
+[38.577554] (-) TimerEvent: {}
+[38.677981] (-) TimerEvent: {}
+[38.778453] (-) TimerEvent: {}
+[38.878946] (-) TimerEvent: {}
+[38.982424] (-) TimerEvent: {}
+[39.082895] (-) TimerEvent: {}
+[39.183604] (-) TimerEvent: {}
+[39.284052] (-) TimerEvent: {}
+[39.384863] (-) TimerEvent: {}
+[39.485304] (-) TimerEvent: {}
+[39.585761] (-) TimerEvent: {}
+[39.686225] (-) TimerEvent: {}
+[39.786683] (-) TimerEvent: {}
+[39.887131] (-) TimerEvent: {}
+[39.987579] (-) TimerEvent: {}
+[40.088016] (-) TimerEvent: {}
+[40.188454] (-) TimerEvent: {}
+[40.288936] (-) TimerEvent: {}
+[40.389351] (-) TimerEvent: {}
+[40.489878] (-) TimerEvent: {}
+[40.590497] (-) TimerEvent: {}
+[40.691036] (-) TimerEvent: {}
+[40.791464] (-) TimerEvent: {}
+[40.891914] (-) TimerEvent: {}
+[40.903938] (livox_ros_driver2) StdoutLine: {'line': b'[100%] Linking CXX shared library liblivox_ros_driver2.so\n'}
+[40.992107] (-) TimerEvent: {}
+[41.092507] (-) TimerEvent: {}
+[41.192927] (-) TimerEvent: {}
+[41.293333] (-) TimerEvent: {}
+[41.393751] (-) TimerEvent: {}
+[41.494190] (-) TimerEvent: {}
+[41.594639] (-) TimerEvent: {}
+[41.693451] (livox_ros_driver2) StdoutLine: {'line': b'[100%] Built target livox_ros_driver2\n'}
+[41.694745] (-) TimerEvent: {}
+[41.711518] (livox_ros_driver2) CommandEnded: {'returncode': 0}
+[41.718307] (livox_ros_driver2) JobProgress: {'identifier': 'livox_ros_driver2', 'progress': 'install'}
+[41.720466] (livox_ros_driver2) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/jetson/slop-bot_ws/build/livox_ros_driver2'], 'cwd': '/home/jetson/slop-bot_ws/build/livox_ros_driver2', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/jetson/slop-bot_ws'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('AI_AGENT', 'claude-code_2-1-314_agent'), ('USER', 'jetson'), ('CLAUDE_CODE_ENTRYPOINT', 'claude-vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('GIT_EDITOR', 'true'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'x11'), ('ALLUSERSPROFILE', '/opt/MVS/MVFG'), ('CLAUDE_AGENT_SDK_VERSION', '0.3.314'), ('CLAUDE_CODE_SESSION_ATTENDED', '1'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/jetson/slop-bot_ws/install/livox_sdk2/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib:/opt/MVS/lib/aarch64:/usr/local/cuda-12.6/lib64:/opt/MVS/lib/aarch64:/opt/MVS/lib/aarch64'), ('CLAUDE_CODE_MESSAGING_TOKEN', 'ef2d6536f069dba12f06ef0576e50619'), ('HOME', '/home/jetson'), ('CHROME_DESKTOP', 'com.microsoft.VSCode.desktop'), ('OLDPWD', '/home/jetson'), ('DESKTOP_SESSION', 'ubuntu'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-ed92d0d2-1.14-main.sock'), ('JETSON_L4T', '36.4.7'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('JETSON_MODEL', 'NVIDIA Jetson Orin NX Engineering Reference Developer Kit'), ('CLAUDE_CODE_CHILD_SESSION', '1'), ('COPILOT_OTEL_FILE_EXPORTER_PATH', '/dev/null'), ('MANAGERPID', '1947'), ('SYSTEMD_EXEC_PID', '2909'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3809'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/jetson/slop-bot_ws/install:/home/jetson/ros2_ws/install'), ('APPLICATION_INSIGHTS_NO_STATSBEAT', 'true'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'jetson'), ('JETSON_MODULE', 'NVIDIA Jetson Orin NX (16GB ram)'), ('JETSON_SERIAL_NUMBER', '1422525087275'), ('CLAUDE_CODE_EMIT_STARTUP_TIMING', '1'), ('JOURNAL_STREAM', '8:55587'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('CLAUDE_CODE_QUESTION_PREVIEW_FORMAT', 'markdown'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'jetson'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '1'), ('WINDOWPATH', '2'), ('MVCAM_SDK_PATH', '/opt/MVS'), ('MCP_CONNECTION_NONBLOCKING', 'true'), ('PATH', '/home/jetson/ethercat_venv/bin:/home/jetson/.local/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/opt/ros/humble/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2670,unix/ubuntu:/tmp/.ICE-unix/2670'), ('INVOCATION_ID', 'f11a0846954541da9650ff1402193b6b'), ('MVCAM_GENICAM_CLPROTOCOL', '/opt/MVS/lib/CLProtocol'), ('VSCODE_NODE_COMPILE_CACHE_ROOT', '/usr/share/code/resources/app/node-compile-cache'), ('COREPACK_ENABLE_AUTO_PIN', '0'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('CLAUDE_EFFORT', 'high'), ('DISPLAY', ':0'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('CLAUDE_PID', '7633'), ('NoDefaultCurrentDirectoryInExePath', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('IBUS_DISABLE_SNOOPER', '1'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('JETSON_SOC', 'tegra234'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:22e895b8-4389-40cf-a967-58c9c0950171'), ('CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '1'), ('MXC_BIN_DIR', '/usr/share/code/resources/app/node_modules.asar.unpacked/@microsoft/mxc-sdk/bin'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING', 'true'), ('CLAUDE_CODE_SESSION_ID', '1c697e8f-dd4f-4e5c-b241-6697ec2e7c21'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('CLAUDECODE', '1'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('VIRTUAL_ENV', '/home/jetson/ethercat_venv'), ('QT_IM_MODULE', 'ibus'), ('JETSON_CUDA_ARCH_BIN', '8.7'), ('PWD', '/home/jetson/slop-bot_ws/build/livox_ros_driver2'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('VSCODE_CODE_CACHE_PATH', '/home/jetson/.config/Code/CachedData/2a59476c9bfcb90b3ddc372c36762471b7dfad1c'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLAUDE_CODE_EXECPATH', '/home/jetson/.vscode/extensions/anthropic.claude-code-2.1.314-linux-arm64/resources/native-binary/claude'), ('PYTHONPATH', '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_chain_drive/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_base/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('CLAUDE_CODE_ENABLE_TASKS', '0'), ('COLCON', '1'), ('COPILOT_CLI_ENABLED_FEATURE_FLAGS', 'SHELL_SPAWN_BACKEND'), ('VTE_VERSION', '6800'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('CLAUDE_CODE_MESSAGING_SOCKET', '/run/user/1000/cc-socks/7633.sock'), ('CMAKE_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('VSCODE_PID', '6735'), ('MVCAM_COMMON_RUNENV', '/opt/MVS/lib'), ('JETSON_P_NUMBER', 'p3767-0000')]), 'shell': False}
+[41.731488] (livox_ros_driver2) StdoutLine: {'line': b'-- Install configuration: "Release"\n'}
+[41.732432] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/ament_index/resource_index/rosidl_interfaces/livox_ros_driver2\n'}
+[41.733154] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2\n'}
+[41.733656] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg\n'}
+[41.734023] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail\n'}
+[41.734911] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__struct.h\n'}
+[41.735214] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__functions.c\n'}
+[41.736005] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__type_support.h\n'}
+[41.737084] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__functions.c\n'}
+[41.737840] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__struct.h\n'}
+[41.738433] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__functions.h\n'}
+[41.739485] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__functions.h\n'}
+[41.740485] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__type_support.h\n'}
+[41.740797] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/rosidl_generator_c__visibility_control.h\n'}
+[41.741302] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/custom_msg.h\n'}
+[41.742018] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/custom_point.h\n'}
+[41.742653] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/environment/library_path.sh\n'}
+[41.743528] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/environment/library_path.dsv\n'}
+[41.745003] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_generator_c.so\n'}
+[41.745316] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_generator_c.so" to ""\n'}
+[41.746005] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2\n'}
+[41.746638] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg\n'}
+[41.747050] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail\n'}
+[41.747737] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__rosidl_typesupport_fastrtps_c.h\n'}
+[41.748298] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__rosidl_typesupport_fastrtps_c.h\n'}
+[41.748547] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/rosidl_typesupport_fastrtps_c__visibility_control.h\n'}
+[41.748673] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_typesupport_fastrtps_c.so\n'}
+[41.748887] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_typesupport_fastrtps_c.so" to ""\n'}
+[41.749008] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2\n'}
+[41.749116] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg\n'}
+[41.749219] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail\n'}
+[41.749325] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__type_support.c\n'}
+[41.751412] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__rosidl_typesupport_introspection_c.h\n'}
+[41.755269] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__rosidl_typesupport_introspection_c.h\n'}
+[41.755815] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__type_support.c\n'}
+[41.755985] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/rosidl_typesupport_introspection_c__visibility_control.h\n'}
+[41.756140] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_typesupport_introspection_c.so\n'}
+[41.756267] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_typesupport_introspection_c.so" to ""\n'}
+[41.756417] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_typesupport_c.so\n'}
+[41.756528] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_typesupport_c.so" to ""\n'}
+[41.756634] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2\n'}
+[41.756776] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg\n'}
+[41.756888] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail\n'}
+[41.756987] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__type_support.hpp\n'}
+[41.757088] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__type_support.hpp\n'}
+[41.757207] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__struct.hpp\n'}
+[41.757308] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__traits.hpp\n'}
+[41.757410] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__builder.hpp\n'}
+[41.757512] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__struct.hpp\n'}
+[41.757863] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__traits.hpp\n'}
+[41.757977] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__builder.hpp\n'}
+[41.758084] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/custom_msg.hpp\n'}
+[41.758238] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/rosidl_generator_cpp__visibility_control.hpp\n'}
+[41.758350] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/custom_point.hpp\n'}
+[41.758484] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2\n'}
+[41.758591] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg\n'}
+[41.758698] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail\n'}
+[41.758802] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/dds_fastrtps\n'}
+[41.758910] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[41.759018] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[41.759125] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h\n'}
+[41.759233] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_typesupport_fastrtps_cpp.so\n'}
+[41.759337] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_typesupport_fastrtps_cpp.so" to ""\n'}
+[41.759442] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2\n'}
+[41.759543] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg\n'}
+[41.759664] (livox_ros_driver2) StdoutLine: {'line': b'-- Up-to-date: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail\n'}
+[41.759971] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__rosidl_typesupport_introspection_cpp.hpp\n'}
+[41.760077] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_msg__type_support.cpp\n'}
+[41.760201] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__rosidl_typesupport_introspection_cpp.hpp\n'}
+[41.760306] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/include/livox_ros_driver2/livox_ros_driver2/msg/detail/custom_point__type_support.cpp\n'}
+[41.760406] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_typesupport_introspection_cpp.so\n'}
+[41.760504] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_typesupport_introspection_cpp.so" to ""\n'}
+[41.760621] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_typesupport_cpp.so\n'}
+[41.760757] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2__rosidl_typesupport_cpp.so" to ""\n'}
+[41.760859] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/environment/pythonpath.sh\n'}
+[41.760957] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/environment/pythonpath.dsv\n'}
+[41.761055] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2-1.0.0-py3.10.egg-info\n'}
+[41.761153] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2-1.0.0-py3.10.egg-info/top_level.txt\n'}
+[41.761251] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2-1.0.0-py3.10.egg-info/SOURCES.txt\n'}
+[41.761351] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2-1.0.0-py3.10.egg-info/dependency_links.txt\n'}
+[41.761449] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2-1.0.0-py3.10.egg-info/PKG-INFO\n'}
+[41.761547] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2\n'}
+[41.761643] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/livox_ros_driver2_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so\n'}
+[41.761758] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/livox_ros_driver2_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so\n'}
+[41.761859] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/_livox_ros_driver2_s.ep.rosidl_typesupport_introspection_c.c\n'}
+[41.761958] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/_livox_ros_driver2_s.ep.rosidl_typesupport_c.c\n'}
+[41.762055] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/__init__.py\n'}
+[41.762151] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/_livox_ros_driver2_s.ep.rosidl_typesupport_fastrtps_c.c\n'}
+[41.762248] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/msg\n'}
+[41.762345] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/msg/_custom_point.py\n'}
+[41.762464] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/msg/__init__.py\n'}
+[41.762764] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/msg/_custom_msg.py\n'}
+[41.762882] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/msg/_custom_msg_s.c\n'}
+[41.762984] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/msg/_custom_point_s.c\n'}
+[41.763104] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/livox_ros_driver2_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so\n'}
+[41.763210] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/liblivox_interfaces2__rosidl_generator_py.so\n'}
+[41.795220] (-) TimerEvent: {}
+[41.839543] (livox_ros_driver2) StdoutLine: {'line': b"Listing '/home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2'...\n"}
+[41.840186] (livox_ros_driver2) StdoutLine: {'line': b"Compiling '/home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/__init__.py'...\n"}
+[41.840554] (livox_ros_driver2) StdoutLine: {'line': b"Listing '/home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/msg'...\n"}
+[41.840705] (livox_ros_driver2) StdoutLine: {'line': b"Compiling '/home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/msg/__init__.py'...\n"}
+[41.840835] (livox_ros_driver2) StdoutLine: {'line': b"Compiling '/home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/msg/_custom_msg.py'...\n"}
+[41.840981] (livox_ros_driver2) StdoutLine: {'line': b"Compiling '/home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/msg/_custom_point.py'...\n"}
+[41.851636] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/livox_ros_driver2_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so\n'}
+[41.852554] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/livox_ros_driver2_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so" to ""\n'}
+[41.853101] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/livox_ros_driver2_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so\n'}
+[41.853409] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/livox_ros_driver2_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so" to ""\n'}
+[41.854532] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/livox_ros_driver2_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so\n'}
+[41.854835] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages/livox_ros_driver2/livox_ros_driver2_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so" to ""\n'}
+[41.855539] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_interfaces2__rosidl_generator_py.so\n'}
+[41.855988] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_interfaces2__rosidl_generator_py.so" to ""\n'}
+[41.856481] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/rust\n'}
+[41.856616] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/rust/src\n'}
+[41.856751] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/rust/src/lib.rs\n'}
+[41.856857] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/rust/src/msg.rs\n'}
+[41.859277] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/rust/src/msg\n'}
+[41.859737] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/rust/src/msg/rmw.rs\n'}
+[41.859932] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/rust/Cargo.toml\n'}
+[41.860085] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/rust/build.rs\n'}
+[41.860222] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/msg/CustomPoint.idl\n'}
+[41.860350] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/msg/CustomMsg.idl\n'}
+[41.860481] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/msg/CustomPoint.msg\n'}
+[41.860610] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/msg/CustomMsg.msg\n'}
+[41.861121] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/livox_ros_driver2/livox_ros_driver2_node\n'}
+[41.861510] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/livox_ros_driver2/livox_ros_driver2_node" to ""\n'}
+[41.861666] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2.so\n'}
+[41.864231] (livox_ros_driver2) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib/liblivox_ros_driver2.so" to ""\n'}
+[41.864835] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/config\n'}
+[41.865118] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/config/mixed_HAP_MID360_config.json\n'}
+[41.865241] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/config/display_point_cloud_ROS2.rviz\n'}
+[41.865344] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/config/AVIA2_config.json\n'}
+[41.865525] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/config/MID360s_config.json\n'}
+[41.865693] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/config/MID360l_config.json\n'}
+[41.865862] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/config/HAP_config.json\n'}
+[41.866166] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/config/MID360_config.json\n'}
+[41.866377] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/config/display_point_cloud_ROS1.rviz\n'}
+[41.866487] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2\n'}
+[41.868151] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2/rviz_AVIA2_launch.py\n'}
+[41.868669] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2/rviz_MID360l_launch.py\n'}
+[41.868981] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2/rviz_MID360s_launch.py\n'}
+[41.869143] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2/msg_HAP_launch.py\n'}
+[41.869395] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2/rviz_MID360_launch.py\n'}
+[41.869562] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2/msg_MID360l_launch.py\n'}
+[41.869834] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2/msg_AVIA2_launch.py\n'}
+[41.869994] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2/rviz_HAP_launch.py\n'}
+[41.870261] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2/msg_MID360_launch.py\n'}
+[41.870505] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2/msg_MID360s_launch.py\n'}
+[41.870737] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2/rviz_mixed.py\n'}
+[41.870894] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/ament_index/resource_index/package_run_dependencies/livox_ros_driver2\n'}
+[41.871148] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/ament_index/resource_index/parent_prefix_path/livox_ros_driver2\n'}
+[41.871580] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/environment/ament_prefix_path.sh\n'}
+[41.871732] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/environment/ament_prefix_path.dsv\n'}
+[41.871977] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/environment/path.sh\n'}
+[41.872220] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/environment/path.dsv\n'}
+[41.872834] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/local_setup.bash\n'}
+[41.873053] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/local_setup.sh\n'}
+[41.873161] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/local_setup.zsh\n'}
+[41.873261] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/local_setup.dsv\n'}
+[41.873374] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/package.dsv\n'}
+[41.873476] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/ament_index/resource_index/packages/livox_ros_driver2\n'}
+[41.875220] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/ament_index/resource_index/rclcpp_components/livox_ros_driver2\n'}
+[41.875546] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/export_livox_interfaces2__rosidl_generator_cExport.cmake\n'}
+[41.875730] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/export_livox_interfaces2__rosidl_generator_cExport-release.cmake\n'}
+[41.876316] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/export_livox_interfaces2__rosidl_typesupport_fastrtps_cExport.cmake\n'}
+[41.876712] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/export_livox_interfaces2__rosidl_typesupport_fastrtps_cExport-release.cmake\n'}
+[41.876877] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/livox_interfaces2__rosidl_typesupport_introspection_cExport.cmake\n'}
+[41.877258] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/livox_interfaces2__rosidl_typesupport_introspection_cExport-release.cmake\n'}
+[41.877367] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/livox_interfaces2__rosidl_typesupport_cExport.cmake\n'}
+[41.877474] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/livox_interfaces2__rosidl_typesupport_cExport-release.cmake\n'}
+[41.877575] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/export_livox_interfaces2__rosidl_generator_cppExport.cmake\n'}
+[41.877675] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/export_livox_interfaces2__rosidl_typesupport_fastrtps_cppExport.cmake\n'}
+[41.878082] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/export_livox_interfaces2__rosidl_typesupport_fastrtps_cppExport-release.cmake\n'}
+[41.878905] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/livox_interfaces2__rosidl_typesupport_introspection_cppExport.cmake\n'}
+[41.879239] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/livox_interfaces2__rosidl_typesupport_introspection_cppExport-release.cmake\n'}
+[41.879392] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/livox_interfaces2__rosidl_typesupport_cppExport.cmake\n'}
+[41.879539] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/livox_interfaces2__rosidl_typesupport_cppExport-release.cmake\n'}
+[41.879883] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/export_livox_interfaces2__rosidl_generator_pyExport.cmake\n'}
+[41.880145] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/export_livox_interfaces2__rosidl_generator_pyExport-release.cmake\n'}
+[41.880408] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/rosidl_cmake-extras.cmake\n'}
+[41.880665] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/ament_cmake_export_dependencies-extras.cmake\n'}
+[41.880964] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/ament_cmake_export_include_directories-extras.cmake\n'}
+[41.881121] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/ament_cmake_export_libraries-extras.cmake\n'}
+[41.881558] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/ament_cmake_export_targets-extras.cmake\n'}
+[41.881715] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake\n'}
+[41.881820] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake\n'}
+[41.882030] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/rosidl_cmake_aggregate_target-extras.cmake\n'}
+[41.882234] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/livox_ros_driver2Config.cmake\n'}
+[41.882335] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/cmake/livox_ros_driver2Config-version.cmake\n'}
+[41.882434] (livox_ros_driver2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_ros_driver2/share/livox_ros_driver2/package.xml\n'}
+[41.885837] (livox_ros_driver2) CommandEnded: {'returncode': 0}
+[41.895356] (-) TimerEvent: {}
+[41.936203] (livox_ros_driver2) JobEnded: {'identifier': 'livox_ros_driver2', 'rc': 0}
+[41.938538] (slop_sensors) JobStarted: {'identifier': 'slop_sensors'}
+[41.959616] (slop_sensors) JobProgress: {'identifier': 'slop_sensors', 'progress': 'cmake'}
+[41.961028] (slop_sensors) Command: {'cmd': ['/usr/bin/cmake', '/home/jetson/slop-bot_ws/src/slop_sensors', '-DPython3_EXECUTABLE=/usr/bin/python3', '-DPYTHON_EXECUTABLE=/usr/bin/python3', '-DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/slop_sensors'], 'cwd': '/home/jetson/slop-bot_ws/build/slop_sensors', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/jetson/slop-bot_ws'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('AI_AGENT', 'claude-code_2-1-314_agent'), ('USER', 'jetson'), ('CLAUDE_CODE_ENTRYPOINT', 'claude-vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('GIT_EDITOR', 'true'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'x11'), ('ALLUSERSPROFILE', '/opt/MVS/MVFG'), ('CLAUDE_AGENT_SDK_VERSION', '0.3.314'), ('CLAUDE_CODE_SESSION_ATTENDED', '1'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib:/home/jetson/slop-bot_ws/install/livox_sdk2/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib:/opt/MVS/lib/aarch64:/usr/local/cuda-12.6/lib64:/opt/MVS/lib/aarch64:/opt/MVS/lib/aarch64'), ('CLAUDE_CODE_MESSAGING_TOKEN', 'ef2d6536f069dba12f06ef0576e50619'), ('HOME', '/home/jetson'), ('CHROME_DESKTOP', 'com.microsoft.VSCode.desktop'), ('OLDPWD', '/home/jetson'), ('DESKTOP_SESSION', 'ubuntu'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-ed92d0d2-1.14-main.sock'), ('JETSON_L4T', '36.4.7'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('JETSON_MODEL', 'NVIDIA Jetson Orin NX Engineering Reference Developer Kit'), ('CLAUDE_CODE_CHILD_SESSION', '1'), ('COPILOT_OTEL_FILE_EXPORTER_PATH', '/dev/null'), ('MANAGERPID', '1947'), ('SYSTEMD_EXEC_PID', '2909'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3809'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/jetson/slop-bot_ws/install:/home/jetson/ros2_ws/install'), ('APPLICATION_INSIGHTS_NO_STATSBEAT', 'true'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'jetson'), ('JETSON_MODULE', 'NVIDIA Jetson Orin NX (16GB ram)'), ('JETSON_SERIAL_NUMBER', '1422525087275'), ('CLAUDE_CODE_EMIT_STARTUP_TIMING', '1'), ('JOURNAL_STREAM', '8:55587'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('CLAUDE_CODE_QUESTION_PREVIEW_FORMAT', 'markdown'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'jetson'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '1'), ('WINDOWPATH', '2'), ('MVCAM_SDK_PATH', '/opt/MVS'), ('MCP_CONNECTION_NONBLOCKING', 'true'), ('PATH', '/home/jetson/ethercat_venv/bin:/home/jetson/.local/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/opt/ros/humble/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2670,unix/ubuntu:/tmp/.ICE-unix/2670'), ('INVOCATION_ID', 'f11a0846954541da9650ff1402193b6b'), ('MVCAM_GENICAM_CLPROTOCOL', '/opt/MVS/lib/CLProtocol'), ('VSCODE_NODE_COMPILE_CACHE_ROOT', '/usr/share/code/resources/app/node-compile-cache'), ('COREPACK_ENABLE_AUTO_PIN', '0'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('CLAUDE_EFFORT', 'high'), ('DISPLAY', ':0'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('CLAUDE_PID', '7633'), ('NoDefaultCurrentDirectoryInExePath', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('IBUS_DISABLE_SNOOPER', '1'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('JETSON_SOC', 'tegra234'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/livox_ros_driver2:/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:22e895b8-4389-40cf-a967-58c9c0950171'), ('CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '1'), ('MXC_BIN_DIR', '/usr/share/code/resources/app/node_modules.asar.unpacked/@microsoft/mxc-sdk/bin'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING', 'true'), ('CLAUDE_CODE_SESSION_ID', '1c697e8f-dd4f-4e5c-b241-6697ec2e7c21'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('CLAUDECODE', '1'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('VIRTUAL_ENV', '/home/jetson/ethercat_venv'), ('QT_IM_MODULE', 'ibus'), ('JETSON_CUDA_ARCH_BIN', '8.7'), ('PWD', '/home/jetson/slop-bot_ws/build/slop_sensors'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('VSCODE_CODE_CACHE_PATH', '/home/jetson/.config/Code/CachedData/2a59476c9bfcb90b3ddc372c36762471b7dfad1c'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLAUDE_CODE_EXECPATH', '/home/jetson/.vscode/extensions/anthropic.claude-code-2.1.314-linux-arm64/resources/native-binary/claude'), ('PYTHONPATH', '/home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_chain_drive/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_base/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('CLAUDE_CODE_ENABLE_TASKS', '0'), ('COLCON', '1'), ('COPILOT_CLI_ENABLED_FEATURE_FLAGS', 'SHELL_SPAWN_BACKEND'), ('VTE_VERSION', '6800'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('CLAUDE_CODE_MESSAGING_SOCKET', '/run/user/1000/cc-socks/7633.sock'), ('CMAKE_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/livox_ros_driver2:/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('VSCODE_PID', '6735'), ('MVCAM_COMMON_RUNENV', '/opt/MVS/lib'), ('JETSON_P_NUMBER', 'p3767-0000')]), 'shell': False}
+[41.991789] (slop_sensors) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[41.995562] (-) TimerEvent: {}
+[42.096053] (-) TimerEvent: {}
+[42.196571] (-) TimerEvent: {}
+[42.297106] (-) TimerEvent: {}
+[42.363830] (slop_sensors) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter\n'}
+[42.397335] (-) TimerEvent: {}
+[42.497763] (-) TimerEvent: {}
+[42.598176] (-) TimerEvent: {}
+[42.698725] (-) TimerEvent: {}
+[42.799151] (-) TimerEvent: {}
+[42.808452] (slop_sensors) StdoutLine: {'line': b'-- Configuring done (0.8s)\n'}
+[42.813444] (slop_sensors) StdoutLine: {'line': b'-- Generating done (0.0s)\n'}
+[42.813682] (slop_sensors) StderrLine: {'line': b'CMake Warning:\n'}
+[42.813850] (slop_sensors) StderrLine: {'line': b'  Manually-specified variables were not used by the project:\n'}
+[42.813977] (slop_sensors) StderrLine: {'line': b'\n'}
+[42.814091] (slop_sensors) StderrLine: {'line': b'    PYTHON_EXECUTABLE\n'}
+[42.814201] (slop_sensors) StderrLine: {'line': b'\n'}
+[42.814307] (slop_sensors) StderrLine: {'line': b'\n'}
+[42.815554] (slop_sensors) StdoutLine: {'line': b'-- Build files have been written to: /home/jetson/slop-bot_ws/build/slop_sensors\n'}
+[42.819759] (slop_sensors) CommandEnded: {'returncode': 0}
+[42.821857] (slop_sensors) JobProgress: {'identifier': 'slop_sensors', 'progress': 'build'}
+[42.821950] (slop_sensors) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/jetson/slop-bot_ws/build/slop_sensors', '--', '-j8', '-l8'], 'cwd': '/home/jetson/slop-bot_ws/build/slop_sensors', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/jetson/slop-bot_ws'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('AI_AGENT', 'claude-code_2-1-314_agent'), ('USER', 'jetson'), ('CLAUDE_CODE_ENTRYPOINT', 'claude-vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('GIT_EDITOR', 'true'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'x11'), ('ALLUSERSPROFILE', '/opt/MVS/MVFG'), ('CLAUDE_AGENT_SDK_VERSION', '0.3.314'), ('CLAUDE_CODE_SESSION_ATTENDED', '1'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib:/home/jetson/slop-bot_ws/install/livox_sdk2/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib:/opt/MVS/lib/aarch64:/usr/local/cuda-12.6/lib64:/opt/MVS/lib/aarch64:/opt/MVS/lib/aarch64'), ('CLAUDE_CODE_MESSAGING_TOKEN', 'ef2d6536f069dba12f06ef0576e50619'), ('HOME', '/home/jetson'), ('CHROME_DESKTOP', 'com.microsoft.VSCode.desktop'), ('OLDPWD', '/home/jetson'), ('DESKTOP_SESSION', 'ubuntu'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-ed92d0d2-1.14-main.sock'), ('JETSON_L4T', '36.4.7'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('JETSON_MODEL', 'NVIDIA Jetson Orin NX Engineering Reference Developer Kit'), ('CLAUDE_CODE_CHILD_SESSION', '1'), ('COPILOT_OTEL_FILE_EXPORTER_PATH', '/dev/null'), ('MANAGERPID', '1947'), ('SYSTEMD_EXEC_PID', '2909'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3809'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/jetson/slop-bot_ws/install:/home/jetson/ros2_ws/install'), ('APPLICATION_INSIGHTS_NO_STATSBEAT', 'true'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'jetson'), ('JETSON_MODULE', 'NVIDIA Jetson Orin NX (16GB ram)'), ('JETSON_SERIAL_NUMBER', '1422525087275'), ('CLAUDE_CODE_EMIT_STARTUP_TIMING', '1'), ('JOURNAL_STREAM', '8:55587'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('CLAUDE_CODE_QUESTION_PREVIEW_FORMAT', 'markdown'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'jetson'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '1'), ('WINDOWPATH', '2'), ('MVCAM_SDK_PATH', '/opt/MVS'), ('MCP_CONNECTION_NONBLOCKING', 'true'), ('PATH', '/home/jetson/ethercat_venv/bin:/home/jetson/.local/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/opt/ros/humble/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2670,unix/ubuntu:/tmp/.ICE-unix/2670'), ('INVOCATION_ID', 'f11a0846954541da9650ff1402193b6b'), ('MVCAM_GENICAM_CLPROTOCOL', '/opt/MVS/lib/CLProtocol'), ('VSCODE_NODE_COMPILE_CACHE_ROOT', '/usr/share/code/resources/app/node-compile-cache'), ('COREPACK_ENABLE_AUTO_PIN', '0'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('CLAUDE_EFFORT', 'high'), ('DISPLAY', ':0'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('CLAUDE_PID', '7633'), ('NoDefaultCurrentDirectoryInExePath', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('IBUS_DISABLE_SNOOPER', '1'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('JETSON_SOC', 'tegra234'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/livox_ros_driver2:/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:22e895b8-4389-40cf-a967-58c9c0950171'), ('CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '1'), ('MXC_BIN_DIR', '/usr/share/code/resources/app/node_modules.asar.unpacked/@microsoft/mxc-sdk/bin'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING', 'true'), ('CLAUDE_CODE_SESSION_ID', '1c697e8f-dd4f-4e5c-b241-6697ec2e7c21'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('CLAUDECODE', '1'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('VIRTUAL_ENV', '/home/jetson/ethercat_venv'), ('QT_IM_MODULE', 'ibus'), ('JETSON_CUDA_ARCH_BIN', '8.7'), ('PWD', '/home/jetson/slop-bot_ws/build/slop_sensors'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('VSCODE_CODE_CACHE_PATH', '/home/jetson/.config/Code/CachedData/2a59476c9bfcb90b3ddc372c36762471b7dfad1c'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLAUDE_CODE_EXECPATH', '/home/jetson/.vscode/extensions/anthropic.claude-code-2.1.314-linux-arm64/resources/native-binary/claude'), ('PYTHONPATH', '/home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_chain_drive/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_base/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('CLAUDE_CODE_ENABLE_TASKS', '0'), ('COLCON', '1'), ('COPILOT_CLI_ENABLED_FEATURE_FLAGS', 'SHELL_SPAWN_BACKEND'), ('VTE_VERSION', '6800'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('CLAUDE_CODE_MESSAGING_SOCKET', '/run/user/1000/cc-socks/7633.sock'), ('CMAKE_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/livox_ros_driver2:/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('VSCODE_PID', '6735'), ('MVCAM_COMMON_RUNENV', '/opt/MVS/lib'), ('JETSON_P_NUMBER', 'p3767-0000')]), 'shell': False}
+[42.864736] (slop_sensors) CommandEnded: {'returncode': 0}
+[42.868100] (slop_sensors) JobProgress: {'identifier': 'slop_sensors', 'progress': 'install'}
+[42.868757] (slop_sensors) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/jetson/slop-bot_ws/build/slop_sensors'], 'cwd': '/home/jetson/slop-bot_ws/build/slop_sensors', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/jetson/slop-bot_ws'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('AI_AGENT', 'claude-code_2-1-314_agent'), ('USER', 'jetson'), ('CLAUDE_CODE_ENTRYPOINT', 'claude-vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('GIT_EDITOR', 'true'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'x11'), ('ALLUSERSPROFILE', '/opt/MVS/MVFG'), ('CLAUDE_AGENT_SDK_VERSION', '0.3.314'), ('CLAUDE_CODE_SESSION_ATTENDED', '1'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/jetson/slop-bot_ws/install/livox_ros_driver2/lib:/home/jetson/slop-bot_ws/install/livox_sdk2/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib:/opt/MVS/lib/aarch64:/usr/local/cuda-12.6/lib64:/opt/MVS/lib/aarch64:/opt/MVS/lib/aarch64'), ('CLAUDE_CODE_MESSAGING_TOKEN', 'ef2d6536f069dba12f06ef0576e50619'), ('HOME', '/home/jetson'), ('CHROME_DESKTOP', 'com.microsoft.VSCode.desktop'), ('OLDPWD', '/home/jetson'), ('DESKTOP_SESSION', 'ubuntu'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-ed92d0d2-1.14-main.sock'), ('JETSON_L4T', '36.4.7'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('JETSON_MODEL', 'NVIDIA Jetson Orin NX Engineering Reference Developer Kit'), ('CLAUDE_CODE_CHILD_SESSION', '1'), ('COPILOT_OTEL_FILE_EXPORTER_PATH', '/dev/null'), ('MANAGERPID', '1947'), ('SYSTEMD_EXEC_PID', '2909'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3809'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/jetson/slop-bot_ws/install:/home/jetson/ros2_ws/install'), ('APPLICATION_INSIGHTS_NO_STATSBEAT', 'true'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'jetson'), ('JETSON_MODULE', 'NVIDIA Jetson Orin NX (16GB ram)'), ('JETSON_SERIAL_NUMBER', '1422525087275'), ('CLAUDE_CODE_EMIT_STARTUP_TIMING', '1'), ('JOURNAL_STREAM', '8:55587'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('CLAUDE_CODE_QUESTION_PREVIEW_FORMAT', 'markdown'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'jetson'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '1'), ('WINDOWPATH', '2'), ('MVCAM_SDK_PATH', '/opt/MVS'), ('MCP_CONNECTION_NONBLOCKING', 'true'), ('PATH', '/home/jetson/ethercat_venv/bin:/home/jetson/.local/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/opt/ros/humble/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2670,unix/ubuntu:/tmp/.ICE-unix/2670'), ('INVOCATION_ID', 'f11a0846954541da9650ff1402193b6b'), ('MVCAM_GENICAM_CLPROTOCOL', '/opt/MVS/lib/CLProtocol'), ('VSCODE_NODE_COMPILE_CACHE_ROOT', '/usr/share/code/resources/app/node-compile-cache'), ('COREPACK_ENABLE_AUTO_PIN', '0'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('CLAUDE_EFFORT', 'high'), ('DISPLAY', ':0'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('CLAUDE_PID', '7633'), ('NoDefaultCurrentDirectoryInExePath', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('IBUS_DISABLE_SNOOPER', '1'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('JETSON_SOC', 'tegra234'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/livox_ros_driver2:/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:22e895b8-4389-40cf-a967-58c9c0950171'), ('CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '1'), ('MXC_BIN_DIR', '/usr/share/code/resources/app/node_modules.asar.unpacked/@microsoft/mxc-sdk/bin'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING', 'true'), ('CLAUDE_CODE_SESSION_ID', '1c697e8f-dd4f-4e5c-b241-6697ec2e7c21'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('CLAUDECODE', '1'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('VIRTUAL_ENV', '/home/jetson/ethercat_venv'), ('QT_IM_MODULE', 'ibus'), ('JETSON_CUDA_ARCH_BIN', '8.7'), ('PWD', '/home/jetson/slop-bot_ws/build/slop_sensors'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('VSCODE_CODE_CACHE_PATH', '/home/jetson/.config/Code/CachedData/2a59476c9bfcb90b3ddc372c36762471b7dfad1c'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLAUDE_CODE_EXECPATH', '/home/jetson/.vscode/extensions/anthropic.claude-code-2.1.314-linux-arm64/resources/native-binary/claude'), ('PYTHONPATH', '/home/jetson/slop-bot_ws/install/livox_ros_driver2/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_chain_drive/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_base/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('CLAUDE_CODE_ENABLE_TASKS', '0'), ('COLCON', '1'), ('COPILOT_CLI_ENABLED_FEATURE_FLAGS', 'SHELL_SPAWN_BACKEND'), ('VTE_VERSION', '6800'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('CLAUDE_CODE_MESSAGING_SOCKET', '/run/user/1000/cc-socks/7633.sock'), ('CMAKE_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/livox_ros_driver2:/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('VSCODE_PID', '6735'), ('MVCAM_COMMON_RUNENV', '/opt/MVS/lib'), ('JETSON_P_NUMBER', 'p3767-0000')]), 'shell': False}
+[42.880274] (slop_sensors) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[42.880892] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/config\n'}
+[42.881233] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/config/realsense.yaml\n'}
+[42.881456] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/config/MID360_config.json\n'}
+[42.881693] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/config/mounts.yaml\n'}
+[42.881908] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/launch\n'}
+[42.882050] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/launch/camera.launch.py\n'}
+[42.882262] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/launch/sensors.launch.py\n'}
+[42.882473] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/launch/lidar.launch.py\n'}
+[42.882604] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/ament_index/resource_index/package_run_dependencies/slop_sensors\n'}
+[42.883054] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/ament_index/resource_index/parent_prefix_path/slop_sensors\n'}
+[42.883349] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/environment/ament_prefix_path.sh\n'}
+[42.883498] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/environment/ament_prefix_path.dsv\n'}
+[42.883642] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/environment/path.sh\n'}
+[42.883864] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/environment/path.dsv\n'}
+[42.884086] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/local_setup.bash\n'}
+[42.884235] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/local_setup.sh\n'}
+[42.884459] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/local_setup.zsh\n'}
+[42.884679] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/local_setup.dsv\n'}
+[42.885245] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/package.dsv\n'}
+[42.885831] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/ament_index/resource_index/packages/slop_sensors\n'}
+[42.886312] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/cmake/slop_sensorsConfig.cmake\n'}
+[42.886791] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/cmake/slop_sensorsConfig-version.cmake\n'}
+[42.886979] (slop_sensors) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/package.xml\n'}
+[42.889482] (slop_sensors) CommandEnded: {'returncode': 0}
+[42.901376] (-) TimerEvent: {}
+[42.936984] (slop_sensors) JobEnded: {'identifier': 'slop_sensors', 'rc': 0}
+[42.939981] (-) EventReactorShutdown: {}

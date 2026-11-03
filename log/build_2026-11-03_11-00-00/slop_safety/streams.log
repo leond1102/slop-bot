@@ -1,0 +1,45 @@
+[0.032s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_safety': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble PS1=(.venv) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ VIRTUAL_ENV_PROMPT=(.venv) /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_safety -- -j8 -l8
+[0.098s] Built target ament_cmake_python_copy_slop_safety
+[0.597s] running egg_info
+[0.598s] writing slop_safety.egg-info/PKG-INFO
+[0.599s] writing dependency_links to slop_safety.egg-info/dependency_links.txt
+[0.599s] writing top-level names to slop_safety.egg-info/top_level.txt
+[0.603s] reading manifest file 'slop_safety.egg-info/SOURCES.txt'
+[0.604s] writing manifest file 'slop_safety.egg-info/SOURCES.txt'
+[0.669s] Built target ament_cmake_python_build_slop_safety_egg
+[0.681s] Invoked command in '/home/jetson/slop-bot_ws/build/slop_safety' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble PS1=(.venv) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ VIRTUAL_ENV_PROMPT=(.venv) /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_safety -- -j8 -l8
+[0.696s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_safety': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble PS1=(.venv) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ VIRTUAL_ENV_PROMPT=(.venv) /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_safety
+[0.704s] -- Install configuration: ""
+[0.705s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/pythonpath.sh
+[0.706s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/pythonpath.dsv
+[0.706s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info
+[0.706s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info/top_level.txt
+[0.706s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info/SOURCES.txt
+[0.706s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info/dependency_links.txt
+[0.706s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety-0.1.0-py3.10.egg-info/PKG-INFO
+[0.707s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety
+[0.707s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/remote_guard.py
+[0.707s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/__init__.py
+[0.707s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety/remote_guard_node.py
+[0.767s] Listing '/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages/slop_safety'...
+[0.777s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/lib/slop_safety/remote_guard
+[0.777s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/config
+[0.778s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/config/twist_mux.yaml
+[0.778s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/launch
+[0.778s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/launch/safety.launch.py
+[0.778s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/ament_index/resource_index/package_run_dependencies/slop_safety
+[0.778s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/ament_index/resource_index/parent_prefix_path/slop_safety
+[0.779s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/ament_prefix_path.sh
+[0.779s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/ament_prefix_path.dsv
+[0.779s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/path.sh
+[0.779s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/environment/path.dsv
+[0.780s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/local_setup.bash
+[0.780s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/local_setup.sh
+[0.780s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/local_setup.zsh
+[0.780s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/local_setup.dsv
+[0.780s] -- Installing: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.dsv
+[0.780s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/ament_index/resource_index/packages/slop_safety
+[0.780s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/cmake/slop_safetyConfig.cmake
+[0.781s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/cmake/slop_safetyConfig-version.cmake
+[0.781s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.xml
+[0.784s] Invoked command in '/home/jetson/slop-bot_ws/build/slop_safety' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble PS1=(.venv) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ VIRTUAL_ENV_PROMPT=(.venv) /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_safety

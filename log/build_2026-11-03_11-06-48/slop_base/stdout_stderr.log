@@ -1,0 +1,65 @@
+[0mCMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+
+[0m
+-- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter
+-- Found ament_cmake_pytest: 1.3.14 (/opt/ros/humble/share/ament_cmake_pytest/cmake)
+-- Configuring done (4.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/jetson/slop-bot_ws/build/slop_base
+Built target ament_cmake_python_copy_slop_base
+running egg_info
+creating slop_base.egg-info
+writing slop_base.egg-info/PKG-INFO
+writing dependency_links to slop_base.egg-info/dependency_links.txt
+writing top-level names to slop_base.egg-info/top_level.txt
+writing manifest file 'slop_base.egg-info/SOURCES.txt'
+reading manifest file 'slop_base.egg-info/SOURCES.txt'
+writing manifest file 'slop_base.egg-info/SOURCES.txt'
+Built target ament_cmake_python_build_slop_base_egg
+-- Install configuration: ""
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/environment/pythonpath.sh
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/environment/pythonpath.dsv
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base-0.1.0-py3.10.egg-info
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base-0.1.0-py3.10.egg-info/top_level.txt
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base-0.1.0-py3.10.egg-info/SOURCES.txt
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base-0.1.0-py3.10.egg-info/dependency_links.txt
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base-0.1.0-py3.10.egg-info/PKG-INFO
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/cl57e_bus.py
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/kinematics.py
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/__init__.py
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/diff_drive_node.py
+Listing '/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base'...
+Compiling '/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/__init__.py'...
+Compiling '/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/cl57e_bus.py'...
+Compiling '/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/diff_drive_node.py'...
+Compiling '/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/kinematics.py'...
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/lib/slop_base/diff_drive
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/lib/slop_base/with_netcaps
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/config
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/config/diff_drive.yaml
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/launch
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/launch/diff_drive.launch.py
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/launch/bringup.launch.py
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/ament_index/resource_index/package_run_dependencies/slop_base
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/ament_index/resource_index/parent_prefix_path/slop_base
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/environment/ament_prefix_path.sh
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/environment/ament_prefix_path.dsv
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/environment/path.sh
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/environment/path.dsv
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/local_setup.bash
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/local_setup.sh
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/local_setup.zsh
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/local_setup.dsv
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.dsv
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/ament_index/resource_index/packages/slop_base
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/cmake/slop_baseConfig.cmake
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/cmake/slop_baseConfig-version.cmake
+-- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.xml

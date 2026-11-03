@@ -1,0 +1,591 @@
+[0.025s] Invoking command in '/home/jetson/slop-bot_ws/build/livox_sdk2': /usr/bin/cmake /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2 -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/livox_sdk2
+[0.032s] CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+[0.032s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.032s]   CMake.
+[0.032s] 
+[0.032s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.032s]   to tell CMake that the project requires at least <min> but has been updated
+[0.032s]   to work with policies introduced by <max> or earlier.
+[0.033s] 
+[0.033s] 
+[0.235s] -- The C compiler identification is GNU 11.4.0
+[0.414s] -- The CXX compiler identification is GNU 11.4.0
+[0.437s] -- Detecting C compiler ABI info
+[0.565s] -- Detecting C compiler ABI info - done
+[0.601s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.602s] -- Detecting C compile features
+[0.603s] -- Detecting C compile features - done
+[0.631s] -- Detecting CXX compiler ABI info
+[0.777s] -- Detecting CXX compiler ABI info - done
+[0.818s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.819s] -- Detecting CXX compile features
+[0.820s] -- Detecting CXX compile features - done
+[0.839s] -- main project dir: /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2
+[0.840s] CMake Deprecation Warning at sdk_core/CMakeLists.txt:1 (cmake_minimum_required):
+[0.840s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.840s]   CMake.
+[0.841s] 
+[0.841s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.841s]   to tell CMake that the project requires at least <min> but has been updated
+[0.841s]   to work with policies introduced by <max> or earlier.
+[0.842s] 
+[0.842s] 
+[0.842s] CMake Deprecation Warning at samples/CMakeLists.txt:1 (cmake_minimum_required):
+[0.843s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.843s]   CMake.
+[0.843s] 
+[0.843s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.843s]   to tell CMake that the project requires at least <min> but has been updated
+[0.844s]   to work with policies introduced by <max> or earlier.
+[0.844s] 
+[0.844s] 
+[0.845s] -- main project dir: /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/samples
+[0.845s] CMake Deprecation Warning at samples/livox_lidar_quick_start/CMakeLists.txt:1 (cmake_minimum_required):
+[0.845s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.846s]   CMake.
+[0.846s] 
+[0.846s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.846s]   to tell CMake that the project requires at least <min> but has been updated
+[0.846s]   to work with policies introduced by <max> or earlier.
+[0.847s] 
+[0.847s] 
+[0.848s] CMake Deprecation Warning at samples/multi_lidars_upgrade/CMakeLists.txt:1 (cmake_minimum_required):
+[0.849s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.849s]   CMake.
+[0.849s] 
+[0.850s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.851s]   to tell CMake that the project requires at least <min> but has been updated
+[0.852s]   to work with policies introduced by <max> or earlier.
+[0.852s] 
+[0.852s] 
+[0.852s] CMake Deprecation Warning at samples/logger/CMakeLists.txt:1 (cmake_minimum_required):
+[0.852s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.853s]   CMake.
+[0.853s] 
+[0.853s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.853s]   to tell CMake that the project requires at least <min> but has been updated
+[0.853s]   to work with policies introduced by <max> or earlier.
+[0.853s] 
+[0.853s] 
+[0.854s] CMake Deprecation Warning at samples/debug_point_cloud/CMakeLists.txt:1 (cmake_minimum_required):
+[0.854s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.854s]   CMake.
+[0.854s] 
+[0.854s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.855s]   to tell CMake that the project requires at least <min> but has been updated
+[0.855s]   to work with policies introduced by <max> or earlier.
+[0.855s] 
+[0.856s] 
+[0.856s] CMake Deprecation Warning at samples/lidar_cmd_observer/CMakeLists.txt:1 (cmake_minimum_required):
+[0.856s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.856s]   CMake.
+[0.856s] 
+[0.857s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.857s]   to tell CMake that the project requires at least <min> but has been updated
+[0.857s]   to work with policies introduced by <max> or earlier.
+[0.857s] 
+[0.858s] 
+[0.858s] CMake Deprecation Warning at samples/livox_lidar_rmc_time_sync/CMakeLists.txt:1 (cmake_minimum_required):
+[0.858s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.858s]   CMake.
+[0.858s] 
+[0.859s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.859s]   to tell CMake that the project requires at least <min> but has been updated
+[0.859s]   to work with policies introduced by <max> or earlier.
+[0.859s] 
+[0.860s] 
+[0.860s] CMake Deprecation Warning at samples/livox_lidar_ip_set/CMakeLists.txt:1 (cmake_minimum_required):
+[0.860s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.860s]   CMake.
+[0.860s] 
+[0.861s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.861s]   to tell CMake that the project requires at least <min> but has been updated
+[0.861s]   to work with policies introduced by <max> or earlier.
+[0.861s] 
+[0.861s] 
+[0.862s] CMake Deprecation Warning at samples/livox_lidar_info_get/CMakeLists.txt:1 (cmake_minimum_required):
+[0.862s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.862s]   CMake.
+[0.862s] 
+[0.863s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.863s]   to tell CMake that the project requires at least <min> but has been updated
+[0.863s]   to work with policies introduced by <max> or earlier.
+[0.863s] 
+[0.864s] 
+[0.864s] -- Configuring done (0.8s)
+[0.932s] -- Generating done (0.1s)
+[0.941s] -- Build files have been written to: /home/jetson/slop-bot_ws/build/livox_sdk2
+[0.952s] Invoked command in '/home/jetson/slop-bot_ws/build/livox_sdk2' returned '0': /usr/bin/cmake /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2 -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/livox_sdk2
+[0.958s] Invoking command in '/home/jetson/slop-bot_ws/build/livox_sdk2': /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/livox_sdk2 -- -j8 -l8
+[1.012s] [  3%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/upgrade_manager.cpp.o
+[1.012s] [  3%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/device_manager.cpp.o
+[1.013s] [  5%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/parse_cfg_file.cpp.o
+[1.013s] [  5%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/params_check.cpp.o
+[1.013s] [  6%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/__/3rdparty/FastCRC/FastCRCsw.cpp.o
+[1.014s] [  6%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/livox_lidar_sdk.cpp.o
+[1.014s] [  7%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/__/3rdparty/FastCRC/FastCRCsw.cpp.o
+[1.027s] [  8%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/device_manager.cpp.o
+[1.724s] [  9%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/io_loop.cpp.o
+[1.802s] [ 10%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/livox_lidar_sdk.cpp.o
+[2.608s] [ 11%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/thread_base.cpp.o
+[4.172s] [ 12%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/io_thread.cpp.o
+[5.812s] [ 13%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/logging.cpp.o
+[13.974s] [ 15%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/params_check.cpp.o
+[14.656s] [ 16%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/network/unix/network_util.cpp.o
+[14.917s] [ 17%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/parse_cfg_file.cpp.o
+[15.177s] [ 18%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/multiple_io/multiple_io_base.cpp.o
+[15.630s] [ 19%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/multiple_io/multiple_io_epoll.cpp.o
+[16.064s] [ 20%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/upgrade_manager.cpp.o
+[16.617s] [ 21%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/multiple_io/multiple_io_poll.cpp.o
+[16.829s] [ 22%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/multiple_io/multiple_io_select.cpp.o
+[17.176s] [ 23%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/io_loop.cpp.o
+[17.385s] [ 24%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/multiple_io/multiple_io_kqueue.cpp.o
+[17.481s] [ 25%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/thread_base.cpp.o
+[18.131s] [ 26%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/wake_up/unix/wake_up_pipe.cpp.o
+[18.347s] [ 27%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/io_thread.cpp.o
+[18.557s] [ 29%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/logging.cpp.o
+[19.845s] [ 30%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/network/unix/network_util.cpp.o
+[20.543s] [ 31%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/multiple_io/multiple_io_base.cpp.o
+[20.544s] [ 32%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/multiple_io/multiple_io_epoll.cpp.o
+[21.312s] [ 33%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/comm/comm_port.cpp.o
+[21.448s] [ 34%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/multiple_io/multiple_io_poll.cpp.o
+[21.937s] [ 35%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/multiple_io/multiple_io_select.cpp.o
+[21.995s] [ 36%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/multiple_io/multiple_io_kqueue.cpp.o
+[22.014s] [ 37%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/wake_up/unix/wake_up_pipe.cpp.o
+[22.210s] [ 38%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/comm/comm_port.cpp.o
+[22.532s] [ 39%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/comm/sdk_protocol.cpp.o
+[22.627s] [ 40%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/comm/generate_seq.cpp.o
+[22.787s] [ 41%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/upgrade/firmware.cpp.o
+[23.096s] [ 43%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/upgrade/livox_lidar_upgrader.cpp.o
+[23.110s] [ 44%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/logger_handler/logger_manager.cpp.o
+[23.203s] [ 45%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/comm/sdk_protocol.cpp.o
+[23.448s] [ 46%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/comm/generate_seq.cpp.o
+[23.573s] [ 47%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/upgrade/firmware.cpp.o
+[23.864s] [ 48%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/logger_handler/logger_handler.cpp.o
+[24.283s] [ 49%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/upgrade/livox_lidar_upgrader.cpp.o
+[25.356s] [ 50%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/logger_handler/logger_manager.cpp.o
+[26.687s] [ 51%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/logger_handler/logger_handler.cpp.o
+[27.596s] [ 52%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/logger_handler/file_manager.cpp.o
+[30.245s] [ 53%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/data_handler/data_handler.cpp.o
+[30.837s] [ 54%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/command_impl.cpp.o
+[35.599s] [ 55%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/general_command_handler.cpp.o
+[38.541s] [ 56%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/hap_command_handler.cpp.o
+[39.775s] [ 59%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/mid360_command_handler.cpp.o
+[39.775s] [ 59%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/build_request.cpp.o
+[40.393s] [ 60%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/logger_handler/file_manager.cpp.o
+[41.149s] [ 61%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/data_handler/data_handler.cpp.o
+[41.200s] In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,
+[41.200s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,
+[41.200s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,
+[41.200s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,
+[41.200s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,
+[41.200s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/hap_command_handler.cpp:37:
+[41.201s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after ‘#pragma GCC diagnostic’ kind [-Wpragmas]
+[41.201s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[41.201s]       |                             ^~~~~~~
+[41.201s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[41.201s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[41.201s]       |                                  ^~~~~~~~~~~~~~~~
+[41.201s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[41.201s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[41.201s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[41.201s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[41.202s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[41.202s]       | ^~~~~~~~~~~~~~~~~~
+[41.209s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean ‘-Warray-bounds’?
+[41.210s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[41.210s]       |                             ^~~~~~~
+[41.210s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[41.210s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[41.210s]       |                                  ^~~~~~~~~~~~~~~~
+[41.210s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[41.210s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[41.210s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[41.210s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[41.211s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[41.211s]       | ^~~~~~~~~~~~~~~~~~
+[41.865s] [ 62%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/parse_lidar_state_info.cpp.o
+[42.879s] In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,
+[42.879s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,
+[42.879s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,
+[42.879s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,
+[42.879s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,
+[42.880s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/mid360_command_handler.cpp:37:
+[42.880s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after ‘#pragma GCC diagnostic’ kind [-Wpragmas]
+[42.880s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[42.880s]       |                             ^~~~~~~
+[42.880s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[42.880s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[42.880s]       |                                  ^~~~~~~~~~~~~~~~
+[42.880s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[42.880s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[42.880s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[42.881s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[42.881s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[42.881s]       | ^~~~~~~~~~~~~~~~~~
+[42.891s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean ‘-Warray-bounds’?
+[42.891s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[42.891s]       |                             ^~~~~~~
+[42.892s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[42.892s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[42.892s]       |                                  ^~~~~~~~~~~~~~~~
+[42.892s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[42.892s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[42.892s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[42.892s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[42.892s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[42.892s]       | ^~~~~~~~~~~~~~~~~~
+[43.348s] In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,
+[43.348s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,
+[43.348s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,
+[43.348s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,
+[43.348s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,
+[43.348s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.cpp:2:
+[43.348s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after ‘#pragma GCC diagnostic’ kind [-Wpragmas]
+[43.349s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[43.349s]       |                             ^~~~~~~
+[43.349s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[43.349s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[43.349s]       |                                  ^~~~~~~~~~~~~~~~
+[43.349s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[43.349s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[43.349s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[43.349s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[43.349s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[43.349s]       | ^~~~~~~~~~~~~~~~~~
+[43.351s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean ‘-Warray-bounds’?
+[43.352s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[43.352s]       |                             ^~~~~~~
+[43.352s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[43.353s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[43.353s]       |                                  ^~~~~~~~~~~~~~~~
+[43.353s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[43.353s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[43.353s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[43.353s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[43.353s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[43.353s]       | ^~~~~~~~~~~~~~~~~~
+[45.551s] [ 63%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/mid360s_command_handler.cpp.o
+[49.128s] In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,
+[49.129s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,
+[49.129s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,
+[49.129s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,
+[49.129s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,
+[49.130s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/mid360s_command_handler.cpp:37:
+[49.130s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after ‘#pragma GCC diagnostic’ kind [-Wpragmas]
+[49.130s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[49.130s]       |                             ^~~~~~~
+[49.130s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[49.130s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[49.130s]       |                                  ^~~~~~~~~~~~~~~~
+[49.130s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[49.130s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[49.130s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[49.131s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[49.131s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[49.131s]       | ^~~~~~~~~~~~~~~~~~
+[49.137s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean ‘-Warray-bounds’?
+[49.137s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[49.137s]       |                             ^~~~~~~
+[49.137s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[49.137s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[49.137s]       |                                  ^~~~~~~~~~~~~~~~
+[49.137s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[49.137s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[49.137s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[49.138s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[49.138s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[49.138s]       | ^~~~~~~~~~~~~~~~~~
+[51.920s] [ 64%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/avia2_command_handler.cpp.o
+[52.632s] [ 65%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/command_impl.cpp.o
+[53.254s] [ 66%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/mid360l_command_handler.cpp.o
+[53.570s] [ 67%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/debug_point_cloud_handler/debug_point_cloud_manager.cpp.o
+[55.408s] [ 68%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/general_command_handler.cpp.o
+[55.438s] In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,
+[55.438s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,
+[55.438s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,
+[55.438s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,
+[55.439s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,
+[55.439s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/avia2_command_handler.cpp:37:
+[55.439s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after ‘#pragma GCC diagnostic’ kind [-Wpragmas]
+[55.439s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[55.439s]       |                             ^~~~~~~
+[55.439s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[55.439s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[55.439s]       |                                  ^~~~~~~~~~~~~~~~
+[55.440s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[55.440s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[55.440s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[55.440s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[55.440s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[55.440s]       | ^~~~~~~~~~~~~~~~~~
+[55.445s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean ‘-Warray-bounds’?
+[55.445s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[55.445s]       |                             ^~~~~~~
+[55.445s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[55.445s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[55.445s]       |                                  ^~~~~~~~~~~~~~~~
+[55.446s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[55.446s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[55.446s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[55.446s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[55.446s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[55.446s]       | ^~~~~~~~~~~~~~~~~~
+[55.820s] [ 69%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/debug_point_cloud_handler/debug_point_cloud_handler.cpp.o
+[56.484s] In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,
+[56.484s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,
+[56.484s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,
+[56.484s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,
+[56.484s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,
+[56.484s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/mid360l_command_handler.cpp:37:
+[56.484s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after ‘#pragma GCC diagnostic’ kind [-Wpragmas]
+[56.485s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[56.485s]       |                             ^~~~~~~
+[56.485s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[56.485s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[56.485s]       |                                  ^~~~~~~~~~~~~~~~
+[56.485s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[56.485s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[56.485s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[56.485s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[56.485s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[56.486s]       | ^~~~~~~~~~~~~~~~~~
+[56.492s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean ‘-Warray-bounds’?
+[56.492s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[56.493s]       |                             ^~~~~~~
+[56.493s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[56.493s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[56.493s]       |                                  ^~~~~~~~~~~~~~~~
+[56.493s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[56.493s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[56.493s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[56.493s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[56.493s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[56.493s]       | ^~~~~~~~~~~~~~~~~~
+[60.131s] [ 70%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/hap_command_handler.cpp.o
+[61.840s] [ 72%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/mid360_command_handler.cpp.o
+[63.422s] In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,
+[63.422s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,
+[63.423s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,
+[63.423s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,
+[63.423s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,
+[63.423s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/hap_command_handler.cpp:37:
+[63.423s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after ‘#pragma GCC diagnostic’ kind [-Wpragmas]
+[63.423s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[63.423s]       |                             ^~~~~~~
+[63.423s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[63.423s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[63.424s]       |                                  ^~~~~~~~~~~~~~~~
+[63.424s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[63.424s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[63.424s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[63.424s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[63.424s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[63.424s]       | ^~~~~~~~~~~~~~~~~~
+[63.428s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean ‘-Warray-bounds’?
+[63.428s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[63.428s]       |                             ^~~~~~~
+[63.428s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[63.428s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[63.428s]       |                                  ^~~~~~~~~~~~~~~~
+[63.428s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[63.428s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[63.429s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[63.429s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[63.429s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[63.429s]       | ^~~~~~~~~~~~~~~~~~
+[65.541s] In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,
+[65.541s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,
+[65.541s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,
+[65.542s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,
+[65.542s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,
+[65.542s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/mid360_command_handler.cpp:37:
+[65.542s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after ‘#pragma GCC diagnostic’ kind [-Wpragmas]
+[65.542s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[65.542s]       |                             ^~~~~~~
+[65.542s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[65.542s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[65.542s]       |                                  ^~~~~~~~~~~~~~~~
+[65.542s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[65.542s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[65.543s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[65.543s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[65.543s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[65.543s]       | ^~~~~~~~~~~~~~~~~~
+[65.550s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean ‘-Warray-bounds’?
+[65.550s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[65.550s]       |                             ^~~~~~~
+[65.554s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[65.554s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[65.554s]       |                                  ^~~~~~~~~~~~~~~~
+[65.555s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[65.555s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[65.555s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[65.555s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[65.555s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[65.555s]       | ^~~~~~~~~~~~~~~~~~
+[68.588s] [ 73%] Linking CXX static library liblivox_lidar_sdk_static.a
+[68.762s] [ 73%] Built target livox_lidar_sdk_static
+[73.491s] [ 74%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/debug_point_cloud_handler/debug_point_cloud_manager.cpp.o
+[73.491s] [ 75%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/debug_point_cloud_handler/debug_point_cloud_handler.cpp.o
+[73.505s] [ 76%] Building CXX object samples/livox_lidar_quick_start/CMakeFiles/livox_lidar_quick_start.dir/main.cpp.o
+[74.243s] [ 77%] Linking CXX executable livox_lidar_quick_start
+[74.539s] [ 77%] Built target livox_lidar_quick_start
+[74.563s] [ 78%] Building CXX object samples/multi_lidars_upgrade/CMakeFiles/multi_lidars_upgrade.dir/main.cpp.o
+[75.455s] [ 79%] Linking CXX executable multi_lidars_upgrade
+[75.768s] [ 79%] Built target multi_lidars_upgrade
+[75.795s] [ 80%] Building CXX object samples/logger/CMakeFiles/logger.dir/main.cpp.o
+[76.622s] [ 81%] Linking CXX executable logger
+[77.025s] [ 81%] Built target logger
+[77.049s] [ 82%] Building CXX object samples/debug_point_cloud/CMakeFiles/debug_point_cloud.dir/main.cpp.o
+[77.928s] [ 83%] Linking CXX executable debug_point_cloud
+[78.223s] [ 83%] Built target debug_point_cloud
+[78.249s] [ 84%] Building CXX object samples/lidar_cmd_observer/CMakeFiles/lidar_cmd_observer.dir/main.cpp.o
+[78.892s] [ 86%] Linking CXX executable lidar_cmd_observer
+[79.187s] [ 86%] Built target lidar_cmd_observer
+[79.210s] [ 87%] Building CXX object samples/livox_lidar_rmc_time_sync/CMakeFiles/livox_lidar_rmc_time_sync.dir/main.cpp.o
+[80.091s] [ 88%] Building CXX object samples/livox_lidar_rmc_time_sync/CMakeFiles/livox_lidar_rmc_time_sync.dir/linux/synchro.cpp.o
+[81.169s] [ 89%] Linking CXX executable livox_lidar_rmc_time_sync
+[81.468s] [ 89%] Built target livox_lidar_rmc_time_sync
+[81.494s] [ 90%] Building CXX object samples/livox_lidar_ip_set/CMakeFiles/livox_lidar_ip_set.dir/main.cpp.o
+[82.223s] [ 91%] Linking CXX executable livox_lidar_ip_set
+[82.513s] [ 91%] Built target livox_lidar_ip_set
+[82.575s] [ 92%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/mid360l_command_handler.cpp.o
+[84.835s] In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,
+[84.835s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,
+[84.836s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,
+[84.836s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,
+[84.836s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,
+[84.836s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/mid360l_command_handler.cpp:37:
+[84.836s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after ‘#pragma GCC diagnostic’ kind [-Wpragmas]
+[84.836s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[84.836s]       |                             ^~~~~~~
+[84.837s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[84.837s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[84.837s]       |                                  ^~~~~~~~~~~~~~~~
+[84.837s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[84.837s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[84.837s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[84.837s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[84.838s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[84.838s]       | ^~~~~~~~~~~~~~~~~~
+[84.838s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean ‘-Warray-bounds’?
+[84.839s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[84.839s]       |                             ^~~~~~~
+[84.839s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[84.839s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[84.839s]       |                                  ^~~~~~~~~~~~~~~~
+[84.839s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[84.839s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[84.839s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[84.840s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[84.840s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[84.840s]       | ^~~~~~~~~~~~~~~~~~
+[91.770s] [ 94%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/avia2_command_handler.cpp.o
+[91.770s] [ 94%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/parse_lidar_state_info.cpp.o
+[91.772s] [ 95%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/mid360s_command_handler.cpp.o
+[92.535s] In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,
+[92.536s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,
+[92.536s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,
+[92.536s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,
+[92.536s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,
+[92.536s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.cpp:2:
+[92.536s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after ‘#pragma GCC diagnostic’ kind [-Wpragmas]
+[92.536s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[92.536s]       |                             ^~~~~~~
+[92.536s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[92.536s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[92.537s]       |                                  ^~~~~~~~~~~~~~~~
+[92.537s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[92.537s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[92.537s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[92.537s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[92.537s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[92.537s]       | ^~~~~~~~~~~~~~~~~~
+[92.539s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean ‘-Warray-bounds’?
+[92.539s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[92.539s]       |                             ^~~~~~~
+[92.539s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[92.539s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[92.540s]       |                                  ^~~~~~~~~~~~~~~~
+[92.540s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[92.540s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[92.540s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[92.540s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[92.540s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[92.540s]       | ^~~~~~~~~~~~~~~~~~
+[93.820s] In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,
+[93.820s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,
+[93.820s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,
+[93.821s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,
+[93.821s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,
+[93.821s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/mid360s_command_handler.cpp:37:
+[93.821s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after ‘#pragma GCC diagnostic’ kind [-Wpragmas]
+[93.821s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[93.821s]       |                             ^~~~~~~
+[93.821s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[93.821s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[93.821s]       |                                  ^~~~~~~~~~~~~~~~
+[93.821s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[93.821s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[93.822s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[93.822s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[93.822s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[93.822s]       | ^~~~~~~~~~~~~~~~~~
+[93.822s] In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,
+[93.822s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,
+[93.822s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,
+[93.822s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,
+[93.822s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,
+[93.822s]                  from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/avia2_command_handler.cpp:37:
+[93.822s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after ‘#pragma GCC diagnostic’ kind [-Wpragmas]
+[93.823s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[93.823s]       |                             ^~~~~~~
+[93.823s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[93.823s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[93.823s]       |                                  ^~~~~~~~~~~~~~~~
+[93.823s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[93.823s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[93.823s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[93.823s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[93.823s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[93.823s]       | ^~~~~~~~~~~~~~~~~~
+[93.824s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean ‘-Warray-bounds’?
+[93.825s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[93.825s]       |                             ^~~~~~~
+[93.825s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[93.825s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[93.825s]       |                                  ^~~~~~~~~~~~~~~~
+[93.825s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[93.825s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[93.825s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[93.826s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[93.826s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[93.826s]       | ^~~~~~~~~~~~~~~~~~
+[93.826s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean ‘-Warray-bounds’?
+[93.826s]   542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))
+[93.826s]       |                             ^~~~~~~
+[93.826s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro ‘RAPIDJSON_PRAGMA’
+[93.826s]   543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)
+[93.826s]       |                                  ^~~~~~~~~~~~~~~~
+[93.826s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro ‘RAPIDJSON_DIAG_PRAGMA’
+[93.826s]   545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))
+[93.827s]       |   ^~~~~~~~~~~~~~~~~~~~~
+[93.827s] /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro ‘RAPIDJSON_DIAG_OFF’
+[93.827s]    36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings
+[93.827s]       | ^~~~~~~~~~~~~~~~~~
+[101.048s] [ 96%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/build_request.cpp.o
+[109.667s] [ 97%] Linking CXX shared library liblivox_lidar_sdk_shared.so
+[109.936s] [ 97%] Built target livox_lidar_sdk_shared
+[109.958s] [ 98%] Building CXX object samples/livox_lidar_info_get/CMakeFiles/livox_lidar_info_get.dir/main.cpp.o
+[110.630s] [100%] Linking CXX executable livox_lidar_info_get
+[110.905s] [100%] Built target livox_lidar_info_get
+[110.921s] Invoked command in '/home/jetson/slop-bot_ws/build/livox_sdk2' returned '0': /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/livox_sdk2 -- -j8 -l8
+[110.935s] Invoking command in '/home/jetson/slop-bot_ws/build/livox_sdk2': /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/livox_sdk2
+[110.942s] -- Install configuration: "Release"
+[110.942s] -- Installing: /home/jetson/slop-bot_ws/install/livox_sdk2/lib/liblivox_lidar_sdk_static.a
+[110.964s] -- Installing: /home/jetson/slop-bot_ws/install/livox_sdk2/include/livox_lidar_def.h
+[110.964s] -- Installing: /home/jetson/slop-bot_ws/install/livox_sdk2/include/livox_lidar_api.h
+[110.965s] -- Installing: /home/jetson/slop-bot_ws/install/livox_sdk2/include/livox_lidar_cfg.h
+[110.965s] -- Installing: /home/jetson/slop-bot_ws/install/livox_sdk2/lib/liblivox_lidar_sdk_shared.so
+[110.974s] Invoked command in '/home/jetson/slop-bot_ws/build/livox_sdk2' returned '0': /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/livox_sdk2

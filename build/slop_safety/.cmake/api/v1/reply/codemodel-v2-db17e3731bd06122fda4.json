@@ -1,0 +1,115 @@
+{
+	"configurations" : 
+	[
+		{
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Python3::Interpreter::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Python3__Interpreter-19aa405a855c94a89f32.json",
+					"name" : "Python3::Interpreter",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Python3::InterpreterMultiConfig::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Python3__InterpreterMultiConfig-d537596fbfc746b4210a.json",
+					"name" : "Python3::InterpreterMultiConfig",
+					"projectIndex" : 0
+				}
+			],
+			"directories" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1
+					],
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-9454083f543f69a5cad2.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "slop_safety",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_build_slop_safety_egg::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_build_slop_safety_egg-651de3b2500f0e8091d6.json",
+					"name" : "ament_cmake_python_build_slop_safety_egg",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_copy_slop_safety::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_copy_slop_safety-a5be7e71c254da1ea6da.json",
+					"name" : "ament_cmake_python_copy_slop_safety",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "slop_safety_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-slop_safety_uninstall-6c1bcaaabcf88e43d3b4.json",
+					"name" : "slop_safety_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-1db1c7a24c62d74aad6c.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/jetson/slop-bot_ws/build/slop_safety",
+		"source" : "/home/jetson/slop-bot_ws/src/slop_safety"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	}
+}

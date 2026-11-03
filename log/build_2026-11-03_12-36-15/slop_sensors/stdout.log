@@ -1,0 +1,24 @@
+-- Install configuration: ""
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/config
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/config/MID360s_config.json
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/config/realsense.yaml
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/config/mounts.yaml
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/launch
+-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/launch/camera.launch.py
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/launch/sensors.launch.py
+-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/launch/lidar.launch.py
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/ament_index/resource_index/package_run_dependencies/slop_sensors
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/ament_index/resource_index/parent_prefix_path/slop_sensors
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/environment/ament_prefix_path.sh
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/environment/path.sh
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/environment/path.dsv
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/local_setup.bash
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/local_setup.sh
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/local_setup.zsh
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/local_setup.dsv
+-- Installing: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/package.dsv
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/ament_index/resource_index/packages/slop_sensors
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/cmake/slop_sensorsConfig.cmake
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/cmake/slop_sensorsConfig-version.cmake
+-- Up-to-date: /home/jetson/slop-bot_ws/install/slop_sensors/share/slop_sensors/package.xml

@@ -1,0 +1,28 @@
+{
+  "names": {
+    "livox_sdk2": {
+      "cmake-args": [
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+      ]
+    },
+    "livox_ros_driver2": {
+      "cmake-args": [
+        "-DROS_EDITION=ROS2",
+        "-DDISTRO_ROS=humble",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
+        "-DPython3_EXECUTABLE=/usr/bin/python3",
+        "-DLIVOX_LIDAR_SDK_LIBRARY=/home/jetson/slop-bot_ws/install/livox_sdk2/lib/liblivox_lidar_sdk_shared.so",
+        "-DLIVOX_LIDAR_SDK_INCLUDE_DIR=/home/jetson/slop-bot_ws/install/livox_sdk2/include",
+        "-DPYTHON_EXECUTABLE=/usr/bin/python3"
+      ]
+    },
+    "slop_sensors": {
+      "cmake-args": [
+        "-DPython3_EXECUTABLE=/usr/bin/python3",
+        "-DPYTHON_EXECUTABLE=/usr/bin/python3"
+      ]
+    }
+  }
+}

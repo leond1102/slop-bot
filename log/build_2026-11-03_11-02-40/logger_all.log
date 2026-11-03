@@ -1,0 +1,298 @@
+[0.216s] [34mcolcon[0m [1;30mDEBUG[0m [32mCommand line arguments: ['/usr/bin/colcon', 'build'][0m
+[0.216s] [34mcolcon[0m [1;30mDEBUG[0m [32mParsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=8, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0xffff85080a00>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0xffff85053d60>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0xffff85053d60>>, mixin_verb=('build',))[0m
+[0.589s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(colcon_meta) check parameters
+[0.589s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) check parameters
+[0.589s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) check parameters
+[0.589s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) check parameters
+[0.589s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(colcon_meta) discover
+[0.590s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) discover
+[0.590s] [34mcolcon.colcon_core.package_discovery[0m [1;30mINFO[0m Crawling recursively for packages in '/home/jetson/slop-bot_ws'
+[0.590s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.590s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ignore'
+[0.590s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ignore_ament_install'
+[0.590s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['colcon_pkg']
+[0.590s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'colcon_pkg'
+[0.590s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['colcon_meta']
+[0.591s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'colcon_meta'
+[0.591s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['ros']
+[0.591s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ros'
+[0.639s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['cmake', 'python']
+[0.639s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'cmake'
+[0.639s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'python'
+[0.639s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['python_setup_py']
+[0.639s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'python_setup_py'
+[0.639s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.640s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) by extension 'ignore'
+[0.640s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) ignored
+[0.640s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.640s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) by extension 'ignore'
+[0.640s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) ignored
+[0.640s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.641s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) by extension 'ignore'
+[0.641s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) ignored
+[0.641s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['ignore', 'ignore_ament_install']
+[0.641s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'ignore'
+[0.641s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'ignore_ament_install'
+[0.641s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['colcon_pkg']
+[0.641s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'colcon_pkg'
+[0.641s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['colcon_meta']
+[0.641s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'colcon_meta'
+[0.641s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['ros']
+[0.641s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'ros'
+[0.642s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['cmake', 'python']
+[0.642s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'cmake'
+[0.642s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'python'
+[0.642s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['python_setup_py']
+[0.642s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'python_setup_py'
+[0.642s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_base) by extensions ['ignore', 'ignore_ament_install']
+[0.642s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_base) by extension 'ignore'
+[0.642s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_base) by extension 'ignore_ament_install'
+[0.642s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_base) by extensions ['colcon_pkg']
+[0.642s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_base) by extension 'colcon_pkg'
+[0.643s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_base) by extensions ['colcon_meta']
+[0.643s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_base) by extension 'colcon_meta'
+[0.643s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_base) by extensions ['ros']
+[0.643s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_base) by extension 'ros'
+[0.647s] [34mcolcon.colcon_core.package_identification[0m [1;30mDEBUG[0m [32mPackage 'src/slop_base' with type 'ros.ament_cmake' and name 'slop_base'[0m
+[0.647s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_safety) by extensions ['ignore', 'ignore_ament_install']
+[0.648s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_safety) by extension 'ignore'
+[0.648s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_safety) by extension 'ignore_ament_install'
+[0.648s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_safety) by extensions ['colcon_pkg']
+[0.648s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_safety) by extension 'colcon_pkg'
+[0.648s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_safety) by extensions ['colcon_meta']
+[0.648s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_safety) by extension 'colcon_meta'
+[0.648s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_safety) by extensions ['ros']
+[0.648s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_safety) by extension 'ros'
+[0.649s] [34mcolcon.colcon_core.package_identification[0m [1;30mDEBUG[0m [32mPackage 'src/slop_safety' with type 'ros.ament_cmake' and name 'slop_safety'[0m
+[0.650s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_teleop) by extensions ['ignore', 'ignore_ament_install']
+[0.650s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_teleop) by extension 'ignore'
+[0.650s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_teleop) by extension 'ignore_ament_install'
+[0.650s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_teleop) by extensions ['colcon_pkg']
+[0.650s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_teleop) by extension 'colcon_pkg'
+[0.650s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_teleop) by extensions ['colcon_meta']
+[0.650s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_teleop) by extension 'colcon_meta'
+[0.650s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_teleop) by extensions ['ros']
+[0.650s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/slop_teleop) by extension 'ros'
+[0.651s] [34mcolcon.colcon_core.package_identification[0m [1;30mDEBUG[0m [32mPackage 'src/slop_teleop' with type 'ros.ament_cmake' and name 'slop_teleop'[0m
+[0.652s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extensions ['ignore', 'ignore_ament_install']
+[0.652s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extension 'ignore'
+[0.652s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extension 'ignore_ament_install'
+[0.652s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extensions ['colcon_pkg']
+[0.652s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extension 'colcon_pkg'
+[0.652s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extensions ['colcon_meta']
+[0.652s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extension 'colcon_meta'
+[0.652s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extensions ['ros']
+[0.652s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extension 'ros'
+[0.652s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extensions ['cmake', 'python']
+[0.652s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extension 'cmake'
+[0.653s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extension 'python'
+[0.653s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extensions ['python_setup_py']
+[0.653s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests) by extension 'python_setup_py'
+[0.653s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extensions ['ignore', 'ignore_ament_install']
+[0.653s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extension 'ignore'
+[0.653s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extension 'ignore_ament_install'
+[0.653s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extensions ['colcon_pkg']
+[0.653s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extension 'colcon_pkg'
+[0.653s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extensions ['colcon_meta']
+[0.653s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extension 'colcon_meta'
+[0.653s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extensions ['ros']
+[0.654s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extension 'ros'
+[0.654s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extensions ['cmake', 'python']
+[0.654s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extension 'cmake'
+[0.654s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extension 'python'
+[0.654s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extensions ['python_setup_py']
+[0.654s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(tests/__pycache__) by extension 'python_setup_py'
+[0.654s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) using defaults
+[0.654s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) discover
+[0.654s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) using defaults
+[0.654s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) discover
+[0.654s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) using defaults
+[0.681s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(prefix_path) check parameters
+[0.682s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(prefix_path) discover
+[0.686s] [34mcolcon.colcon_installed_package_information.package_discovery[0m [1;30mDEBUG[0m [32mFound 3 installed packages in /home/jetson/slop-bot_ws/install[0m
+[0.687s] [34mcolcon.colcon_installed_package_information.package_discovery[0m [1;30mDEBUG[0m [32mFound 14 installed packages in /home/jetson/ros2_ws/install[0m
+[0.689s] [34mcolcon.colcon_installed_package_information.package_discovery[0m [1;30mDEBUG[0m [32mFound 376 installed packages in /opt/ros/humble[0m
+[0.692s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(prefix_path) using defaults
+[0.769s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_safety' build argument 'cmake_args' from command line to 'None'
+[0.770s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_safety' build argument 'cmake_target' from command line to 'None'
+[0.770s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_safety' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.770s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_safety' build argument 'cmake_clean_cache' from command line to 'False'
+[0.770s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_safety' build argument 'cmake_clean_first' from command line to 'False'
+[0.770s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_safety' build argument 'cmake_force_configure' from command line to 'False'
+[0.770s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_safety' build argument 'ament_cmake_args' from command line to 'None'
+[0.770s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_safety' build argument 'catkin_cmake_args' from command line to 'None'
+[0.770s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_safety' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.770s] [34mcolcon.colcon_core.verb[0m [1;30mDEBUG[0m [32mBuilding package 'slop_safety' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/jetson/slop-bot_ws/build/slop_safety', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/jetson/slop-bot_ws/install/slop_safety', 'merge_install': False, 'path': '/home/jetson/slop-bot_ws/src/slop_safety', 'symlink_install': False, 'test_result_base': None}[0m
+[0.771s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_teleop' build argument 'cmake_args' from command line to 'None'
+[0.771s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_teleop' build argument 'cmake_target' from command line to 'None'
+[0.771s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_teleop' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.771s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_teleop' build argument 'cmake_clean_cache' from command line to 'False'
+[0.771s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_teleop' build argument 'cmake_clean_first' from command line to 'False'
+[0.771s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_teleop' build argument 'cmake_force_configure' from command line to 'False'
+[0.771s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_teleop' build argument 'ament_cmake_args' from command line to 'None'
+[0.771s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_teleop' build argument 'catkin_cmake_args' from command line to 'None'
+[0.771s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_teleop' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.771s] [34mcolcon.colcon_core.verb[0m [1;30mDEBUG[0m [32mBuilding package 'slop_teleop' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/jetson/slop-bot_ws/build/slop_teleop', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/jetson/slop-bot_ws/install/slop_teleop', 'merge_install': False, 'path': '/home/jetson/slop-bot_ws/src/slop_teleop', 'symlink_install': False, 'test_result_base': None}[0m
+[0.772s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_base' build argument 'cmake_args' from command line to 'None'
+[0.772s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_base' build argument 'cmake_target' from command line to 'None'
+[0.772s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_base' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.772s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_base' build argument 'cmake_clean_cache' from command line to 'False'
+[0.772s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_base' build argument 'cmake_clean_first' from command line to 'False'
+[0.772s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_base' build argument 'cmake_force_configure' from command line to 'False'
+[0.772s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_base' build argument 'ament_cmake_args' from command line to 'None'
+[0.772s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_base' build argument 'catkin_cmake_args' from command line to 'None'
+[0.772s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'slop_base' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.772s] [34mcolcon.colcon_core.verb[0m [1;30mDEBUG[0m [32mBuilding package 'slop_base' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/jetson/slop-bot_ws/build/slop_base', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/jetson/slop-bot_ws/install/slop_base', 'merge_install': False, 'path': '/home/jetson/slop-bot_ws/src/slop_base', 'symlink_install': False, 'test_result_base': None}[0m
+[0.772s] [34mcolcon.colcon_core.executor[0m [1;30mINFO[0m Executing jobs using 'parallel' executor
+[0.775s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mrun_until_complete[0m
+[0.775s] [34mcolcon.colcon_ros.task.ament_cmake.build[0m [1;30mINFO[0m Building ROS package in '/home/jetson/slop-bot_ws/src/slop_safety' with build type 'ament_cmake'
+[0.775s] [34mcolcon.colcon_cmake.task.cmake.build[0m [1;30mINFO[0m Building CMake package in '/home/jetson/slop-bot_ws/src/slop_safety'
+[0.779s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.779s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.779s] [34mcolcon.colcon_core.shell[0m [1;30mDEBUG[0m [32mSkip shell extension 'dsv' for command environment[0m
+[0.789s] [34mcolcon.colcon_ros.task.ament_cmake.build[0m [1;30mINFO[0m Building ROS package in '/home/jetson/slop-bot_ws/src/slop_teleop' with build type 'ament_cmake'
+[0.789s] [34mcolcon.colcon_cmake.task.cmake.build[0m [1;30mINFO[0m Building CMake package in '/home/jetson/slop-bot_ws/src/slop_teleop'
+[0.789s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.790s] [34mcolcon.colcon_core.shell[0m [1;30mDEBUG[0m [32mSkip shell extension 'dsv' for command environment[0m
+[0.807s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/jetson/slop-bot_ws/build/slop_safety': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_safety -- -j8 -l8[0m
+[0.817s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/jetson/slop-bot_ws/build/slop_teleop': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_teleop -- -j8 -l8[0m
+[1.438s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/jetson/slop-bot_ws/build/slop_teleop' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_teleop -- -j8 -l8[0m
+[1.450s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/jetson/slop-bot_ws/build/slop_teleop': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_teleop[0m
+[1.453s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/jetson/slop-bot_ws/build/slop_safety' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_safety -- -j8 -l8[0m
+[1.456s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/jetson/slop-bot_ws/build/slop_safety': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_safety[0m
+[1.537s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(slop_teleop)
+[1.542s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/jetson/slop-bot_ws/build/slop_teleop' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_teleop[0m
+[1.555s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop' for CMake module files
+[1.557s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop' for CMake config files
+[1.558s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('slop_teleop', 'cmake_prefix_path')
+[1.559s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/hook/cmake_prefix_path.ps1'
+[1.562s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/hook/cmake_prefix_path.dsv'
+[1.563s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/hook/cmake_prefix_path.sh'
+[1.567s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop/lib'
+[1.567s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop/bin'
+[1.567s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop/lib/pkgconfig/slop_teleop.pc'
+[1.568s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop/lib/python3.10/site-packages'
+[1.570s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop/bin'
+[1.571s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/package.ps1'
+[1.576s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/package.dsv'
+[1.578s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/package.sh'
+[1.581s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/package.bash'
+[1.585s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/package.zsh'
+[1.587s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/jetson/slop-bot_ws/install/slop_teleop/share/colcon-core/packages/slop_teleop)
+[1.590s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(slop_teleop)
+[1.590s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop' for CMake module files
+[1.592s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop' for CMake config files
+[1.593s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('slop_teleop', 'cmake_prefix_path')
+[1.594s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/hook/cmake_prefix_path.ps1'
+[1.596s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/hook/cmake_prefix_path.dsv'
+[1.597s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/hook/cmake_prefix_path.sh'
+[1.599s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop/lib'
+[1.600s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop/bin'
+[1.600s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop/lib/pkgconfig/slop_teleop.pc'
+[1.601s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop/lib/python3.10/site-packages'
+[1.602s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_teleop/bin'
+[1.603s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/package.ps1'
+[1.605s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/package.dsv'
+[1.607s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/package.sh'
+[1.608s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/package.bash'
+[1.610s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/package.zsh'
+[1.611s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/jetson/slop-bot_ws/install/slop_teleop/share/colcon-core/packages/slop_teleop)
+[1.614s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(slop_safety)
+[1.615s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety' for CMake module files
+[1.617s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/jetson/slop-bot_ws/build/slop_safety' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_safety[0m
+[1.618s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety' for CMake config files
+[1.619s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('slop_safety', 'cmake_prefix_path')
+[1.619s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/hook/cmake_prefix_path.ps1'
+[1.621s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/hook/cmake_prefix_path.dsv'
+[1.622s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/hook/cmake_prefix_path.sh'
+[1.624s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety/lib'
+[1.625s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety/bin'
+[1.625s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety/lib/pkgconfig/slop_safety.pc'
+[1.626s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety/lib/python3.10/site-packages'
+[1.627s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety/bin'
+[1.628s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.ps1'
+[1.630s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.dsv'
+[1.631s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.sh'
+[1.632s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.bash'
+[1.634s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.zsh'
+[1.635s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/jetson/slop-bot_ws/install/slop_safety/share/colcon-core/packages/slop_safety)
+[1.636s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(slop_safety)
+[1.637s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety' for CMake module files
+[1.638s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety' for CMake config files
+[1.639s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('slop_safety', 'cmake_prefix_path')
+[1.640s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/hook/cmake_prefix_path.ps1'
+[1.641s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/hook/cmake_prefix_path.dsv'
+[1.642s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/hook/cmake_prefix_path.sh'
+[1.644s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety/lib'
+[1.644s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety/bin'
+[1.644s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety/lib/pkgconfig/slop_safety.pc'
+[1.645s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety/lib/python3.10/site-packages'
+[1.646s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_safety/bin'
+[1.646s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.ps1'
+[1.648s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.dsv'
+[1.649s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.sh'
+[1.651s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.bash'
+[1.652s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_safety/share/slop_safety/package.zsh'
+[1.653s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/jetson/slop-bot_ws/install/slop_safety/share/colcon-core/packages/slop_safety)
+[1.653s] [34mcolcon.colcon_ros.task.ament_cmake.build[0m [1;30mINFO[0m Building ROS package in '/home/jetson/slop-bot_ws/src/slop_base' with build type 'ament_cmake'
+[1.654s] [34mcolcon.colcon_cmake.task.cmake.build[0m [1;30mINFO[0m Building CMake package in '/home/jetson/slop-bot_ws/src/slop_base'
+[1.655s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.655s] [34mcolcon.colcon_core.shell[0m [1;30mDEBUG[0m [32mSkip shell extension 'dsv' for command environment[0m
+[1.683s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/jetson/slop-bot_ws/build/slop_base': CMAKE_PREFIX_PATH=/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_base -- -j8 -l8[0m
+[2.309s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/jetson/slop-bot_ws/build/slop_base' returned '0': CMAKE_PREFIX_PATH=/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_base -- -j8 -l8[0m
+[2.314s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/jetson/slop-bot_ws/build/slop_base': CMAKE_PREFIX_PATH=/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_base[0m
+[2.410s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(slop_base)
+[2.411s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base' for CMake module files
+[2.416s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base' for CMake config files
+[2.418s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/jetson/slop-bot_ws/build/slop_base' returned '0': CMAKE_PREFIX_PATH=/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_base[0m
+[2.419s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('slop_base', 'cmake_prefix_path')
+[2.420s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/hook/cmake_prefix_path.ps1'
+[2.422s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/hook/cmake_prefix_path.dsv'
+[2.423s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/hook/cmake_prefix_path.sh'
+[2.425s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base/lib'
+[2.426s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base/bin'
+[2.426s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base/lib/pkgconfig/slop_base.pc'
+[2.427s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base/lib/python3.10/site-packages'
+[2.428s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base/bin'
+[2.429s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.ps1'
+[2.432s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.dsv'
+[2.433s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.sh'
+[2.435s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.bash'
+[2.436s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.zsh'
+[2.437s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/jetson/slop-bot_ws/install/slop_base/share/colcon-core/packages/slop_base)
+[2.440s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(slop_base)
+[2.440s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base' for CMake module files
+[2.442s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base' for CMake config files
+[2.443s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('slop_base', 'cmake_prefix_path')
+[2.444s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/hook/cmake_prefix_path.ps1'
+[2.445s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/hook/cmake_prefix_path.dsv'
+[2.447s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/hook/cmake_prefix_path.sh'
+[2.449s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base/lib'
+[2.449s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base/bin'
+[2.449s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base/lib/pkgconfig/slop_base.pc'
+[2.450s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base/lib/python3.10/site-packages'
+[2.452s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/jetson/slop-bot_ws/install/slop_base/bin'
+[2.453s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.ps1'
+[2.457s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.dsv'
+[2.458s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.sh'
+[2.460s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.bash'
+[2.461s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.zsh'
+[2.463s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/jetson/slop-bot_ws/install/slop_base/share/colcon-core/packages/slop_base)
+[2.464s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mclosing loop[0m
+[2.465s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mloop closed[0m
+[2.465s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mrun_until_complete finished with '0'[0m
+[2.466s] [34mcolcon.colcon_core.event_reactor[0m [1;30mDEBUG[0m [32mjoining thread[0m
+[2.484s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[2.485s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[2.485s] [34mcolcon.colcon_notification.desktop_notification[0m [1;30mINFO[0m Sending desktop notification using 'notify2'
+[2.532s] [34mcolcon.colcon_core.event_reactor[0m [1;30mDEBUG[0m [32mjoined thread[0m
+[2.533s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script '/home/jetson/slop-bot_ws/install/local_setup.ps1'
+[2.537s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix util module '/home/jetson/slop-bot_ws/install/_local_setup_util_ps1.py'
+[2.543s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script '/home/jetson/slop-bot_ws/install/setup.ps1'
+[2.550s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script '/home/jetson/slop-bot_ws/install/local_setup.sh'
+[2.553s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix util module '/home/jetson/slop-bot_ws/install/_local_setup_util_sh.py'
+[2.556s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script '/home/jetson/slop-bot_ws/install/setup.sh'
+[2.563s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script '/home/jetson/slop-bot_ws/install/local_setup.bash'
+[2.566s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script '/home/jetson/slop-bot_ws/install/setup.bash'
+[2.573s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script '/home/jetson/slop-bot_ws/install/local_setup.zsh'
+[2.575s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script '/home/jetson/slop-bot_ws/install/setup.zsh'

@@ -1,0 +1,222 @@
+{
+	"abstract" : true,
+	"artifacts" : 
+	[
+		{
+			"path" : "/opt/ros/humble/lib/libfoonathan_memory-0.7.1.a"
+		}
+	],
+	"backtrace" : 31,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"find_package",
+			"include",
+			"get_default_rmw_implementation",
+			"ament_auto_find_build_dependencies"
+		],
+		"files" : 
+		[
+			"/opt/ros/humble/lib/foonathan_memory/cmake/foonathan_memory-config.cmake",
+			"/opt/ros/humble/share/fastrtps/cmake/fastrtps-config.cmake",
+			"/opt/ros/humble/share/rmw_fastrtps_shared_cpp/cmake/rmw_fastrtps_shared_cpp-extras.cmake",
+			"/opt/ros/humble/share/rmw_fastrtps_shared_cpp/cmake/rmw_fastrtps_shared_cppConfig.cmake",
+			"/opt/ros/humble/share/rmw_fastrtps_cpp/cmake/ament_cmake_export_dependencies-extras.cmake",
+			"/opt/ros/humble/share/rmw_fastrtps_cpp/cmake/rmw_fastrtps_cppConfig.cmake",
+			"/opt/ros/humble/share/rmw_implementation_cmake/cmake/get_default_rmw_implementation.cmake",
+			"/opt/ros/humble/share/rmw_implementation/cmake/rmw_implementation-extras.cmake",
+			"/opt/ros/humble/share/rmw_implementation/cmake/rmw_implementationConfig.cmake",
+			"/opt/ros/humble/share/rcl/cmake/ament_cmake_export_dependencies-extras.cmake",
+			"/opt/ros/humble/share/rcl/cmake/rclConfig.cmake",
+			"/opt/ros/humble/share/libstatistics_collector/cmake/ament_cmake_export_dependencies-extras.cmake",
+			"/opt/ros/humble/share/libstatistics_collector/cmake/libstatistics_collectorConfig.cmake",
+			"/opt/ros/humble/share/rclcpp/cmake/ament_cmake_export_dependencies-extras.cmake",
+			"/opt/ros/humble/share/rclcpp/cmake/rclcppConfig.cmake",
+			"/opt/ros/humble/share/ament_cmake_auto/cmake/ament_auto_find_build_dependencies.cmake",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 16
+			},
+			{
+				"command" : 4,
+				"file" : 16,
+				"line" : 225,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 15,
+				"line" : 67,
+				"parent" : 1
+			},
+			{
+				"file" : 14,
+				"parent" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 14,
+				"line" : 41,
+				"parent" : 3
+			},
+			{
+				"file" : 13,
+				"parent" : 4
+			},
+			{
+				"command" : 1,
+				"file" : 13,
+				"line" : 21,
+				"parent" : 5
+			},
+			{
+				"file" : 12,
+				"parent" : 6
+			},
+			{
+				"command" : 2,
+				"file" : 12,
+				"line" : 41,
+				"parent" : 7
+			},
+			{
+				"file" : 11,
+				"parent" : 8
+			},
+			{
+				"command" : 1,
+				"file" : 11,
+				"line" : 21,
+				"parent" : 9
+			},
+			{
+				"file" : 10,
+				"parent" : 10
+			},
+			{
+				"command" : 2,
+				"file" : 10,
+				"line" : 41,
+				"parent" : 11
+			},
+			{
+				"file" : 9,
+				"parent" : 12
+			},
+			{
+				"command" : 1,
+				"file" : 9,
+				"line" : 21,
+				"parent" : 13
+			},
+			{
+				"file" : 8,
+				"parent" : 14
+			},
+			{
+				"command" : 2,
+				"file" : 8,
+				"line" : 41,
+				"parent" : 15
+			},
+			{
+				"file" : 7,
+				"parent" : 16
+			},
+			{
+				"command" : 3,
+				"file" : 7,
+				"line" : 19,
+				"parent" : 17
+			},
+			{
+				"command" : 1,
+				"file" : 6,
+				"line" : 64,
+				"parent" : 18
+			},
+			{
+				"file" : 5,
+				"parent" : 19
+			},
+			{
+				"command" : 2,
+				"file" : 5,
+				"line" : 41,
+				"parent" : 20
+			},
+			{
+				"file" : 4,
+				"parent" : 21
+			},
+			{
+				"command" : 1,
+				"file" : 4,
+				"line" : 21,
+				"parent" : 22
+			},
+			{
+				"file" : 3,
+				"parent" : 23
+			},
+			{
+				"command" : 2,
+				"file" : 3,
+				"line" : 41,
+				"parent" : 24
+			},
+			{
+				"file" : 2,
+				"parent" : 25
+			},
+			{
+				"command" : 1,
+				"file" : 2,
+				"line" : 19,
+				"parent" : 26
+			},
+			{
+				"file" : 1,
+				"parent" : 27
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 50,
+				"parent" : 28
+			},
+			{
+				"file" : 0,
+				"parent" : 29
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 54,
+				"parent" : 30
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	},
+	"id" : "foonathan_memory::@6890427a1f51a3e7e1df",
+	"imported" : true,
+	"local" : true,
+	"name" : "foonathan_memory",
+	"nameOnDisk" : "libfoonathan_memory-0.7.1.a",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sources" : [],
+	"type" : "STATIC_LIBRARY"
+}

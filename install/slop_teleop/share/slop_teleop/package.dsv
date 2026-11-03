@@ -1,0 +1,8 @@
+source;share/slop_teleop/hook/cmake_prefix_path.ps1
+source;share/slop_teleop/hook/cmake_prefix_path.dsv
+source;share/slop_teleop/hook/cmake_prefix_path.sh
+source;share/slop_teleop/local_setup.bash
+source;share/slop_teleop/local_setup.dsv
+source;share/slop_teleop/local_setup.ps1
+source;share/slop_teleop/local_setup.sh
+source;share/slop_teleop/local_setup.zsh

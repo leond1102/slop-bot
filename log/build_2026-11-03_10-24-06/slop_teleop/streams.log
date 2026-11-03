@@ -1,0 +1,31 @@
+[0.023s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_teleop': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble VIRTUAL_ENV_PROMPT=(.venv) /usr/bin/cmake /home/jetson/slop-bot_ws/src/slop_teleop -DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/slop_teleop
+[0.033s] CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+[0.033s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.034s]   CMake.
+[0.034s] 
+[0.034s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.034s]   to tell CMake that the project requires at least <min> but has been updated
+[0.034s]   to work with policies introduced by <max> or earlier.
+[0.034s] 
+[0.034s] 
+[0.067s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.320s] -- Found Python3: /home/jetson/ethercat_venv/bin/python3 (found version "3.10.12") found components: Interpreter
+[0.686s] Traceback (most recent call last):
+[0.687s]   File "/opt/ros/humble/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 22, in <module>
+[0.687s]     from catkin_pkg.package import parse_package_string
+[0.687s] ModuleNotFoundError: No module named 'catkin_pkg'
+[0.693s] CMake Error at /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:95 (message):
+[0.693s]   execute_process(/home/jetson/ethercat_venv/bin/python3
+[0.693s]   /opt/ros/humble/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py
+[0.694s]   /home/jetson/slop-bot_ws/src/slop_teleop/package.xml
+[0.694s]   /home/jetson/slop-bot_ws/build/slop_teleop/ament_cmake_core/package.cmake)
+[0.694s]   returned error code 1
+[0.694s] Call Stack (most recent call first):
+[0.694s]   /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:49 (_ament_package_xml)
+[0.694s]   /opt/ros/humble/share/ament_cmake_python/cmake/ament_python_install_package.cmake:60 (ament_package_xml)
+[0.695s]   /opt/ros/humble/share/ament_cmake_python/cmake/ament_python_install_package.cmake:39 (_ament_cmake_python_install_package)
+[0.695s]   CMakeLists.txt:8 (ament_python_install_package)
+[0.695s] 
+[0.695s] 
+[0.695s] -- Configuring incomplete, errors occurred!
+[0.699s] Invoked command in '/home/jetson/slop-bot_ws/build/slop_teleop' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble VIRTUAL_ENV_PROMPT=(.venv) /usr/bin/cmake /home/jetson/slop-bot_ws/src/slop_teleop -DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/slop_teleop

@@ -1,0 +1,65 @@
+[0.027s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_teleop': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/jetson/slop-bot_ws/src/slop_teleop -DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/slop_teleop
+[0.029s] [0mCMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+[0.029s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.029s]   CMake.
+[0.029s] 
+[0.029s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.029s]   to tell CMake that the project requires at least <min> but has been updated
+[0.029s]   to work with policies introduced by <max> or earlier.
+[0.029s] 
+[0.030s] [0m
+[0.047s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.414s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter
+[0.903s] -- Found ament_cmake_pytest: 1.3.14 (/opt/ros/humble/share/ament_cmake_pytest/cmake)
+[2.526s] -- Configuring done (2.5s)
+[2.542s] -- Generating done (0.0s)
+[2.550s] -- Build files have been written to: /home/jetson/slop-bot_ws/build/slop_teleop
+[2.558s] Invoked command in '/home/jetson/slop-bot_ws/build/slop_teleop' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/jetson/slop-bot_ws/src/slop_teleop -DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/slop_teleop
+[2.563s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_teleop': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_teleop -- -j8 -l8
+[2.616s] Built target ament_cmake_python_copy_slop_teleop
+[3.134s] running egg_info
+[3.135s] creating slop_teleop.egg-info
+[3.136s] writing slop_teleop.egg-info/PKG-INFO
+[3.136s] writing dependency_links to slop_teleop.egg-info/dependency_links.txt
+[3.137s] writing top-level names to slop_teleop.egg-info/top_level.txt
+[3.137s] writing manifest file 'slop_teleop.egg-info/SOURCES.txt'
+[3.142s] reading manifest file 'slop_teleop.egg-info/SOURCES.txt'
+[3.143s] writing manifest file 'slop_teleop.egg-info/SOURCES.txt'
+[3.216s] Built target ament_cmake_python_build_slop_teleop_egg
+[3.236s] Invoked command in '/home/jetson/slop-bot_ws/build/slop_teleop' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_teleop -- -j8 -l8
+[3.240s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_teleop': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_teleop
+[3.246s] -- Install configuration: ""
+[3.246s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/environment/pythonpath.sh
+[3.247s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/environment/pythonpath.dsv
+[3.247s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop-0.1.0-py3.10.egg-info
+[3.247s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop-0.1.0-py3.10.egg-info/top_level.txt
+[3.247s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop-0.1.0-py3.10.egg-info/SOURCES.txt
+[3.248s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop-0.1.0-py3.10.egg-info/dependency_links.txt
+[3.248s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop-0.1.0-py3.10.egg-info/PKG-INFO
+[3.248s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop
+[3.248s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop/__init__.py
+[3.249s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop/keys.py
+[3.249s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop/keyboard_teleop_node.py
+[3.313s] Listing '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop'...
+[3.314s] Compiling '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop/__init__.py'...
+[3.314s] Compiling '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop/keyboard_teleop_node.py'...
+[3.314s] Compiling '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages/slop_teleop/keys.py'...
+[3.328s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/config
+[3.329s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/config/keyboard_teleop.yaml
+[3.330s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/lib/slop_teleop/keyboard_teleop
+[3.331s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/ament_index/resource_index/package_run_dependencies/slop_teleop
+[3.332s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/ament_index/resource_index/parent_prefix_path/slop_teleop
+[3.332s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/environment/ament_prefix_path.sh
+[3.333s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/environment/ament_prefix_path.dsv
+[3.333s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/environment/path.sh
+[3.334s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/environment/path.dsv
+[3.335s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/local_setup.bash
+[3.336s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/local_setup.sh
+[3.338s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/local_setup.zsh
+[3.340s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/local_setup.dsv
+[3.341s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/package.dsv
+[3.342s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/ament_index/resource_index/packages/slop_teleop
+[3.343s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/cmake/slop_teleopConfig.cmake
+[3.344s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/cmake/slop_teleopConfig-version.cmake
+[3.344s] -- Installing: /home/jetson/slop-bot_ws/install/slop_teleop/share/slop_teleop/package.xml
+[3.347s] Invoked command in '/home/jetson/slop-bot_ws/build/slop_teleop' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_teleop

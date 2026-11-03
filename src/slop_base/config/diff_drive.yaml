@@ -1,0 +1,41 @@
+# Slop-Bot: Differentialantrieb, zwei Schrittmotoren ohne Encoder am CL57E-4A (EtherCAT).
+# Geometrie: angetriebene Räder vorne, Spur 24 cm, Raddurchmesser 7 cm.
+# Frei schwenkende Schleppräder 34 cm dahinter (nur für URDF/Footprint wichtig, nicht für die Kinematik).
+# base_footprint = Mitte zwischen den angetriebenen Rädern am Boden.
+diff_drive_node:
+  ros__parameters:
+    ifname: enP8p1s0          # Ethernet-Port des EtherCAT-Busses
+    cycle_ms: 2.0
+    dc: false
+
+    # Getriebe hängt am Motor: Achse 3 = 1:7,5, Achse 4 = 1:14 (mit diff_motor_test.py geprüft)
+    left_axis: 3
+    left_gear: 7.5
+    left_dir: 1
+    right_axis: 4
+    right_gear: 20.0          #14 eigentlich aber so läufts irgendwie
+    right_dir: -1             # Motor gespiegelt eingebaut
+    units_per_rev: 0          # 0 = aus Treiber (DivSet, aktuell 10000)
+
+    wheel_diameter: 0.07      # m
+    track_width: 0.24         # m, Abstand der Radmitten
+    max_wheel_rpm: 10.0       # Ausgang 4 schafft im Test nicht mehr → 0,037 m/s, 0,31 rad/s
+    wheel_acc: 6.0            # rad/s² am Rad (≈ 1 U/s², 10 U/min in 0,2 s)
+
+    loop: open                # Schrittmotoren ohne Encoder
+    max_ferr_rev: 1.0         # Open Loop: greift nur, wenn der Treiber nicht mehr mitzählt
+    motor_current_ma: 0       # TODO: Nennstrom vom Typenschild, dann wird MaxCurrent (1300 mA) geprüft
+
+    enable_on_start: true
+    cmd_vel_timeout: 0.5      # s ohne /cmd_vel → Stopp
+    arm_delay: 1.0            # s Ruhe nach dem Freigeben, bevor Fahrbefehle zählen
+    lock_topic: /safety/remote_lock   # Fahrsperre von slop_safety/remote_guard, '' = aus
+    lock_timeout: 1.0         # s ohne Nachricht → gesperrt
+    allowed_cmd_vel_nodes: [twist_mux]   # nur twist_mux darf auf /cmd_vel senden
+    rate: 50.0
+
+    odom_frame: odom
+    base_frame: base_footprint
+    publish_tf: true
+    left_joint: left_wheel_joint
+    right_joint: right_wheel_joint

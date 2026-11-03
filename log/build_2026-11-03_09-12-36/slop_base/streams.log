@@ -1,0 +1,63 @@
+[0.023s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_base': AMENT_PREFIX_PATH=/home/jetson/slop-bot_ws/install/slop_safety:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble PYTHONPATH=/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(ethercat_venv) /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_base -- -j8 -l8
+[0.041s] CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+[0.041s]   Compatibility with CMake < 3.10 will be removed from a future version of
+[0.041s]   CMake.
+[0.042s] 
+[0.042s]   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+[0.042s]   to tell CMake that the project requires at least <min> but has been updated
+[0.042s]   to work with policies introduced by <max> or earlier.
+[0.042s] 
+[0.042s] 
+[0.044s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.426s] -- Found ament_cmake_pytest: 1.3.14 (/opt/ros/humble/share/ament_cmake_pytest/cmake)
+[3.528s] -- Configuring done (3.5s)
+[3.541s] -- Generating done (0.0s)
+[3.545s] -- Build files have been written to: /home/jetson/slop-bot_ws/build/slop_base
+[3.590s] Built target ament_cmake_python_copy_slop_base
+[4.086s] running egg_info
+[4.087s] writing slop_base.egg-info/PKG-INFO
+[4.088s] writing dependency_links to slop_base.egg-info/dependency_links.txt
+[4.088s] writing top-level names to slop_base.egg-info/top_level.txt
+[4.093s] reading manifest file 'slop_base.egg-info/SOURCES.txt'
+[4.094s] writing manifest file 'slop_base.egg-info/SOURCES.txt'
+[4.159s] Built target ament_cmake_python_build_slop_base_egg
+[4.173s] Invoked command in '/home/jetson/slop-bot_ws/build/slop_base' returned '0': AMENT_PREFIX_PATH=/home/jetson/slop-bot_ws/install/slop_safety:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble PYTHONPATH=/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(ethercat_venv) /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_base -- -j8 -l8
+[4.175s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_base': AMENT_PREFIX_PATH=/home/jetson/slop-bot_ws/install/slop_safety:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble PYTHONPATH=/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(ethercat_venv) /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_base
+[4.184s] -- Install configuration: ""
+[4.185s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/environment/pythonpath.sh
+[4.186s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/environment/pythonpath.dsv
+[4.186s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base-0.1.0-py3.10.egg-info
+[4.186s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base-0.1.0-py3.10.egg-info/top_level.txt
+[4.187s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base-0.1.0-py3.10.egg-info/SOURCES.txt
+[4.187s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base-0.1.0-py3.10.egg-info/dependency_links.txt
+[4.187s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base-0.1.0-py3.10.egg-info/PKG-INFO
+[4.187s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base
+[4.187s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/cl57e_bus.py
+[4.187s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/kinematics.py
+[4.187s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/__init__.py
+[4.188s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/diff_drive_node.py
+[4.261s] Listing '/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base'...
+[4.261s] Compiling '/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages/slop_base/diff_drive_node.py'...
+[4.273s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/lib/slop_base/diff_drive
+[4.273s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/lib/slop_base/with_netcaps
+[4.273s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/config
+[4.274s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/config/diff_drive.yaml
+[4.274s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/launch
+[4.275s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/launch/diff_drive.launch.py
+[4.275s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/launch/bringup.launch.py
+[4.276s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/ament_index/resource_index/package_run_dependencies/slop_base
+[4.276s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/ament_index/resource_index/parent_prefix_path/slop_base
+[4.276s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/environment/ament_prefix_path.sh
+[4.276s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/environment/ament_prefix_path.dsv
+[4.276s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/environment/path.sh
+[4.276s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/environment/path.dsv
+[4.277s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/local_setup.bash
+[4.277s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/local_setup.sh
+[4.277s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/local_setup.zsh
+[4.277s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/local_setup.dsv
+[4.278s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.dsv
+[4.279s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/share/ament_index/resource_index/packages/slop_base
+[4.280s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/cmake/slop_baseConfig.cmake
+[4.280s] -- Up-to-date: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/cmake/slop_baseConfig-version.cmake
+[4.281s] -- Installing: /home/jetson/slop-bot_ws/install/slop_base/share/slop_base/package.xml
+[4.281s] Invoked command in '/home/jetson/slop-bot_ws/build/slop_base' returned '0': AMENT_PREFIX_PATH=/home/jetson/slop-bot_ws/install/slop_safety:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble PYTHONPATH=/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(ethercat_venv) /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/slop_base

@@ -1,0 +1,4 @@
+#!/usr/bin/python3
+from slop_safety.remote_guard_node import main
+
+main()

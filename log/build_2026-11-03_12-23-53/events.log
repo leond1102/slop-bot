@@ -1,0 +1,2034 @@
+[0.000000] (-) TimerEvent: {}
+[0.000170] (-) JobUnselected: {'identifier': 'slop_base'}
+[0.000648] (-) JobUnselected: {'identifier': 'slop_safety'}
+[0.001540] (-) JobUnselected: {'identifier': 'slop_teleop'}
+[0.001638] (livox_sdk2) JobQueued: {'identifier': 'livox_sdk2', 'dependencies': OrderedDict()}
+[0.001718] (livox_ros_driver2) JobQueued: {'identifier': 'livox_ros_driver2', 'dependencies': OrderedDict([('livox_sdk2', '/home/jetson/slop-bot_ws/install/livox_sdk2')])}
+[0.001796] (slop_sensors) JobQueued: {'identifier': 'slop_sensors', 'dependencies': OrderedDict([('livox_sdk2', '/home/jetson/slop-bot_ws/install/livox_sdk2'), ('livox_ros_driver2', '/home/jetson/slop-bot_ws/install/livox_ros_driver2')])}
+[0.001870] (livox_sdk2) JobStarted: {'identifier': 'livox_sdk2'}
+[0.019846] (livox_sdk2) JobProgress: {'identifier': 'livox_sdk2', 'progress': 'cmake'}
+[0.024444] (livox_sdk2) Command: {'cmd': ['/usr/bin/cmake', '/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2', '-DCMAKE_BUILD_TYPE=Release', '-DCMAKE_POLICY_VERSION_MINIMUM=3.5', '-DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/livox_sdk2'], 'cwd': '/home/jetson/slop-bot_ws/build/livox_sdk2', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/jetson/slop-bot_ws'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('AI_AGENT', 'claude-code_2-1-314_agent'), ('USER', 'jetson'), ('CLAUDE_CODE_ENTRYPOINT', 'claude-vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('GIT_EDITOR', 'true'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'x11'), ('ALLUSERSPROFILE', '/opt/MVS/MVFG'), ('CLAUDE_AGENT_SDK_VERSION', '0.3.314'), ('CLAUDE_CODE_SESSION_ATTENDED', '1'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib:/opt/MVS/lib/aarch64:/usr/local/cuda-12.6/lib64:/opt/MVS/lib/aarch64:/opt/MVS/lib/aarch64:'), ('CLAUDE_CODE_MESSAGING_TOKEN', 'ef2d6536f069dba12f06ef0576e50619'), ('HOME', '/home/jetson'), ('CHROME_DESKTOP', 'com.microsoft.VSCode.desktop'), ('OLDPWD', '/home/jetson'), ('DESKTOP_SESSION', 'ubuntu'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-ed92d0d2-1.14-main.sock'), ('JETSON_L4T', '36.4.7'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('JETSON_MODEL', 'NVIDIA Jetson Orin NX Engineering Reference Developer Kit'), ('CLAUDE_CODE_CHILD_SESSION', '1'), ('COPILOT_OTEL_FILE_EXPORTER_PATH', '/dev/null'), ('MANAGERPID', '1947'), ('SYSTEMD_EXEC_PID', '2909'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3809'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/jetson/slop-bot_ws/install:/home/jetson/ros2_ws/install'), ('APPLICATION_INSIGHTS_NO_STATSBEAT', 'true'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'jetson'), ('JETSON_MODULE', 'NVIDIA Jetson Orin NX (16GB ram)'), ('JETSON_SERIAL_NUMBER', '1422525087275'), ('CLAUDE_CODE_EMIT_STARTUP_TIMING', '1'), ('JOURNAL_STREAM', '8:55587'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('CLAUDE_CODE_QUESTION_PREVIEW_FORMAT', 'markdown'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'jetson'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '1'), ('WINDOWPATH', '2'), ('MVCAM_SDK_PATH', '/opt/MVS'), ('MCP_CONNECTION_NONBLOCKING', 'true'), ('PATH', '/home/jetson/ethercat_venv/bin:/home/jetson/.local/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/opt/ros/humble/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2670,unix/ubuntu:/tmp/.ICE-unix/2670'), ('INVOCATION_ID', 'f11a0846954541da9650ff1402193b6b'), ('MVCAM_GENICAM_CLPROTOCOL', '/opt/MVS/lib/CLProtocol'), ('VSCODE_NODE_COMPILE_CACHE_ROOT', '/usr/share/code/resources/app/node-compile-cache'), ('COREPACK_ENABLE_AUTO_PIN', '0'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('CLAUDE_EFFORT', 'high'), ('DISPLAY', ':0'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('CLAUDE_PID', '7633'), ('NoDefaultCurrentDirectoryInExePath', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('IBUS_DISABLE_SNOOPER', '1'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('JETSON_SOC', 'tegra234'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:22e895b8-4389-40cf-a967-58c9c0950171'), ('CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '1'), ('MXC_BIN_DIR', '/usr/share/code/resources/app/node_modules.asar.unpacked/@microsoft/mxc-sdk/bin'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING', 'true'), ('CLAUDE_CODE_SESSION_ID', '1c697e8f-dd4f-4e5c-b241-6697ec2e7c21'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('CLAUDECODE', '1'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('VIRTUAL_ENV', '/home/jetson/ethercat_venv'), ('QT_IM_MODULE', 'ibus'), ('JETSON_CUDA_ARCH_BIN', '8.7'), ('PWD', '/home/jetson/slop-bot_ws/build/livox_sdk2'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('VSCODE_CODE_CACHE_PATH', '/home/jetson/.config/Code/CachedData/2a59476c9bfcb90b3ddc372c36762471b7dfad1c'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLAUDE_CODE_EXECPATH', '/home/jetson/.vscode/extensions/anthropic.claude-code-2.1.314-linux-arm64/resources/native-binary/claude'), ('PYTHONPATH', '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_chain_drive/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_base/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('CLAUDE_CODE_ENABLE_TASKS', '0'), ('COLCON', '1'), ('COPILOT_CLI_ENABLED_FEATURE_FLAGS', 'SHELL_SPAWN_BACKEND'), ('VTE_VERSION', '6800'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('CLAUDE_CODE_MESSAGING_SOCKET', '/run/user/1000/cc-socks/7633.sock'), ('CMAKE_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup'), ('VSCODE_PID', '6735'), ('MVCAM_COMMON_RUNENV', '/opt/MVS/lib'), ('JETSON_P_NUMBER', 'p3767-0000')]), 'shell': False}
+[0.033332] (livox_sdk2) StderrLine: {'line': b'CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):\n'}
+[0.033765] (livox_sdk2) StderrLine: {'line': b'  Compatibility with CMake < 3.10 will be removed from a future version of\n'}
+[0.033892] (livox_sdk2) StderrLine: {'line': b'  CMake.\n'}
+[0.033996] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.034095] (livox_sdk2) StderrLine: {'line': b'  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax\n'}
+[0.034193] (livox_sdk2) StderrLine: {'line': b'  to tell CMake that the project requires at least <min> but has been updated\n'}
+[0.034288] (livox_sdk2) StderrLine: {'line': b'  to work with policies introduced by <max> or earlier.\n'}
+[0.034384] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.034476] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.099609] (-) TimerEvent: {}
+[0.200011] (-) TimerEvent: {}
+[0.236483] (livox_sdk2) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[0.300463] (-) TimerEvent: {}
+[0.401067] (-) TimerEvent: {}
+[0.415613] (livox_sdk2) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[0.438354] (livox_sdk2) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[0.501260] (-) TimerEvent: {}
+[0.566185] (livox_sdk2) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[0.601440] (-) TimerEvent: {}
+[0.602347] (livox_sdk2) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[0.603258] (livox_sdk2) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[0.604308] (livox_sdk2) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[0.632873] (livox_sdk2) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[0.701612] (-) TimerEvent: {}
+[0.778662] (livox_sdk2) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[0.801789] (-) TimerEvent: {}
+[0.818860] (livox_sdk2) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[0.820337] (livox_sdk2) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[0.821676] (livox_sdk2) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[0.840322] (livox_sdk2) StdoutLine: {'line': b'-- main project dir: /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2\n'}
+[0.841559] (livox_sdk2) StderrLine: {'line': b'CMake Deprecation Warning at sdk_core/CMakeLists.txt:1 (cmake_minimum_required):\n'}
+[0.841859] (livox_sdk2) StderrLine: {'line': b'  Compatibility with CMake < 3.10 will be removed from a future version of\n'}
+[0.842101] (livox_sdk2) StderrLine: {'line': b'  CMake.\n'}
+[0.842318] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.842521] (livox_sdk2) StderrLine: {'line': b'  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax\n'}
+[0.842727] (livox_sdk2) StderrLine: {'line': b'  to tell CMake that the project requires at least <min> but has been updated\n'}
+[0.842925] (livox_sdk2) StderrLine: {'line': b'  to work with policies introduced by <max> or earlier.\n'}
+[0.843116] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.843734] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.843930] (livox_sdk2) StderrLine: {'line': b'CMake Deprecation Warning at samples/CMakeLists.txt:1 (cmake_minimum_required):\n'}
+[0.844124] (livox_sdk2) StderrLine: {'line': b'  Compatibility with CMake < 3.10 will be removed from a future version of\n'}
+[0.844509] (livox_sdk2) StderrLine: {'line': b'  CMake.\n'}
+[0.844705] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.844929] (livox_sdk2) StderrLine: {'line': b'  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax\n'}
+[0.845124] (livox_sdk2) StderrLine: {'line': b'  to tell CMake that the project requires at least <min> but has been updated\n'}
+[0.845313] (livox_sdk2) StderrLine: {'line': b'  to work with policies introduced by <max> or earlier.\n'}
+[0.845510] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.845841] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.846413] (livox_sdk2) StdoutLine: {'line': b'-- main project dir: /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/samples\n'}
+[0.846626] (livox_sdk2) StderrLine: {'line': b'CMake Deprecation Warning at samples/livox_lidar_quick_start/CMakeLists.txt:1 (cmake_minimum_required):\n'}
+[0.846825] (livox_sdk2) StderrLine: {'line': b'  Compatibility with CMake < 3.10 will be removed from a future version of\n'}
+[0.847020] (livox_sdk2) StderrLine: {'line': b'  CMake.\n'}
+[0.847530] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.847736] (livox_sdk2) StderrLine: {'line': b'  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax\n'}
+[0.847937] (livox_sdk2) StderrLine: {'line': b'  to tell CMake that the project requires at least <min> but has been updated\n'}
+[0.848137] (livox_sdk2) StderrLine: {'line': b'  to work with policies introduced by <max> or earlier.\n'}
+[0.848336] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.848530] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.849534] (livox_sdk2) StderrLine: {'line': b'CMake Deprecation Warning at samples/multi_lidars_upgrade/CMakeLists.txt:1 (cmake_minimum_required):\n'}
+[0.849907] (livox_sdk2) StderrLine: {'line': b'  Compatibility with CMake < 3.10 will be removed from a future version of\n'}
+[0.850587] (livox_sdk2) StderrLine: {'line': b'  CMake.\n'}
+[0.850862] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.851122] (livox_sdk2) StderrLine: {'line': b'  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax\n'}
+[0.852517] (livox_sdk2) StderrLine: {'line': b'  to tell CMake that the project requires at least <min> but has been updated\n'}
+[0.853000] (livox_sdk2) StderrLine: {'line': b'  to work with policies introduced by <max> or earlier.\n'}
+[0.853833] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.853992] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.854107] (livox_sdk2) StderrLine: {'line': b'CMake Deprecation Warning at samples/logger/CMakeLists.txt:1 (cmake_minimum_required):\n'}
+[0.854211] (livox_sdk2) StderrLine: {'line': b'  Compatibility with CMake < 3.10 will be removed from a future version of\n'}
+[0.854674] (livox_sdk2) StderrLine: {'line': b'  CMake.\n'}
+[0.854785] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.854890] (livox_sdk2) StderrLine: {'line': b'  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax\n'}
+[0.854987] (livox_sdk2) StderrLine: {'line': b'  to tell CMake that the project requires at least <min> but has been updated\n'}
+[0.855116] (livox_sdk2) StderrLine: {'line': b'  to work with policies introduced by <max> or earlier.\n'}
+[0.855212] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.855306] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.855398] (livox_sdk2) StderrLine: {'line': b'CMake Deprecation Warning at samples/debug_point_cloud/CMakeLists.txt:1 (cmake_minimum_required):\n'}
+[0.855493] (livox_sdk2) StderrLine: {'line': b'  Compatibility with CMake < 3.10 will be removed from a future version of\n'}
+[0.855587] (livox_sdk2) StderrLine: {'line': b'  CMake.\n'}
+[0.855734] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.855935] (livox_sdk2) StderrLine: {'line': b'  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax\n'}
+[0.856527] (livox_sdk2) StderrLine: {'line': b'  to tell CMake that the project requires at least <min> but has been updated\n'}
+[0.856877] (livox_sdk2) StderrLine: {'line': b'  to work with policies introduced by <max> or earlier.\n'}
+[0.857120] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.857388] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.857610] (livox_sdk2) StderrLine: {'line': b'CMake Deprecation Warning at samples/lidar_cmd_observer/CMakeLists.txt:1 (cmake_minimum_required):\n'}
+[0.857828] (livox_sdk2) StderrLine: {'line': b'  Compatibility with CMake < 3.10 will be removed from a future version of\n'}
+[0.858047] (livox_sdk2) StderrLine: {'line': b'  CMake.\n'}
+[0.858259] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.858465] (livox_sdk2) StderrLine: {'line': b'  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax\n'}
+[0.858677] (livox_sdk2) StderrLine: {'line': b'  to tell CMake that the project requires at least <min> but has been updated\n'}
+[0.858889] (livox_sdk2) StderrLine: {'line': b'  to work with policies introduced by <max> or earlier.\n'}
+[0.859100] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.859309] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.859518] (livox_sdk2) StderrLine: {'line': b'CMake Deprecation Warning at samples/livox_lidar_rmc_time_sync/CMakeLists.txt:1 (cmake_minimum_required):\n'}
+[0.859732] (livox_sdk2) StderrLine: {'line': b'  Compatibility with CMake < 3.10 will be removed from a future version of\n'}
+[0.859943] (livox_sdk2) StderrLine: {'line': b'  CMake.\n'}
+[0.860154] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.860362] (livox_sdk2) StderrLine: {'line': b'  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax\n'}
+[0.860577] (livox_sdk2) StderrLine: {'line': b'  to tell CMake that the project requires at least <min> but has been updated\n'}
+[0.860863] (livox_sdk2) StderrLine: {'line': b'  to work with policies introduced by <max> or earlier.\n'}
+[0.861090] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.861303] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.861512] (livox_sdk2) StderrLine: {'line': b'CMake Deprecation Warning at samples/livox_lidar_ip_set/CMakeLists.txt:1 (cmake_minimum_required):\n'}
+[0.861722] (livox_sdk2) StderrLine: {'line': b'  Compatibility with CMake < 3.10 will be removed from a future version of\n'}
+[0.861935] (livox_sdk2) StderrLine: {'line': b'  CMake.\n'}
+[0.862145] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.862352] (livox_sdk2) StderrLine: {'line': b'  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax\n'}
+[0.862561] (livox_sdk2) StderrLine: {'line': b'  to tell CMake that the project requires at least <min> but has been updated\n'}
+[0.862772] (livox_sdk2) StderrLine: {'line': b'  to work with policies introduced by <max> or earlier.\n'}
+[0.862981] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.863187] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.863397] (livox_sdk2) StderrLine: {'line': b'CMake Deprecation Warning at samples/livox_lidar_info_get/CMakeLists.txt:1 (cmake_minimum_required):\n'}
+[0.863607] (livox_sdk2) StderrLine: {'line': b'  Compatibility with CMake < 3.10 will be removed from a future version of\n'}
+[0.863817] (livox_sdk2) StderrLine: {'line': b'  CMake.\n'}
+[0.864027] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.864289] (livox_sdk2) StderrLine: {'line': b'  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax\n'}
+[0.864551] (livox_sdk2) StderrLine: {'line': b'  to tell CMake that the project requires at least <min> but has been updated\n'}
+[0.864801] (livox_sdk2) StderrLine: {'line': b'  to work with policies introduced by <max> or earlier.\n'}
+[0.865049] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.865280] (livox_sdk2) StderrLine: {'line': b'\n'}
+[0.865514] (livox_sdk2) StdoutLine: {'line': b'-- Configuring done (0.8s)\n'}
+[0.902114] (-) TimerEvent: {}
+[0.933627] (livox_sdk2) StdoutLine: {'line': b'-- Generating done (0.1s)\n'}
+[0.942149] (livox_sdk2) StdoutLine: {'line': b'-- Build files have been written to: /home/jetson/slop-bot_ws/build/livox_sdk2\n'}
+[0.952442] (livox_sdk2) CommandEnded: {'returncode': 0}
+[0.958721] (livox_sdk2) JobProgress: {'identifier': 'livox_sdk2', 'progress': 'build'}
+[0.958978] (livox_sdk2) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/jetson/slop-bot_ws/build/livox_sdk2', '--', '-j8', '-l8'], 'cwd': '/home/jetson/slop-bot_ws/build/livox_sdk2', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/jetson/slop-bot_ws'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('AI_AGENT', 'claude-code_2-1-314_agent'), ('USER', 'jetson'), ('CLAUDE_CODE_ENTRYPOINT', 'claude-vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('GIT_EDITOR', 'true'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'x11'), ('ALLUSERSPROFILE', '/opt/MVS/MVFG'), ('CLAUDE_AGENT_SDK_VERSION', '0.3.314'), ('CLAUDE_CODE_SESSION_ATTENDED', '1'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib:/opt/MVS/lib/aarch64:/usr/local/cuda-12.6/lib64:/opt/MVS/lib/aarch64:/opt/MVS/lib/aarch64:'), ('CLAUDE_CODE_MESSAGING_TOKEN', 'ef2d6536f069dba12f06ef0576e50619'), ('HOME', '/home/jetson'), ('CHROME_DESKTOP', 'com.microsoft.VSCode.desktop'), ('OLDPWD', '/home/jetson'), ('DESKTOP_SESSION', 'ubuntu'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-ed92d0d2-1.14-main.sock'), ('JETSON_L4T', '36.4.7'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('JETSON_MODEL', 'NVIDIA Jetson Orin NX Engineering Reference Developer Kit'), ('CLAUDE_CODE_CHILD_SESSION', '1'), ('COPILOT_OTEL_FILE_EXPORTER_PATH', '/dev/null'), ('MANAGERPID', '1947'), ('SYSTEMD_EXEC_PID', '2909'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3809'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/jetson/slop-bot_ws/install:/home/jetson/ros2_ws/install'), ('APPLICATION_INSIGHTS_NO_STATSBEAT', 'true'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'jetson'), ('JETSON_MODULE', 'NVIDIA Jetson Orin NX (16GB ram)'), ('JETSON_SERIAL_NUMBER', '1422525087275'), ('CLAUDE_CODE_EMIT_STARTUP_TIMING', '1'), ('JOURNAL_STREAM', '8:55587'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('CLAUDE_CODE_QUESTION_PREVIEW_FORMAT', 'markdown'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'jetson'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '1'), ('WINDOWPATH', '2'), ('MVCAM_SDK_PATH', '/opt/MVS'), ('MCP_CONNECTION_NONBLOCKING', 'true'), ('PATH', '/home/jetson/ethercat_venv/bin:/home/jetson/.local/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/opt/ros/humble/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2670,unix/ubuntu:/tmp/.ICE-unix/2670'), ('INVOCATION_ID', 'f11a0846954541da9650ff1402193b6b'), ('MVCAM_GENICAM_CLPROTOCOL', '/opt/MVS/lib/CLProtocol'), ('VSCODE_NODE_COMPILE_CACHE_ROOT', '/usr/share/code/resources/app/node-compile-cache'), ('COREPACK_ENABLE_AUTO_PIN', '0'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('CLAUDE_EFFORT', 'high'), ('DISPLAY', ':0'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('CLAUDE_PID', '7633'), ('NoDefaultCurrentDirectoryInExePath', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('IBUS_DISABLE_SNOOPER', '1'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('JETSON_SOC', 'tegra234'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:22e895b8-4389-40cf-a967-58c9c0950171'), ('CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '1'), ('MXC_BIN_DIR', '/usr/share/code/resources/app/node_modules.asar.unpacked/@microsoft/mxc-sdk/bin'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING', 'true'), ('CLAUDE_CODE_SESSION_ID', '1c697e8f-dd4f-4e5c-b241-6697ec2e7c21'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('CLAUDECODE', '1'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('VIRTUAL_ENV', '/home/jetson/ethercat_venv'), ('QT_IM_MODULE', 'ibus'), ('JETSON_CUDA_ARCH_BIN', '8.7'), ('PWD', '/home/jetson/slop-bot_ws/build/livox_sdk2'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('VSCODE_CODE_CACHE_PATH', '/home/jetson/.config/Code/CachedData/2a59476c9bfcb90b3ddc372c36762471b7dfad1c'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLAUDE_CODE_EXECPATH', '/home/jetson/.vscode/extensions/anthropic.claude-code-2.1.314-linux-arm64/resources/native-binary/claude'), ('PYTHONPATH', '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_chain_drive/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_base/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('CLAUDE_CODE_ENABLE_TASKS', '0'), ('COLCON', '1'), ('COPILOT_CLI_ENABLED_FEATURE_FLAGS', 'SHELL_SPAWN_BACKEND'), ('VTE_VERSION', '6800'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('CLAUDE_CODE_MESSAGING_SOCKET', '/run/user/1000/cc-socks/7633.sock'), ('CMAKE_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup'), ('VSCODE_PID', '6735'), ('MVCAM_COMMON_RUNENV', '/opt/MVS/lib'), ('JETSON_P_NUMBER', 'p3767-0000')]), 'shell': False}
+[1.002336] (-) TimerEvent: {}
+[1.012948] (livox_sdk2) StdoutLine: {'line': b'[  3%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/upgrade_manager.cpp.o\n'}
+[1.013705] (livox_sdk2) StdoutLine: {'line': b'[  3%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/device_manager.cpp.o\n'}
+[1.014372] (livox_sdk2) StdoutLine: {'line': b'[  5%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/parse_cfg_file.cpp.o\n'}
+[1.014642] (livox_sdk2) StdoutLine: {'line': b'[  5%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/params_check.cpp.o\n'}
+[1.014775] (livox_sdk2) StdoutLine: {'line': b'[  6%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/__/3rdparty/FastCRC/FastCRCsw.cpp.o\n'}
+[1.015257] (livox_sdk2) StdoutLine: {'line': b'[  6%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/livox_lidar_sdk.cpp.o\n'}
+[1.016140] (livox_sdk2) StdoutLine: {'line': b'[  7%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/__/3rdparty/FastCRC/FastCRCsw.cpp.o\n'}
+[1.028689] (livox_sdk2) StdoutLine: {'line': b'[  8%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/device_manager.cpp.o\n'}
+[1.102484] (-) TimerEvent: {}
+[1.203759] (-) TimerEvent: {}
+[1.304197] (-) TimerEvent: {}
+[1.405782] (-) TimerEvent: {}
+[1.506273] (-) TimerEvent: {}
+[1.606755] (-) TimerEvent: {}
+[1.712974] (-) TimerEvent: {}
+[1.725216] (livox_sdk2) StdoutLine: {'line': b'[  9%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/io_loop.cpp.o\n'}
+[1.803123] (livox_sdk2) StdoutLine: {'line': b'[ 10%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/livox_lidar_sdk.cpp.o\n'}
+[1.812902] (-) TimerEvent: {}
+[1.913391] (-) TimerEvent: {}
+[2.013911] (-) TimerEvent: {}
+[2.114400] (-) TimerEvent: {}
+[2.219947] (-) TimerEvent: {}
+[2.320429] (-) TimerEvent: {}
+[2.420929] (-) TimerEvent: {}
+[2.521358] (-) TimerEvent: {}
+[2.609511] (livox_sdk2) StdoutLine: {'line': b'[ 11%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/thread_base.cpp.o\n'}
+[2.621617] (-) TimerEvent: {}
+[2.722139] (-) TimerEvent: {}
+[2.822613] (-) TimerEvent: {}
+[2.923096] (-) TimerEvent: {}
+[3.023993] (-) TimerEvent: {}
+[3.124486] (-) TimerEvent: {}
+[3.225025] (-) TimerEvent: {}
+[3.325505] (-) TimerEvent: {}
+[3.425976] (-) TimerEvent: {}
+[3.526422] (-) TimerEvent: {}
+[3.626887] (-) TimerEvent: {}
+[3.727369] (-) TimerEvent: {}
+[3.827833] (-) TimerEvent: {}
+[3.928607] (-) TimerEvent: {}
+[4.029045] (-) TimerEvent: {}
+[4.129497] (-) TimerEvent: {}
+[4.173501] (livox_sdk2) StdoutLine: {'line': b'[ 12%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/io_thread.cpp.o\n'}
+[4.230528] (-) TimerEvent: {}
+[4.330987] (-) TimerEvent: {}
+[4.431416] (-) TimerEvent: {}
+[4.531873] (-) TimerEvent: {}
+[4.632324] (-) TimerEvent: {}
+[4.732819] (-) TimerEvent: {}
+[4.833229] (-) TimerEvent: {}
+[4.933654] (-) TimerEvent: {}
+[5.034082] (-) TimerEvent: {}
+[5.134534] (-) TimerEvent: {}
+[5.234998] (-) TimerEvent: {}
+[5.335530] (-) TimerEvent: {}
+[5.435991] (-) TimerEvent: {}
+[5.536455] (-) TimerEvent: {}
+[5.637069] (-) TimerEvent: {}
+[5.737556] (-) TimerEvent: {}
+[5.813423] (livox_sdk2) StdoutLine: {'line': b'[ 13%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/logging.cpp.o\n'}
+[5.837856] (-) TimerEvent: {}
+[5.938425] (-) TimerEvent: {}
+[6.039110] (-) TimerEvent: {}
+[6.139716] (-) TimerEvent: {}
+[6.240148] (-) TimerEvent: {}
+[6.340969] (-) TimerEvent: {}
+[6.442418] (-) TimerEvent: {}
+[6.546725] (-) TimerEvent: {}
+[6.647225] (-) TimerEvent: {}
+[6.747726] (-) TimerEvent: {}
+[6.848437] (-) TimerEvent: {}
+[6.949052] (-) TimerEvent: {}
+[7.049768] (-) TimerEvent: {}
+[7.150189] (-) TimerEvent: {}
+[7.250612] (-) TimerEvent: {}
+[7.353112] (-) TimerEvent: {}
+[7.458743] (-) TimerEvent: {}
+[7.559389] (-) TimerEvent: {}
+[7.659830] (-) TimerEvent: {}
+[7.760292] (-) TimerEvent: {}
+[7.860733] (-) TimerEvent: {}
+[7.961181] (-) TimerEvent: {}
+[8.061674] (-) TimerEvent: {}
+[8.162108] (-) TimerEvent: {}
+[8.262613] (-) TimerEvent: {}
+[8.363045] (-) TimerEvent: {}
+[8.463793] (-) TimerEvent: {}
+[8.565723] (-) TimerEvent: {}
+[8.666166] (-) TimerEvent: {}
+[8.766633] (-) TimerEvent: {}
+[8.867110] (-) TimerEvent: {}
+[8.967710] (-) TimerEvent: {}
+[9.069670] (-) TimerEvent: {}
+[9.171311] (-) TimerEvent: {}
+[9.272605] (-) TimerEvent: {}
+[9.375182] (-) TimerEvent: {}
+[9.475671] (-) TimerEvent: {}
+[9.577044] (-) TimerEvent: {}
+[9.677760] (-) TimerEvent: {}
+[9.778588] (-) TimerEvent: {}
+[9.879628] (-) TimerEvent: {}
+[9.980167] (-) TimerEvent: {}
+[10.080665] (-) TimerEvent: {}
+[10.181122] (-) TimerEvent: {}
+[10.281668] (-) TimerEvent: {}
+[10.382115] (-) TimerEvent: {}
+[10.482573] (-) TimerEvent: {}
+[10.583084] (-) TimerEvent: {}
+[10.683652] (-) TimerEvent: {}
+[10.784210] (-) TimerEvent: {}
+[10.885136] (-) TimerEvent: {}
+[10.986155] (-) TimerEvent: {}
+[11.086937] (-) TimerEvent: {}
+[11.187797] (-) TimerEvent: {}
+[11.288694] (-) TimerEvent: {}
+[11.389283] (-) TimerEvent: {}
+[11.489805] (-) TimerEvent: {}
+[11.590363] (-) TimerEvent: {}
+[11.690809] (-) TimerEvent: {}
+[11.791272] (-) TimerEvent: {}
+[11.891819] (-) TimerEvent: {}
+[11.992542] (-) TimerEvent: {}
+[12.093011] (-) TimerEvent: {}
+[12.193485] (-) TimerEvent: {}
+[12.293897] (-) TimerEvent: {}
+[12.394794] (-) TimerEvent: {}
+[12.501679] (-) TimerEvent: {}
+[12.602276] (-) TimerEvent: {}
+[12.703218] (-) TimerEvent: {}
+[12.803642] (-) TimerEvent: {}
+[12.904300] (-) TimerEvent: {}
+[13.004872] (-) TimerEvent: {}
+[13.105305] (-) TimerEvent: {}
+[13.206343] (-) TimerEvent: {}
+[13.308632] (-) TimerEvent: {}
+[13.409716] (-) TimerEvent: {}
+[13.510631] (-) TimerEvent: {}
+[13.611689] (-) TimerEvent: {}
+[13.712619] (-) TimerEvent: {}
+[13.813162] (-) TimerEvent: {}
+[13.914542] (-) TimerEvent: {}
+[13.975070] (livox_sdk2) StdoutLine: {'line': b'[ 15%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/params_check.cpp.o\n'}
+[14.014844] (-) TimerEvent: {}
+[14.115353] (-) TimerEvent: {}
+[14.216387] (-) TimerEvent: {}
+[14.317480] (-) TimerEvent: {}
+[14.418058] (-) TimerEvent: {}
+[14.518677] (-) TimerEvent: {}
+[14.619498] (-) TimerEvent: {}
+[14.657172] (livox_sdk2) StdoutLine: {'line': b'[ 16%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/network/unix/network_util.cpp.o\n'}
+[14.720492] (-) TimerEvent: {}
+[14.821275] (-) TimerEvent: {}
+[14.918484] (livox_sdk2) StdoutLine: {'line': b'[ 17%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/parse_cfg_file.cpp.o\n'}
+[14.921452] (-) TimerEvent: {}
+[15.021929] (-) TimerEvent: {}
+[15.122407] (-) TimerEvent: {}
+[15.178811] (livox_sdk2) StdoutLine: {'line': b'[ 18%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/multiple_io/multiple_io_base.cpp.o\n'}
+[15.222627] (-) TimerEvent: {}
+[15.323112] (-) TimerEvent: {}
+[15.423592] (-) TimerEvent: {}
+[15.524077] (-) TimerEvent: {}
+[15.624494] (-) TimerEvent: {}
+[15.631719] (livox_sdk2) StdoutLine: {'line': b'[ 19%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/multiple_io/multiple_io_epoll.cpp.o\n'}
+[15.724700] (-) TimerEvent: {}
+[15.825114] (-) TimerEvent: {}
+[15.925727] (-) TimerEvent: {}
+[16.026150] (-) TimerEvent: {}
+[16.065085] (livox_sdk2) StdoutLine: {'line': b'[ 20%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/upgrade_manager.cpp.o\n'}
+[16.126391] (-) TimerEvent: {}
+[16.226853] (-) TimerEvent: {}
+[16.327273] (-) TimerEvent: {}
+[16.427705] (-) TimerEvent: {}
+[16.528435] (-) TimerEvent: {}
+[16.618476] (livox_sdk2) StdoutLine: {'line': b'[ 21%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/multiple_io/multiple_io_poll.cpp.o\n'}
+[16.628631] (-) TimerEvent: {}
+[16.729313] (-) TimerEvent: {}
+[16.829786] (-) TimerEvent: {}
+[16.830602] (livox_sdk2) StdoutLine: {'line': b'[ 22%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/multiple_io/multiple_io_select.cpp.o\n'}
+[16.930753] (-) TimerEvent: {}
+[17.031212] (-) TimerEvent: {}
+[17.133489] (-) TimerEvent: {}
+[17.177226] (livox_sdk2) StdoutLine: {'line': b'[ 23%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/io_loop.cpp.o\n'}
+[17.233687] (-) TimerEvent: {}
+[17.334133] (-) TimerEvent: {}
+[17.386063] (livox_sdk2) StdoutLine: {'line': b'[ 24%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/multiple_io/multiple_io_kqueue.cpp.o\n'}
+[17.434325] (-) TimerEvent: {}
+[17.482541] (livox_sdk2) StdoutLine: {'line': b'[ 25%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/thread_base.cpp.o\n'}
+[17.534496] (-) TimerEvent: {}
+[17.634953] (-) TimerEvent: {}
+[17.735410] (-) TimerEvent: {}
+[17.835880] (-) TimerEvent: {}
+[17.937732] (-) TimerEvent: {}
+[18.038163] (-) TimerEvent: {}
+[18.132215] (livox_sdk2) StdoutLine: {'line': b'[ 26%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/base/wake_up/unix/wake_up_pipe.cpp.o\n'}
+[18.138349] (-) TimerEvent: {}
+[18.238766] (-) TimerEvent: {}
+[18.339230] (-) TimerEvent: {}
+[18.348122] (livox_sdk2) StdoutLine: {'line': b'[ 27%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/io_thread.cpp.o\n'}
+[18.439430] (-) TimerEvent: {}
+[18.539991] (-) TimerEvent: {}
+[18.558549] (livox_sdk2) StdoutLine: {'line': b'[ 29%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/logging.cpp.o\n'}
+[18.640217] (-) TimerEvent: {}
+[18.740723] (-) TimerEvent: {}
+[18.841195] (-) TimerEvent: {}
+[18.941578] (-) TimerEvent: {}
+[19.042036] (-) TimerEvent: {}
+[19.142499] (-) TimerEvent: {}
+[19.242977] (-) TimerEvent: {}
+[19.343644] (-) TimerEvent: {}
+[19.444138] (-) TimerEvent: {}
+[19.544591] (-) TimerEvent: {}
+[19.645006] (-) TimerEvent: {}
+[19.745433] (-) TimerEvent: {}
+[19.845880] (-) TimerEvent: {}
+[19.846437] (livox_sdk2) StdoutLine: {'line': b'[ 30%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/network/unix/network_util.cpp.o\n'}
+[19.946059] (-) TimerEvent: {}
+[20.046499] (-) TimerEvent: {}
+[20.146942] (-) TimerEvent: {}
+[20.247387] (-) TimerEvent: {}
+[20.347819] (-) TimerEvent: {}
+[20.448270] (-) TimerEvent: {}
+[20.544383] (livox_sdk2) StdoutLine: {'line': b'[ 31%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/multiple_io/multiple_io_base.cpp.o\n'}
+[20.545357] (livox_sdk2) StdoutLine: {'line': b'[ 32%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/multiple_io/multiple_io_epoll.cpp.o\n'}
+[20.548445] (-) TimerEvent: {}
+[20.648890] (-) TimerEvent: {}
+[20.749309] (-) TimerEvent: {}
+[20.849785] (-) TimerEvent: {}
+[20.951322] (-) TimerEvent: {}
+[21.051777] (-) TimerEvent: {}
+[21.153604] (-) TimerEvent: {}
+[21.255065] (-) TimerEvent: {}
+[21.313996] (livox_sdk2) StdoutLine: {'line': b'[ 33%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/comm/comm_port.cpp.o\n'}
+[21.355261] (-) TimerEvent: {}
+[21.449132] (livox_sdk2) StdoutLine: {'line': b'[ 34%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/multiple_io/multiple_io_poll.cpp.o\n'}
+[21.455447] (-) TimerEvent: {}
+[21.555890] (-) TimerEvent: {}
+[21.656321] (-) TimerEvent: {}
+[21.756724] (-) TimerEvent: {}
+[21.857160] (-) TimerEvent: {}
+[21.938641] (livox_sdk2) StdoutLine: {'line': b'[ 35%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/multiple_io/multiple_io_select.cpp.o\n'}
+[21.957349] (-) TimerEvent: {}
+[21.996714] (livox_sdk2) StdoutLine: {'line': b'[ 36%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/multiple_io/multiple_io_kqueue.cpp.o\n'}
+[22.016012] (livox_sdk2) StdoutLine: {'line': b'[ 37%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/base/wake_up/unix/wake_up_pipe.cpp.o\n'}
+[22.057557] (-) TimerEvent: {}
+[22.158025] (-) TimerEvent: {}
+[22.211994] (livox_sdk2) StdoutLine: {'line': b'[ 38%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/comm/comm_port.cpp.o\n'}
+[22.261413] (-) TimerEvent: {}
+[22.361913] (-) TimerEvent: {}
+[22.462349] (-) TimerEvent: {}
+[22.533676] (livox_sdk2) StdoutLine: {'line': b'[ 39%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/comm/sdk_protocol.cpp.o\n'}
+[22.562566] (-) TimerEvent: {}
+[22.628432] (livox_sdk2) StdoutLine: {'line': b'[ 40%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/comm/generate_seq.cpp.o\n'}
+[22.662899] (-) TimerEvent: {}
+[22.763394] (-) TimerEvent: {}
+[22.788158] (livox_sdk2) StdoutLine: {'line': b'[ 41%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/upgrade/firmware.cpp.o\n'}
+[22.863622] (-) TimerEvent: {}
+[22.964098] (-) TimerEvent: {}
+[23.064556] (-) TimerEvent: {}
+[23.097234] (livox_sdk2) StdoutLine: {'line': b'[ 43%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/upgrade/livox_lidar_upgrader.cpp.o\n'}
+[23.111347] (livox_sdk2) StdoutLine: {'line': b'[ 44%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/logger_handler/logger_manager.cpp.o\n'}
+[23.164761] (-) TimerEvent: {}
+[23.205018] (livox_sdk2) StdoutLine: {'line': b'[ 45%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/comm/sdk_protocol.cpp.o\n'}
+[23.264920] (-) TimerEvent: {}
+[23.365601] (-) TimerEvent: {}
+[23.449647] (livox_sdk2) StdoutLine: {'line': b'[ 46%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/comm/generate_seq.cpp.o\n'}
+[23.465810] (-) TimerEvent: {}
+[23.566322] (-) TimerEvent: {}
+[23.574994] (livox_sdk2) StdoutLine: {'line': b'[ 47%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/upgrade/firmware.cpp.o\n'}
+[23.666555] (-) TimerEvent: {}
+[23.767064] (-) TimerEvent: {}
+[23.865958] (livox_sdk2) StdoutLine: {'line': b'[ 48%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/logger_handler/logger_handler.cpp.o\n'}
+[23.867158] (-) TimerEvent: {}
+[23.967504] (-) TimerEvent: {}
+[24.067941] (-) TimerEvent: {}
+[24.168516] (-) TimerEvent: {}
+[24.268907] (-) TimerEvent: {}
+[24.284675] (livox_sdk2) StdoutLine: {'line': b'[ 49%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/upgrade/livox_lidar_upgrader.cpp.o\n'}
+[24.369101] (-) TimerEvent: {}
+[24.469554] (-) TimerEvent: {}
+[24.569991] (-) TimerEvent: {}
+[24.670422] (-) TimerEvent: {}
+[24.770865] (-) TimerEvent: {}
+[24.871295] (-) TimerEvent: {}
+[24.971734] (-) TimerEvent: {}
+[25.072170] (-) TimerEvent: {}
+[25.172579] (-) TimerEvent: {}
+[25.273017] (-) TimerEvent: {}
+[25.357120] (livox_sdk2) StdoutLine: {'line': b'[ 50%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/logger_handler/logger_manager.cpp.o\n'}
+[25.373189] (-) TimerEvent: {}
+[25.473634] (-) TimerEvent: {}
+[25.574082] (-) TimerEvent: {}
+[25.674527] (-) TimerEvent: {}
+[25.774991] (-) TimerEvent: {}
+[25.875500] (-) TimerEvent: {}
+[25.975955] (-) TimerEvent: {}
+[26.076400] (-) TimerEvent: {}
+[26.176875] (-) TimerEvent: {}
+[26.277305] (-) TimerEvent: {}
+[26.377806] (-) TimerEvent: {}
+[26.478222] (-) TimerEvent: {}
+[26.578657] (-) TimerEvent: {}
+[26.680936] (-) TimerEvent: {}
+[26.688230] (livox_sdk2) StdoutLine: {'line': b'[ 51%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/logger_handler/logger_handler.cpp.o\n'}
+[26.781111] (-) TimerEvent: {}
+[26.881528] (-) TimerEvent: {}
+[26.981954] (-) TimerEvent: {}
+[27.082382] (-) TimerEvent: {}
+[27.182807] (-) TimerEvent: {}
+[27.283237] (-) TimerEvent: {}
+[27.383698] (-) TimerEvent: {}
+[27.484942] (-) TimerEvent: {}
+[27.585371] (-) TimerEvent: {}
+[27.597471] (livox_sdk2) StdoutLine: {'line': b'[ 52%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/logger_handler/file_manager.cpp.o\n'}
+[27.685566] (-) TimerEvent: {}
+[27.785991] (-) TimerEvent: {}
+[27.886432] (-) TimerEvent: {}
+[27.986842] (-) TimerEvent: {}
+[28.088275] (-) TimerEvent: {}
+[28.189384] (-) TimerEvent: {}
+[28.290985] (-) TimerEvent: {}
+[28.391403] (-) TimerEvent: {}
+[28.491828] (-) TimerEvent: {}
+[28.592292] (-) TimerEvent: {}
+[28.692978] (-) TimerEvent: {}
+[28.793473] (-) TimerEvent: {}
+[28.893920] (-) TimerEvent: {}
+[28.994631] (-) TimerEvent: {}
+[29.095049] (-) TimerEvent: {}
+[29.195512] (-) TimerEvent: {}
+[29.295942] (-) TimerEvent: {}
+[29.397539] (-) TimerEvent: {}
+[29.497965] (-) TimerEvent: {}
+[29.602010] (-) TimerEvent: {}
+[29.702487] (-) TimerEvent: {}
+[29.802938] (-) TimerEvent: {}
+[29.903408] (-) TimerEvent: {}
+[30.003862] (-) TimerEvent: {}
+[30.104322] (-) TimerEvent: {}
+[30.204819] (-) TimerEvent: {}
+[30.246148] (livox_sdk2) StdoutLine: {'line': b'[ 53%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/data_handler/data_handler.cpp.o\n'}
+[30.304933] (-) TimerEvent: {}
+[30.405351] (-) TimerEvent: {}
+[30.505801] (-) TimerEvent: {}
+[30.606230] (-) TimerEvent: {}
+[30.706663] (-) TimerEvent: {}
+[30.807138] (-) TimerEvent: {}
+[30.838343] (livox_sdk2) StdoutLine: {'line': b'[ 54%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/command_impl.cpp.o\n'}
+[30.907324] (-) TimerEvent: {}
+[31.007783] (-) TimerEvent: {}
+[31.108223] (-) TimerEvent: {}
+[31.208647] (-) TimerEvent: {}
+[31.309096] (-) TimerEvent: {}
+[31.409569] (-) TimerEvent: {}
+[31.509998] (-) TimerEvent: {}
+[31.610418] (-) TimerEvent: {}
+[31.710904] (-) TimerEvent: {}
+[31.811375] (-) TimerEvent: {}
+[31.911858] (-) TimerEvent: {}
+[32.012288] (-) TimerEvent: {}
+[32.112722] (-) TimerEvent: {}
+[32.213239] (-) TimerEvent: {}
+[32.313698] (-) TimerEvent: {}
+[32.414150] (-) TimerEvent: {}
+[32.514595] (-) TimerEvent: {}
+[32.615029] (-) TimerEvent: {}
+[32.715596] (-) TimerEvent: {}
+[32.816518] (-) TimerEvent: {}
+[32.916916] (-) TimerEvent: {}
+[33.017337] (-) TimerEvent: {}
+[33.117783] (-) TimerEvent: {}
+[33.218240] (-) TimerEvent: {}
+[33.318907] (-) TimerEvent: {}
+[33.419328] (-) TimerEvent: {}
+[33.519741] (-) TimerEvent: {}
+[33.620179] (-) TimerEvent: {}
+[33.720779] (-) TimerEvent: {}
+[33.821200] (-) TimerEvent: {}
+[33.921897] (-) TimerEvent: {}
+[34.022336] (-) TimerEvent: {}
+[34.122769] (-) TimerEvent: {}
+[34.223245] (-) TimerEvent: {}
+[34.323827] (-) TimerEvent: {}
+[34.424260] (-) TimerEvent: {}
+[34.524762] (-) TimerEvent: {}
+[34.625177] (-) TimerEvent: {}
+[34.725611] (-) TimerEvent: {}
+[34.826338] (-) TimerEvent: {}
+[34.926814] (-) TimerEvent: {}
+[35.027295] (-) TimerEvent: {}
+[35.127720] (-) TimerEvent: {}
+[35.228193] (-) TimerEvent: {}
+[35.328704] (-) TimerEvent: {}
+[35.429165] (-) TimerEvent: {}
+[35.529960] (-) TimerEvent: {}
+[35.600855] (livox_sdk2) StdoutLine: {'line': b'[ 55%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/general_command_handler.cpp.o\n'}
+[35.629848] (-) TimerEvent: {}
+[35.730275] (-) TimerEvent: {}
+[35.830705] (-) TimerEvent: {}
+[35.931155] (-) TimerEvent: {}
+[36.031581] (-) TimerEvent: {}
+[36.132054] (-) TimerEvent: {}
+[36.232476] (-) TimerEvent: {}
+[36.332931] (-) TimerEvent: {}
+[36.433617] (-) TimerEvent: {}
+[36.534041] (-) TimerEvent: {}
+[36.634517] (-) TimerEvent: {}
+[36.734994] (-) TimerEvent: {}
+[36.835582] (-) TimerEvent: {}
+[36.936071] (-) TimerEvent: {}
+[37.036549] (-) TimerEvent: {}
+[37.137008] (-) TimerEvent: {}
+[37.237470] (-) TimerEvent: {}
+[37.337923] (-) TimerEvent: {}
+[37.438369] (-) TimerEvent: {}
+[37.538854] (-) TimerEvent: {}
+[37.639361] (-) TimerEvent: {}
+[37.739850] (-) TimerEvent: {}
+[37.840321] (-) TimerEvent: {}
+[37.940854] (-) TimerEvent: {}
+[38.041290] (-) TimerEvent: {}
+[38.141744] (-) TimerEvent: {}
+[38.242212] (-) TimerEvent: {}
+[38.342690] (-) TimerEvent: {}
+[38.443134] (-) TimerEvent: {}
+[38.542828] (livox_sdk2) StdoutLine: {'line': b'[ 56%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/hap_command_handler.cpp.o\n'}
+[38.543254] (-) TimerEvent: {}
+[38.643582] (-) TimerEvent: {}
+[38.744009] (-) TimerEvent: {}
+[38.844454] (-) TimerEvent: {}
+[38.944950] (-) TimerEvent: {}
+[39.045700] (-) TimerEvent: {}
+[39.146163] (-) TimerEvent: {}
+[39.246625] (-) TimerEvent: {}
+[39.347076] (-) TimerEvent: {}
+[39.447538] (-) TimerEvent: {}
+[39.548014] (-) TimerEvent: {}
+[39.648441] (-) TimerEvent: {}
+[39.748912] (-) TimerEvent: {}
+[39.776181] (livox_sdk2) StdoutLine: {'line': b'[ 59%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/mid360_command_handler.cpp.o\n'}
+[39.776896] (livox_sdk2) StdoutLine: {'line': b'[ 59%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/build_request.cpp.o\n'}
+[39.849095] (-) TimerEvent: {}
+[39.949521] (-) TimerEvent: {}
+[40.049930] (-) TimerEvent: {}
+[40.150335] (-) TimerEvent: {}
+[40.250788] (-) TimerEvent: {}
+[40.351243] (-) TimerEvent: {}
+[40.394561] (livox_sdk2) StdoutLine: {'line': b'[ 60%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/logger_handler/file_manager.cpp.o\n'}
+[40.451441] (-) TimerEvent: {}
+[40.551877] (-) TimerEvent: {}
+[40.652351] (-) TimerEvent: {}
+[40.752829] (-) TimerEvent: {}
+[40.853272] (-) TimerEvent: {}
+[40.953714] (-) TimerEvent: {}
+[41.054133] (-) TimerEvent: {}
+[41.150595] (livox_sdk2) StdoutLine: {'line': b'[ 61%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/data_handler/data_handler.cpp.o\n'}
+[41.154299] (-) TimerEvent: {}
+[41.201400] (livox_sdk2) StderrLine: {'line': b'In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,\n'}
+[41.201860] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,\n'}
+[41.201998] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,\n'}
+[41.202109] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,\n'}
+[41.202209] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,\n'}
+[41.202308] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/hap_command_handler.cpp:37:\n'}
+[41.202405] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after \xe2\x80\x98#pragma GCC diagnostic\xe2\x80\x99 kind [-Wpragmas]\n'}
+[41.202512] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[41.202608] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[41.202701] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[41.202836] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[41.202951] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[41.203048] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[41.203142] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[41.203238] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[41.203329] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[41.203422] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[41.203521] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[41.210243] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean \xe2\x80\x98-Warray-bounds\xe2\x80\x99?\n'}
+[41.211337] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[41.211527] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[41.211644] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[41.211754] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[41.211854] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[41.211951] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[41.212044] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[41.212139] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[41.212229] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[41.212358] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[41.212457] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[41.254486] (-) TimerEvent: {}
+[41.354933] (-) TimerEvent: {}
+[41.455388] (-) TimerEvent: {}
+[41.555816] (-) TimerEvent: {}
+[41.656356] (-) TimerEvent: {}
+[41.756860] (-) TimerEvent: {}
+[41.857263] (-) TimerEvent: {}
+[41.866307] (livox_sdk2) StdoutLine: {'line': b'[ 62%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/parse_lidar_state_info.cpp.o\n'}
+[41.957530] (-) TimerEvent: {}
+[42.060732] (-) TimerEvent: {}
+[42.161164] (-) TimerEvent: {}
+[42.261617] (-) TimerEvent: {}
+[42.362043] (-) TimerEvent: {}
+[42.462504] (-) TimerEvent: {}
+[42.562943] (-) TimerEvent: {}
+[42.663383] (-) TimerEvent: {}
+[42.763833] (-) TimerEvent: {}
+[42.864688] (-) TimerEvent: {}
+[42.880104] (livox_sdk2) StderrLine: {'line': b'In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,\n'}
+[42.880874] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,\n'}
+[42.881079] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,\n'}
+[42.881194] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,\n'}
+[42.881300] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,\n'}
+[42.881404] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/mid360_command_handler.cpp:37:\n'}
+[42.881501] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after \xe2\x80\x98#pragma GCC diagnostic\xe2\x80\x99 kind [-Wpragmas]\n'}
+[42.881599] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[42.881725] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[42.881820] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[42.881915] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[42.882010] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[42.882100] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[42.882191] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[42.882282] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[42.882372] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[42.882465] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[42.882557] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[42.892597] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean \xe2\x80\x98-Warray-bounds\xe2\x80\x99?\n'}
+[42.893096] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[42.893234] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[42.893346] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[42.893487] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[42.893589] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[42.893686] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[42.893785] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[42.893880] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[42.893970] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[42.894090] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[42.894189] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[42.964907] (-) TimerEvent: {}
+[43.065373] (-) TimerEvent: {}
+[43.165805] (-) TimerEvent: {}
+[43.266245] (-) TimerEvent: {}
+[43.349253] (livox_sdk2) StderrLine: {'line': b'In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,\n'}
+[43.349693] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,\n'}
+[43.349834] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,\n'}
+[43.349946] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,\n'}
+[43.350085] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,\n'}
+[43.350192] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.cpp:2:\n'}
+[43.350297] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after \xe2\x80\x98#pragma GCC diagnostic\xe2\x80\x99 kind [-Wpragmas]\n'}
+[43.350401] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[43.350497] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[43.350592] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[43.350687] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[43.350779] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[43.350874] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[43.350967] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[43.351061] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[43.351155] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[43.351250] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[43.351346] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[43.353124] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean \xe2\x80\x98-Warray-bounds\xe2\x80\x99?\n'}
+[43.353763] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[43.354168] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[43.354294] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[43.354402] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[43.354499] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[43.354630] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[43.354744] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[43.354841] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[43.354933] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[43.355022] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[43.355117] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[43.366440] (-) TimerEvent: {}
+[43.466856] (-) TimerEvent: {}
+[43.567343] (-) TimerEvent: {}
+[43.667887] (-) TimerEvent: {}
+[43.768328] (-) TimerEvent: {}
+[43.868810] (-) TimerEvent: {}
+[43.969615] (-) TimerEvent: {}
+[44.070045] (-) TimerEvent: {}
+[44.173553] (-) TimerEvent: {}
+[44.274180] (-) TimerEvent: {}
+[44.374631] (-) TimerEvent: {}
+[44.475377] (-) TimerEvent: {}
+[44.575814] (-) TimerEvent: {}
+[44.676299] (-) TimerEvent: {}
+[44.776799] (-) TimerEvent: {}
+[44.877212] (-) TimerEvent: {}
+[44.977640] (-) TimerEvent: {}
+[45.078087] (-) TimerEvent: {}
+[45.178615] (-) TimerEvent: {}
+[45.279320] (-) TimerEvent: {}
+[45.380687] (-) TimerEvent: {}
+[45.481348] (-) TimerEvent: {}
+[45.552365] (livox_sdk2) StdoutLine: {'line': b'[ 63%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/mid360s_command_handler.cpp.o\n'}
+[45.581516] (-) TimerEvent: {}
+[45.682141] (-) TimerEvent: {}
+[45.782591] (-) TimerEvent: {}
+[45.883322] (-) TimerEvent: {}
+[45.983806] (-) TimerEvent: {}
+[46.084476] (-) TimerEvent: {}
+[46.184936] (-) TimerEvent: {}
+[46.285406] (-) TimerEvent: {}
+[46.385819] (-) TimerEvent: {}
+[46.489252] (-) TimerEvent: {}
+[46.589691] (-) TimerEvent: {}
+[46.690340] (-) TimerEvent: {}
+[46.790756] (-) TimerEvent: {}
+[46.891218] (-) TimerEvent: {}
+[46.991655] (-) TimerEvent: {}
+[47.092246] (-) TimerEvent: {}
+[47.193225] (-) TimerEvent: {}
+[47.294102] (-) TimerEvent: {}
+[47.394542] (-) TimerEvent: {}
+[47.495139] (-) TimerEvent: {}
+[47.595586] (-) TimerEvent: {}
+[47.696077] (-) TimerEvent: {}
+[47.796522] (-) TimerEvent: {}
+[47.897021] (-) TimerEvent: {}
+[47.997677] (-) TimerEvent: {}
+[48.098280] (-) TimerEvent: {}
+[48.199153] (-) TimerEvent: {}
+[48.299621] (-) TimerEvent: {}
+[48.401359] (-) TimerEvent: {}
+[48.502294] (-) TimerEvent: {}
+[48.603835] (-) TimerEvent: {}
+[48.704958] (-) TimerEvent: {}
+[48.805725] (-) TimerEvent: {}
+[48.906828] (-) TimerEvent: {}
+[49.007659] (-) TimerEvent: {}
+[49.108204] (-) TimerEvent: {}
+[49.130051] (livox_sdk2) StderrLine: {'line': b'In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,\n'}
+[49.130530] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,\n'}
+[49.131015] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,\n'}
+[49.131180] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,\n'}
+[49.131290] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,\n'}
+[49.131394] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/mid360s_command_handler.cpp:37:\n'}
+[49.131495] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after \xe2\x80\x98#pragma GCC diagnostic\xe2\x80\x99 kind [-Wpragmas]\n'}
+[49.131617] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[49.131713] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[49.131812] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[49.131919] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[49.132013] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[49.132107] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[49.132201] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[49.132292] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[49.132381] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[49.132471] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[49.132565] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[49.138099] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean \xe2\x80\x98-Warray-bounds\xe2\x80\x99?\n'}
+[49.138554] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[49.138683] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[49.138791] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[49.138896] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[49.138993] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[49.139089] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[49.139191] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[49.139290] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[49.139383] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[49.139478] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[49.139572] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[49.208265] (-) TimerEvent: {}
+[49.309073] (-) TimerEvent: {}
+[49.409524] (-) TimerEvent: {}
+[49.510026] (-) TimerEvent: {}
+[49.610551] (-) TimerEvent: {}
+[49.711050] (-) TimerEvent: {}
+[49.811481] (-) TimerEvent: {}
+[49.911934] (-) TimerEvent: {}
+[50.012426] (-) TimerEvent: {}
+[50.112928] (-) TimerEvent: {}
+[50.213379] (-) TimerEvent: {}
+[50.313820] (-) TimerEvent: {}
+[50.417758] (-) TimerEvent: {}
+[50.518229] (-) TimerEvent: {}
+[50.618654] (-) TimerEvent: {}
+[50.719085] (-) TimerEvent: {}
+[50.819493] (-) TimerEvent: {}
+[50.919923] (-) TimerEvent: {}
+[51.020337] (-) TimerEvent: {}
+[51.120957] (-) TimerEvent: {}
+[51.221397] (-) TimerEvent: {}
+[51.321803] (-) TimerEvent: {}
+[51.422220] (-) TimerEvent: {}
+[51.522728] (-) TimerEvent: {}
+[51.623156] (-) TimerEvent: {}
+[51.724844] (-) TimerEvent: {}
+[51.825484] (-) TimerEvent: {}
+[51.921648] (livox_sdk2) StdoutLine: {'line': b'[ 64%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/avia2_command_handler.cpp.o\n'}
+[51.925659] (-) TimerEvent: {}
+[52.026117] (-) TimerEvent: {}
+[52.129983] (-) TimerEvent: {}
+[52.230456] (-) TimerEvent: {}
+[52.330887] (-) TimerEvent: {}
+[52.431326] (-) TimerEvent: {}
+[52.531738] (-) TimerEvent: {}
+[52.632250] (-) TimerEvent: {}
+[52.633075] (livox_sdk2) StdoutLine: {'line': b'[ 65%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/command_impl.cpp.o\n'}
+[52.732424] (-) TimerEvent: {}
+[52.836715] (-) TimerEvent: {}
+[52.937153] (-) TimerEvent: {}
+[53.037569] (-) TimerEvent: {}
+[53.140436] (-) TimerEvent: {}
+[53.240906] (-) TimerEvent: {}
+[53.255671] (livox_sdk2) StdoutLine: {'line': b'[ 66%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/command_handler/mid360l_command_handler.cpp.o\n'}
+[53.341091] (-) TimerEvent: {}
+[53.441541] (-) TimerEvent: {}
+[53.542014] (-) TimerEvent: {}
+[53.571783] (livox_sdk2) StdoutLine: {'line': b'[ 67%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/debug_point_cloud_handler/debug_point_cloud_manager.cpp.o\n'}
+[53.646341] (-) TimerEvent: {}
+[53.747196] (-) TimerEvent: {}
+[53.847803] (-) TimerEvent: {}
+[53.951704] (-) TimerEvent: {}
+[54.052178] (-) TimerEvent: {}
+[54.152864] (-) TimerEvent: {}
+[54.253735] (-) TimerEvent: {}
+[54.354727] (-) TimerEvent: {}
+[54.455217] (-) TimerEvent: {}
+[54.559061] (-) TimerEvent: {}
+[54.665822] (-) TimerEvent: {}
+[54.766294] (-) TimerEvent: {}
+[54.866794] (-) TimerEvent: {}
+[54.967323] (-) TimerEvent: {}
+[55.068277] (-) TimerEvent: {}
+[55.170953] (-) TimerEvent: {}
+[55.271566] (-) TimerEvent: {}
+[55.372031] (-) TimerEvent: {}
+[55.409469] (livox_sdk2) StdoutLine: {'line': b'[ 68%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/general_command_handler.cpp.o\n'}
+[55.439413] (livox_sdk2) StderrLine: {'line': b'In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,\n'}
+[55.439946] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,\n'}
+[55.440156] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,\n'}
+[55.440279] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,\n'}
+[55.440394] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,\n'}
+[55.440503] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/avia2_command_handler.cpp:37:\n'}
+[55.440609] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after \xe2\x80\x98#pragma GCC diagnostic\xe2\x80\x99 kind [-Wpragmas]\n'}
+[55.440831] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[55.440953] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[55.441062] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[55.441169] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[55.441292] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[55.441408] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[55.441510] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[55.441615] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[55.441718] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[55.441819] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[55.441921] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[55.446536] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean \xe2\x80\x98-Warray-bounds\xe2\x80\x99?\n'}
+[55.446847] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[55.446962] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[55.447066] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[55.447168] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[55.447266] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[55.447366] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[55.447464] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[55.447563] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[55.447661] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[55.447763] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[55.447863] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[55.472206] (-) TimerEvent: {}
+[55.572644] (-) TimerEvent: {}
+[55.673076] (-) TimerEvent: {}
+[55.773504] (-) TimerEvent: {}
+[55.821637] (livox_sdk2) StdoutLine: {'line': b'[ 69%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_static.dir/debug_point_cloud_handler/debug_point_cloud_handler.cpp.o\n'}
+[55.873696] (-) TimerEvent: {}
+[55.974132] (-) TimerEvent: {}
+[56.074574] (-) TimerEvent: {}
+[56.175043] (-) TimerEvent: {}
+[56.275484] (-) TimerEvent: {}
+[56.375917] (-) TimerEvent: {}
+[56.476352] (-) TimerEvent: {}
+[56.485217] (livox_sdk2) StderrLine: {'line': b'In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,\n'}
+[56.485687] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,\n'}
+[56.485834] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,\n'}
+[56.485948] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,\n'}
+[56.486056] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,\n'}
+[56.486192] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/mid360l_command_handler.cpp:37:\n'}
+[56.486291] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after \xe2\x80\x98#pragma GCC diagnostic\xe2\x80\x99 kind [-Wpragmas]\n'}
+[56.486401] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[56.486499] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[56.486593] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[56.486686] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[56.486781] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[56.486870] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[56.486988] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[56.487084] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[56.487177] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[56.487267] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[56.487381] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[56.493800] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean \xe2\x80\x98-Warray-bounds\xe2\x80\x99?\n'}
+[56.494270] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[56.494406] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[56.494519] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[56.494626] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[56.494720] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[56.494816] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[56.494913] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[56.495007] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[56.495106] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[56.495199] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[56.495289] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[56.576541] (-) TimerEvent: {}
+[56.676981] (-) TimerEvent: {}
+[56.777389] (-) TimerEvent: {}
+[56.877843] (-) TimerEvent: {}
+[56.978308] (-) TimerEvent: {}
+[57.078737] (-) TimerEvent: {}
+[57.179191] (-) TimerEvent: {}
+[57.279655] (-) TimerEvent: {}
+[57.380093] (-) TimerEvent: {}
+[57.480937] (-) TimerEvent: {}
+[57.581355] (-) TimerEvent: {}
+[57.682190] (-) TimerEvent: {}
+[57.782618] (-) TimerEvent: {}
+[57.883039] (-) TimerEvent: {}
+[57.983447] (-) TimerEvent: {}
+[58.083947] (-) TimerEvent: {}
+[58.184403] (-) TimerEvent: {}
+[58.287527] (-) TimerEvent: {}
+[58.387972] (-) TimerEvent: {}
+[58.488420] (-) TimerEvent: {}
+[58.588908] (-) TimerEvent: {}
+[58.689378] (-) TimerEvent: {}
+[58.789896] (-) TimerEvent: {}
+[58.890338] (-) TimerEvent: {}
+[58.990761] (-) TimerEvent: {}
+[59.091178] (-) TimerEvent: {}
+[59.191631] (-) TimerEvent: {}
+[59.292161] (-) TimerEvent: {}
+[59.392581] (-) TimerEvent: {}
+[59.493035] (-) TimerEvent: {}
+[59.593497] (-) TimerEvent: {}
+[59.693956] (-) TimerEvent: {}
+[59.794426] (-) TimerEvent: {}
+[59.894938] (-) TimerEvent: {}
+[59.995410] (-) TimerEvent: {}
+[60.096488] (-) TimerEvent: {}
+[60.132121] (livox_sdk2) StdoutLine: {'line': b'[ 70%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/hap_command_handler.cpp.o\n'}
+[60.196701] (-) TimerEvent: {}
+[60.297185] (-) TimerEvent: {}
+[60.397603] (-) TimerEvent: {}
+[60.498025] (-) TimerEvent: {}
+[60.598472] (-) TimerEvent: {}
+[60.698899] (-) TimerEvent: {}
+[60.799305] (-) TimerEvent: {}
+[60.899731] (-) TimerEvent: {}
+[61.000236] (-) TimerEvent: {}
+[61.100705] (-) TimerEvent: {}
+[61.201164] (-) TimerEvent: {}
+[61.301619] (-) TimerEvent: {}
+[61.402097] (-) TimerEvent: {}
+[61.502581] (-) TimerEvent: {}
+[61.603045] (-) TimerEvent: {}
+[61.703503] (-) TimerEvent: {}
+[61.803944] (-) TimerEvent: {}
+[61.841733] (livox_sdk2) StdoutLine: {'line': b'[ 72%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/mid360_command_handler.cpp.o\n'}
+[61.904142] (-) TimerEvent: {}
+[62.005868] (-) TimerEvent: {}
+[62.106293] (-) TimerEvent: {}
+[62.206728] (-) TimerEvent: {}
+[62.307217] (-) TimerEvent: {}
+[62.407656] (-) TimerEvent: {}
+[62.508082] (-) TimerEvent: {}
+[62.608481] (-) TimerEvent: {}
+[62.708937] (-) TimerEvent: {}
+[62.809360] (-) TimerEvent: {}
+[62.909825] (-) TimerEvent: {}
+[63.010345] (-) TimerEvent: {}
+[63.110838] (-) TimerEvent: {}
+[63.213843] (-) TimerEvent: {}
+[63.314325] (-) TimerEvent: {}
+[63.414816] (-) TimerEvent: {}
+[63.423715] (livox_sdk2) StderrLine: {'line': b'In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,\n'}
+[63.424235] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,\n'}
+[63.424374] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,\n'}
+[63.424483] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,\n'}
+[63.424591] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,\n'}
+[63.424691] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/hap_command_handler.cpp:37:\n'}
+[63.424817] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after \xe2\x80\x98#pragma GCC diagnostic\xe2\x80\x99 kind [-Wpragmas]\n'}
+[63.424925] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[63.425025] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[63.425119] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[63.425215] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[63.425349] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[63.425441] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[63.425534] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[63.425625] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[63.425714] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[63.425808] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[63.425907] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[63.429197] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean \xe2\x80\x98-Warray-bounds\xe2\x80\x99?\n'}
+[63.429643] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[63.429782] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[63.429887] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[63.429990] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[63.430088] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[63.430216] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[63.430330] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[63.430425] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[63.430516] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[63.430633] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[63.430729] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[63.515015] (-) TimerEvent: {}
+[63.615495] (-) TimerEvent: {}
+[63.715982] (-) TimerEvent: {}
+[63.816497] (-) TimerEvent: {}
+[63.917057] (-) TimerEvent: {}
+[64.017514] (-) TimerEvent: {}
+[64.117952] (-) TimerEvent: {}
+[64.218379] (-) TimerEvent: {}
+[64.318817] (-) TimerEvent: {}
+[64.419256] (-) TimerEvent: {}
+[64.519685] (-) TimerEvent: {}
+[64.620122] (-) TimerEvent: {}
+[64.720574] (-) TimerEvent: {}
+[64.821031] (-) TimerEvent: {}
+[64.921479] (-) TimerEvent: {}
+[65.021920] (-) TimerEvent: {}
+[65.122364] (-) TimerEvent: {}
+[65.222853] (-) TimerEvent: {}
+[65.323331] (-) TimerEvent: {}
+[65.423801] (-) TimerEvent: {}
+[65.524375] (-) TimerEvent: {}
+[65.542571] (livox_sdk2) StderrLine: {'line': b'In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,\n'}
+[65.543034] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,\n'}
+[65.543170] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,\n'}
+[65.543279] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,\n'}
+[65.543449] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,\n'}
+[65.543549] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/mid360_command_handler.cpp:37:\n'}
+[65.543649] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after \xe2\x80\x98#pragma GCC diagnostic\xe2\x80\x99 kind [-Wpragmas]\n'}
+[65.543749] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[65.543841] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[65.543935] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[65.544028] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[65.544121] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[65.544210] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[65.544300] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[65.544390] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[65.544481] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[65.544576] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[65.544669] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[65.551730] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean \xe2\x80\x98-Warray-bounds\xe2\x80\x99?\n'}
+[65.552184] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[65.552318] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[65.555752] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[65.556200] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[65.556326] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[65.556431] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[65.556535] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[65.556634] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[65.556728] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[65.556852] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[65.556954] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[65.624580] (-) TimerEvent: {}
+[65.725464] (-) TimerEvent: {}
+[65.825909] (-) TimerEvent: {}
+[65.934366] (-) TimerEvent: {}
+[66.034788] (-) TimerEvent: {}
+[66.135185] (-) TimerEvent: {}
+[66.235612] (-) TimerEvent: {}
+[66.336034] (-) TimerEvent: {}
+[66.436442] (-) TimerEvent: {}
+[66.536859] (-) TimerEvent: {}
+[66.637278] (-) TimerEvent: {}
+[66.737715] (-) TimerEvent: {}
+[66.838182] (-) TimerEvent: {}
+[66.938627] (-) TimerEvent: {}
+[67.039074] (-) TimerEvent: {}
+[67.139706] (-) TimerEvent: {}
+[67.240174] (-) TimerEvent: {}
+[67.340598] (-) TimerEvent: {}
+[67.441280] (-) TimerEvent: {}
+[67.541727] (-) TimerEvent: {}
+[67.642264] (-) TimerEvent: {}
+[67.742672] (-) TimerEvent: {}
+[67.843076] (-) TimerEvent: {}
+[67.943483] (-) TimerEvent: {}
+[68.043926] (-) TimerEvent: {}
+[68.144357] (-) TimerEvent: {}
+[68.244782] (-) TimerEvent: {}
+[68.345328] (-) TimerEvent: {}
+[68.445723] (-) TimerEvent: {}
+[68.546123] (-) TimerEvent: {}
+[68.589264] (livox_sdk2) StdoutLine: {'line': b'[ 73%] Linking CXX static library liblivox_lidar_sdk_static.a\n'}
+[68.646297] (-) TimerEvent: {}
+[68.746724] (-) TimerEvent: {}
+[68.763607] (livox_sdk2) StdoutLine: {'line': b'[ 73%] Built target livox_lidar_sdk_static\n'}
+[68.846891] (-) TimerEvent: {}
+[68.947376] (-) TimerEvent: {}
+[69.048259] (-) TimerEvent: {}
+[69.148700] (-) TimerEvent: {}
+[69.249197] (-) TimerEvent: {}
+[69.350333] (-) TimerEvent: {}
+[69.450810] (-) TimerEvent: {}
+[69.551261] (-) TimerEvent: {}
+[69.651696] (-) TimerEvent: {}
+[69.752099] (-) TimerEvent: {}
+[69.852669] (-) TimerEvent: {}
+[69.953444] (-) TimerEvent: {}
+[70.053900] (-) TimerEvent: {}
+[70.154357] (-) TimerEvent: {}
+[70.254840] (-) TimerEvent: {}
+[70.355274] (-) TimerEvent: {}
+[70.455747] (-) TimerEvent: {}
+[70.556184] (-) TimerEvent: {}
+[70.656650] (-) TimerEvent: {}
+[70.757591] (-) TimerEvent: {}
+[70.858474] (-) TimerEvent: {}
+[70.959265] (-) TimerEvent: {}
+[71.060498] (-) TimerEvent: {}
+[71.161098] (-) TimerEvent: {}
+[71.261632] (-) TimerEvent: {}
+[71.362107] (-) TimerEvent: {}
+[71.462583] (-) TimerEvent: {}
+[71.562987] (-) TimerEvent: {}
+[71.663553] (-) TimerEvent: {}
+[71.763963] (-) TimerEvent: {}
+[71.864414] (-) TimerEvent: {}
+[71.964864] (-) TimerEvent: {}
+[72.068968] (-) TimerEvent: {}
+[72.172412] (-) TimerEvent: {}
+[72.272822] (-) TimerEvent: {}
+[72.373218] (-) TimerEvent: {}
+[72.473758] (-) TimerEvent: {}
+[72.574160] (-) TimerEvent: {}
+[72.674554] (-) TimerEvent: {}
+[72.774910] (-) TimerEvent: {}
+[72.875307] (-) TimerEvent: {}
+[72.975685] (-) TimerEvent: {}
+[73.076084] (-) TimerEvent: {}
+[73.176486] (-) TimerEvent: {}
+[73.276895] (-) TimerEvent: {}
+[73.377296] (-) TimerEvent: {}
+[73.477702] (-) TimerEvent: {}
+[73.492589] (livox_sdk2) StdoutLine: {'line': b'[ 74%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/debug_point_cloud_handler/debug_point_cloud_manager.cpp.o\n'}
+[73.493188] (livox_sdk2) StdoutLine: {'line': b'[ 75%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/debug_point_cloud_handler/debug_point_cloud_handler.cpp.o\n'}
+[73.506524] (livox_sdk2) StdoutLine: {'line': b'[ 76%] Building CXX object samples/livox_lidar_quick_start/CMakeFiles/livox_lidar_quick_start.dir/main.cpp.o\n'}
+[73.577887] (-) TimerEvent: {}
+[73.678300] (-) TimerEvent: {}
+[73.778708] (-) TimerEvent: {}
+[73.879090] (-) TimerEvent: {}
+[73.979497] (-) TimerEvent: {}
+[74.079958] (-) TimerEvent: {}
+[74.180360] (-) TimerEvent: {}
+[74.244911] (livox_sdk2) StdoutLine: {'line': b'[ 77%] Linking CXX executable livox_lidar_quick_start\n'}
+[74.280527] (-) TimerEvent: {}
+[74.380935] (-) TimerEvent: {}
+[74.481309] (-) TimerEvent: {}
+[74.540317] (livox_sdk2) StdoutLine: {'line': b'[ 77%] Built target livox_lidar_quick_start\n'}
+[74.564676] (livox_sdk2) StdoutLine: {'line': b'[ 78%] Building CXX object samples/multi_lidars_upgrade/CMakeFiles/multi_lidars_upgrade.dir/main.cpp.o\n'}
+[74.581475] (-) TimerEvent: {}
+[74.681868] (-) TimerEvent: {}
+[74.782259] (-) TimerEvent: {}
+[74.882674] (-) TimerEvent: {}
+[74.983696] (-) TimerEvent: {}
+[75.084107] (-) TimerEvent: {}
+[75.185843] (-) TimerEvent: {}
+[75.286239] (-) TimerEvent: {}
+[75.386597] (-) TimerEvent: {}
+[75.456908] (livox_sdk2) StdoutLine: {'line': b'[ 79%] Linking CXX executable multi_lidars_upgrade\n'}
+[75.486752] (-) TimerEvent: {}
+[75.587135] (-) TimerEvent: {}
+[75.687577] (-) TimerEvent: {}
+[75.769869] (livox_sdk2) StdoutLine: {'line': b'[ 79%] Built target multi_lidars_upgrade\n'}
+[75.788151] (-) TimerEvent: {}
+[75.796447] (livox_sdk2) StdoutLine: {'line': b'[ 80%] Building CXX object samples/logger/CMakeFiles/logger.dir/main.cpp.o\n'}
+[75.888331] (-) TimerEvent: {}
+[75.988781] (-) TimerEvent: {}
+[76.089132] (-) TimerEvent: {}
+[76.189475] (-) TimerEvent: {}
+[76.289871] (-) TimerEvent: {}
+[76.390268] (-) TimerEvent: {}
+[76.490845] (-) TimerEvent: {}
+[76.591219] (-) TimerEvent: {}
+[76.624015] (livox_sdk2) StdoutLine: {'line': b'[ 81%] Linking CXX executable logger\n'}
+[76.691377] (-) TimerEvent: {}
+[76.791771] (-) TimerEvent: {}
+[76.892154] (-) TimerEvent: {}
+[76.992499] (-) TimerEvent: {}
+[77.026378] (livox_sdk2) StdoutLine: {'line': b'[ 81%] Built target logger\n'}
+[77.050528] (livox_sdk2) StdoutLine: {'line': b'[ 82%] Building CXX object samples/debug_point_cloud/CMakeFiles/debug_point_cloud.dir/main.cpp.o\n'}
+[77.092655] (-) TimerEvent: {}
+[77.193047] (-) TimerEvent: {}
+[77.293431] (-) TimerEvent: {}
+[77.393785] (-) TimerEvent: {}
+[77.497539] (-) TimerEvent: {}
+[77.597924] (-) TimerEvent: {}
+[77.698305] (-) TimerEvent: {}
+[77.798722] (-) TimerEvent: {}
+[77.899102] (-) TimerEvent: {}
+[77.929193] (livox_sdk2) StdoutLine: {'line': b'[ 83%] Linking CXX executable debug_point_cloud\n'}
+[77.999275] (-) TimerEvent: {}
+[78.099680] (-) TimerEvent: {}
+[78.200106] (-) TimerEvent: {}
+[78.224082] (livox_sdk2) StdoutLine: {'line': b'[ 83%] Built target debug_point_cloud\n'}
+[78.250393] (livox_sdk2) StdoutLine: {'line': b'[ 84%] Building CXX object samples/lidar_cmd_observer/CMakeFiles/lidar_cmd_observer.dir/main.cpp.o\n'}
+[78.300246] (-) TimerEvent: {}
+[78.400605] (-) TimerEvent: {}
+[78.500996] (-) TimerEvent: {}
+[78.602677] (-) TimerEvent: {}
+[78.703571] (-) TimerEvent: {}
+[78.803956] (-) TimerEvent: {}
+[78.893149] (livox_sdk2) StdoutLine: {'line': b'[ 86%] Linking CXX executable lidar_cmd_observer\n'}
+[78.904090] (-) TimerEvent: {}
+[79.004431] (-) TimerEvent: {}
+[79.104794] (-) TimerEvent: {}
+[79.188892] (livox_sdk2) StdoutLine: {'line': b'[ 86%] Built target lidar_cmd_observer\n'}
+[79.204941] (-) TimerEvent: {}
+[79.211220] (livox_sdk2) StdoutLine: {'line': b'[ 87%] Building CXX object samples/livox_lidar_rmc_time_sync/CMakeFiles/livox_lidar_rmc_time_sync.dir/main.cpp.o\n'}
+[79.305090] (-) TimerEvent: {}
+[79.405474] (-) TimerEvent: {}
+[79.505868] (-) TimerEvent: {}
+[79.608908] (-) TimerEvent: {}
+[79.709322] (-) TimerEvent: {}
+[79.809669] (-) TimerEvent: {}
+[79.910052] (-) TimerEvent: {}
+[80.010434] (-) TimerEvent: {}
+[80.092038] (livox_sdk2) StdoutLine: {'line': b'[ 88%] Building CXX object samples/livox_lidar_rmc_time_sync/CMakeFiles/livox_lidar_rmc_time_sync.dir/linux/synchro.cpp.o\n'}
+[80.110590] (-) TimerEvent: {}
+[80.211002] (-) TimerEvent: {}
+[80.311375] (-) TimerEvent: {}
+[80.411758] (-) TimerEvent: {}
+[80.512173] (-) TimerEvent: {}
+[80.612579] (-) TimerEvent: {}
+[80.712969] (-) TimerEvent: {}
+[80.813354] (-) TimerEvent: {}
+[80.913704] (-) TimerEvent: {}
+[81.014103] (-) TimerEvent: {}
+[81.114507] (-) TimerEvent: {}
+[81.170605] (livox_sdk2) StdoutLine: {'line': b'[ 89%] Linking CXX executable livox_lidar_rmc_time_sync\n'}
+[81.214665] (-) TimerEvent: {}
+[81.315031] (-) TimerEvent: {}
+[81.415371] (-) TimerEvent: {}
+[81.469821] (livox_sdk2) StdoutLine: {'line': b'[ 89%] Built target livox_lidar_rmc_time_sync\n'}
+[81.495662] (livox_sdk2) StdoutLine: {'line': b'[ 90%] Building CXX object samples/livox_lidar_ip_set/CMakeFiles/livox_lidar_ip_set.dir/main.cpp.o\n'}
+[81.515554] (-) TimerEvent: {}
+[81.615940] (-) TimerEvent: {}
+[81.716306] (-) TimerEvent: {}
+[81.816664] (-) TimerEvent: {}
+[81.917099] (-) TimerEvent: {}
+[82.017598] (-) TimerEvent: {}
+[82.117976] (-) TimerEvent: {}
+[82.218340] (-) TimerEvent: {}
+[82.224515] (livox_sdk2) StdoutLine: {'line': b'[ 91%] Linking CXX executable livox_lidar_ip_set\n'}
+[82.318504] (-) TimerEvent: {}
+[82.418942] (-) TimerEvent: {}
+[82.514180] (livox_sdk2) StdoutLine: {'line': b'[ 91%] Built target livox_lidar_ip_set\n'}
+[82.519073] (-) TimerEvent: {}
+[82.576294] (livox_sdk2) StdoutLine: {'line': b'[ 92%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/mid360l_command_handler.cpp.o\n'}
+[82.619292] (-) TimerEvent: {}
+[82.720056] (-) TimerEvent: {}
+[82.820438] (-) TimerEvent: {}
+[82.920830] (-) TimerEvent: {}
+[83.021203] (-) TimerEvent: {}
+[83.121608] (-) TimerEvent: {}
+[83.222072] (-) TimerEvent: {}
+[83.322482] (-) TimerEvent: {}
+[83.422877] (-) TimerEvent: {}
+[83.523243] (-) TimerEvent: {}
+[83.623611] (-) TimerEvent: {}
+[83.723973] (-) TimerEvent: {}
+[83.824348] (-) TimerEvent: {}
+[83.924708] (-) TimerEvent: {}
+[84.025107] (-) TimerEvent: {}
+[84.125522] (-) TimerEvent: {}
+[84.225932] (-) TimerEvent: {}
+[84.326333] (-) TimerEvent: {}
+[84.426719] (-) TimerEvent: {}
+[84.527104] (-) TimerEvent: {}
+[84.627497] (-) TimerEvent: {}
+[84.727921] (-) TimerEvent: {}
+[84.828386] (-) TimerEvent: {}
+[84.836109] (livox_sdk2) StderrLine: {'line': b'In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,\n'}
+[84.836843] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,\n'}
+[84.837286] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,\n'}
+[84.837507] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,\n'}
+[84.837668] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,\n'}
+[84.837818] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/mid360l_command_handler.cpp:37:\n'}
+[84.838007] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after \xe2\x80\x98#pragma GCC diagnostic\xe2\x80\x99 kind [-Wpragmas]\n'}
+[84.838159] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[84.838298] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[84.838435] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[84.838580] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[84.838729] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[84.838866] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[84.839008] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[84.839149] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[84.839288] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[84.839428] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[84.839563] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[84.840260] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean \xe2\x80\x98-Warray-bounds\xe2\x80\x99?\n'}
+[84.840459] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[84.840585] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[84.840704] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[84.840852] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[84.840972] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[84.841089] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[84.841205] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[84.841319] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[84.841433] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[84.841549] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[84.841664] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[84.928584] (-) TimerEvent: {}
+[85.029085] (-) TimerEvent: {}
+[85.129566] (-) TimerEvent: {}
+[85.230027] (-) TimerEvent: {}
+[85.330464] (-) TimerEvent: {}
+[85.430917] (-) TimerEvent: {}
+[85.531606] (-) TimerEvent: {}
+[85.632092] (-) TimerEvent: {}
+[85.732582] (-) TimerEvent: {}
+[85.833121] (-) TimerEvent: {}
+[85.933595] (-) TimerEvent: {}
+[86.034039] (-) TimerEvent: {}
+[86.134518] (-) TimerEvent: {}
+[86.234992] (-) TimerEvent: {}
+[86.335429] (-) TimerEvent: {}
+[86.435870] (-) TimerEvent: {}
+[86.536324] (-) TimerEvent: {}
+[86.636780] (-) TimerEvent: {}
+[86.737268] (-) TimerEvent: {}
+[86.837760] (-) TimerEvent: {}
+[86.938195] (-) TimerEvent: {}
+[87.038594] (-) TimerEvent: {}
+[87.139050] (-) TimerEvent: {}
+[87.239524] (-) TimerEvent: {}
+[87.339970] (-) TimerEvent: {}
+[87.440378] (-) TimerEvent: {}
+[87.540939] (-) TimerEvent: {}
+[87.641395] (-) TimerEvent: {}
+[87.741824] (-) TimerEvent: {}
+[87.842312] (-) TimerEvent: {}
+[87.942799] (-) TimerEvent: {}
+[88.043278] (-) TimerEvent: {}
+[88.143772] (-) TimerEvent: {}
+[88.244306] (-) TimerEvent: {}
+[88.344858] (-) TimerEvent: {}
+[88.445389] (-) TimerEvent: {}
+[88.545906] (-) TimerEvent: {}
+[88.647548] (-) TimerEvent: {}
+[88.747999] (-) TimerEvent: {}
+[88.848484] (-) TimerEvent: {}
+[88.949069] (-) TimerEvent: {}
+[89.049573] (-) TimerEvent: {}
+[89.150069] (-) TimerEvent: {}
+[89.250591] (-) TimerEvent: {}
+[89.351100] (-) TimerEvent: {}
+[89.451582] (-) TimerEvent: {}
+[89.552117] (-) TimerEvent: {}
+[89.652640] (-) TimerEvent: {}
+[89.753119] (-) TimerEvent: {}
+[89.853835] (-) TimerEvent: {}
+[89.954344] (-) TimerEvent: {}
+[90.054833] (-) TimerEvent: {}
+[90.155353] (-) TimerEvent: {}
+[90.255860] (-) TimerEvent: {}
+[90.356338] (-) TimerEvent: {}
+[90.456860] (-) TimerEvent: {}
+[90.557360] (-) TimerEvent: {}
+[90.657869] (-) TimerEvent: {}
+[90.758408] (-) TimerEvent: {}
+[90.858931] (-) TimerEvent: {}
+[90.959563] (-) TimerEvent: {}
+[91.060095] (-) TimerEvent: {}
+[91.160711] (-) TimerEvent: {}
+[91.261506] (-) TimerEvent: {}
+[91.362004] (-) TimerEvent: {}
+[91.462487] (-) TimerEvent: {}
+[91.563009] (-) TimerEvent: {}
+[91.663504] (-) TimerEvent: {}
+[91.764223] (-) TimerEvent: {}
+[91.771820] (livox_sdk2) StdoutLine: {'line': b'[ 94%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/avia2_command_handler.cpp.o\n'}
+[91.772233] (livox_sdk2) StdoutLine: {'line': b'[ 94%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/parse_lidar_state_info.cpp.o\n'}
+[91.773380] (livox_sdk2) StdoutLine: {'line': b'[ 95%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/mid360s_command_handler.cpp.o\n'}
+[91.864378] (-) TimerEvent: {}
+[91.965806] (-) TimerEvent: {}
+[92.066505] (-) TimerEvent: {}
+[92.167388] (-) TimerEvent: {}
+[92.268154] (-) TimerEvent: {}
+[92.368552] (-) TimerEvent: {}
+[92.469050] (-) TimerEvent: {}
+[92.536604] (livox_sdk2) StderrLine: {'line': b'In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,\n'}
+[92.537382] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,\n'}
+[92.537537] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,\n'}
+[92.537649] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,\n'}
+[92.537752] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,\n'}
+[92.537850] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.cpp:2:\n'}
+[92.537945] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after \xe2\x80\x98#pragma GCC diagnostic\xe2\x80\x99 kind [-Wpragmas]\n'}
+[92.538042] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[92.538138] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[92.538229] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[92.538324] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[92.538413] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[92.538510] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[92.538604] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[92.538695] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[92.538789] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[92.538882] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[92.539065] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[92.540469] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean \xe2\x80\x98-Warray-bounds\xe2\x80\x99?\n'}
+[92.540851] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[92.540990] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[92.541104] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[92.541216] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[92.541350] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[92.541467] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[92.541574] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[92.541675] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[92.541774] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[92.541874] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[92.541993] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[92.569280] (-) TimerEvent: {}
+[92.669887] (-) TimerEvent: {}
+[92.770305] (-) TimerEvent: {}
+[92.870728] (-) TimerEvent: {}
+[92.971166] (-) TimerEvent: {}
+[93.071630] (-) TimerEvent: {}
+[93.172045] (-) TimerEvent: {}
+[93.272492] (-) TimerEvent: {}
+[93.373074] (-) TimerEvent: {}
+[93.473480] (-) TimerEvent: {}
+[93.573889] (-) TimerEvent: {}
+[93.674308] (-) TimerEvent: {}
+[93.774706] (-) TimerEvent: {}
+[93.821289] (livox_sdk2) StderrLine: {'line': b'In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,\n'}
+[93.821888] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,\n'}
+[93.822017] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,\n'}
+[93.822371] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,\n'}
+[93.822487] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,\n'}
+[93.822588] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/mid360s_command_handler.cpp:37:\n'}
+[93.822684] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after \xe2\x80\x98#pragma GCC diagnostic\xe2\x80\x99 kind [-Wpragmas]\n'}
+[93.822813] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[93.822906] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[93.822993] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[93.823081] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[93.823168] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[93.823256] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[93.823346] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[93.823433] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[93.823520] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[93.823605] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[93.823707] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[93.823795] (livox_sdk2) StderrLine: {'line': b'In file included from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/stream.h:19,\n'}
+[93.823882] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/memorystream.h:22,\n'}
+[93.823966] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/encodedstream.h:22,\n'}
+[93.824054] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/document.h:26,\n'}
+[93.824141] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/parse_lidar_state_info.h:38,\n'}
+[93.824226] (livox_sdk2) StderrLine: {'line': b'                 from /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/command_handler/avia2_command_handler.cpp:37:\n'}
+[93.824312] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: warning: unknown option after \xe2\x80\x98#pragma GCC diagnostic\xe2\x80\x99 kind [-Wpragmas]\n'}
+[93.824398] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[93.824482] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[93.824568] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[93.824669] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[93.824786] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[93.824883] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[93.824975] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[93.825061] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[93.825147] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[93.825236] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[93.825323] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[93.826183] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean \xe2\x80\x98-Warray-bounds\xe2\x80\x99?\n'}
+[93.826463] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[93.826594] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[93.826700] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[93.826803] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[93.826901] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[93.826998] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[93.827142] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[93.827241] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[93.827372] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[93.827473] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[93.827569] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[93.827663] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:542:29: note: did you mean \xe2\x80\x98-Warray-bounds\xe2\x80\x99?\n'}
+[93.827780] (livox_sdk2) StderrLine: {'line': b'  542 | #define RAPIDJSON_PRAGMA(x) _Pragma(RAPIDJSON_STRINGIFY(x))\n'}
+[93.827875] (livox_sdk2) StderrLine: {'line': b'      |                             ^~~~~~~\n'}
+[93.827968] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:543:34: note: in expansion of macro \xe2\x80\x98RAPIDJSON_PRAGMA\xe2\x80\x99\n'}
+[93.828061] (livox_sdk2) StderrLine: {'line': b'  543 | #define RAPIDJSON_DIAG_PRAGMA(x) RAPIDJSON_PRAGMA(GCC diagnostic x)\n'}
+[93.828153] (livox_sdk2) StderrLine: {'line': b'      |                                  ^~~~~~~~~~~~~~~~\n'}
+[93.828244] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/rapidjson.h:545:3: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_PRAGMA\xe2\x80\x99\n'}
+[93.828334] (livox_sdk2) StderrLine: {'line': b'  545 |   RAPIDJSON_DIAG_PRAGMA(ignored RAPIDJSON_STRINGIFY(RAPIDJSON_JOIN(-W, x)))\n'}
+[93.828423] (livox_sdk2) StderrLine: {'line': b'      |   ^~~~~~~~~~~~~~~~~~~~~\n'}
+[93.828516] (livox_sdk2) StderrLine: {'line': b'/home/jetson/slop-bot_ws/src/third_party/Livox-SDK2/sdk_core/../3rdparty/rapidjson/internal/dtoa.h:36:1: note: in expansion of macro \xe2\x80\x98RAPIDJSON_DIAG_OFF\xe2\x80\x99\n'}
+[93.828613] (livox_sdk2) StderrLine: {'line': b'   36 | RAPIDJSON_DIAG_OFF(array - bounds)  // some gcc versions generate wrong warnings\n'}
+[93.828726] (livox_sdk2) StderrLine: {'line': b'      | ^~~~~~~~~~~~~~~~~~\n'}
+[93.874887] (-) TimerEvent: {}
+[93.975309] (-) TimerEvent: {}
+[94.075762] (-) TimerEvent: {}
+[94.176187] (-) TimerEvent: {}
+[94.276634] (-) TimerEvent: {}
+[94.377098] (-) TimerEvent: {}
+[94.477556] (-) TimerEvent: {}
+[94.577981] (-) TimerEvent: {}
+[94.678404] (-) TimerEvent: {}
+[94.779113] (-) TimerEvent: {}
+[94.879522] (-) TimerEvent: {}
+[94.980167] (-) TimerEvent: {}
+[95.080965] (-) TimerEvent: {}
+[95.181406] (-) TimerEvent: {}
+[95.281855] (-) TimerEvent: {}
+[95.382315] (-) TimerEvent: {}
+[95.483173] (-) TimerEvent: {}
+[95.583613] (-) TimerEvent: {}
+[95.684043] (-) TimerEvent: {}
+[95.784487] (-) TimerEvent: {}
+[95.884962] (-) TimerEvent: {}
+[95.985385] (-) TimerEvent: {}
+[96.085821] (-) TimerEvent: {}
+[96.186227] (-) TimerEvent: {}
+[96.286657] (-) TimerEvent: {}
+[96.387128] (-) TimerEvent: {}
+[96.487597] (-) TimerEvent: {}
+[96.588387] (-) TimerEvent: {}
+[96.689459] (-) TimerEvent: {}
+[96.789868] (-) TimerEvent: {}
+[96.890273] (-) TimerEvent: {}
+[96.990687] (-) TimerEvent: {}
+[97.091111] (-) TimerEvent: {}
+[97.191523] (-) TimerEvent: {}
+[97.291940] (-) TimerEvent: {}
+[97.392401] (-) TimerEvent: {}
+[97.492880] (-) TimerEvent: {}
+[97.593317] (-) TimerEvent: {}
+[97.693789] (-) TimerEvent: {}
+[97.794313] (-) TimerEvent: {}
+[97.894755] (-) TimerEvent: {}
+[97.995192] (-) TimerEvent: {}
+[98.095669] (-) TimerEvent: {}
+[98.196075] (-) TimerEvent: {}
+[98.296489] (-) TimerEvent: {}
+[98.396924] (-) TimerEvent: {}
+[98.497317] (-) TimerEvent: {}
+[98.597733] (-) TimerEvent: {}
+[98.698166] (-) TimerEvent: {}
+[98.798564] (-) TimerEvent: {}
+[98.898983] (-) TimerEvent: {}
+[98.999407] (-) TimerEvent: {}
+[99.099862] (-) TimerEvent: {}
+[99.200269] (-) TimerEvent: {}
+[99.300680] (-) TimerEvent: {}
+[99.401118] (-) TimerEvent: {}
+[99.501554] (-) TimerEvent: {}
+[99.601958] (-) TimerEvent: {}
+[99.702360] (-) TimerEvent: {}
+[99.803098] (-) TimerEvent: {}
+[99.903508] (-) TimerEvent: {}
+[100.003920] (-) TimerEvent: {}
+[100.104573] (-) TimerEvent: {}
+[100.205076] (-) TimerEvent: {}
+[100.305522] (-) TimerEvent: {}
+[100.405935] (-) TimerEvent: {}
+[100.506332] (-) TimerEvent: {}
+[100.606729] (-) TimerEvent: {}
+[100.707318] (-) TimerEvent: {}
+[100.807725] (-) TimerEvent: {}
+[100.908131] (-) TimerEvent: {}
+[101.008548] (-) TimerEvent: {}
+[101.049544] (livox_sdk2) StdoutLine: {'line': b'[ 96%] Building CXX object sdk_core/CMakeFiles/livox_lidar_sdk_shared.dir/command_handler/build_request.cpp.o\n'}
+[101.110189] (-) TimerEvent: {}
+[101.210625] (-) TimerEvent: {}
+[101.311030] (-) TimerEvent: {}
+[101.411435] (-) TimerEvent: {}
+[101.511861] (-) TimerEvent: {}
+[101.612242] (-) TimerEvent: {}
+[101.712641] (-) TimerEvent: {}
+[101.813085] (-) TimerEvent: {}
+[101.913505] (-) TimerEvent: {}
+[102.013965] (-) TimerEvent: {}
+[102.114405] (-) TimerEvent: {}
+[102.214871] (-) TimerEvent: {}
+[102.315311] (-) TimerEvent: {}
+[102.415825] (-) TimerEvent: {}
+[102.516314] (-) TimerEvent: {}
+[102.616843] (-) TimerEvent: {}
+[102.717228] (-) TimerEvent: {}
+[102.817637] (-) TimerEvent: {}
+[102.918123] (-) TimerEvent: {}
+[103.018579] (-) TimerEvent: {}
+[103.119048] (-) TimerEvent: {}
+[103.219636] (-) TimerEvent: {}
+[103.320521] (-) TimerEvent: {}
+[103.421250] (-) TimerEvent: {}
+[103.522055] (-) TimerEvent: {}
+[103.622584] (-) TimerEvent: {}
+[103.722992] (-) TimerEvent: {}
+[103.823700] (-) TimerEvent: {}
+[103.924143] (-) TimerEvent: {}
+[104.024666] (-) TimerEvent: {}
+[104.125271] (-) TimerEvent: {}
+[104.225707] (-) TimerEvent: {}
+[104.326130] (-) TimerEvent: {}
+[104.426516] (-) TimerEvent: {}
+[104.526900] (-) TimerEvent: {}
+[104.627332] (-) TimerEvent: {}
+[104.727816] (-) TimerEvent: {}
+[104.828282] (-) TimerEvent: {}
+[104.928725] (-) TimerEvent: {}
+[105.029216] (-) TimerEvent: {}
+[105.129675] (-) TimerEvent: {}
+[105.230102] (-) TimerEvent: {}
+[105.330583] (-) TimerEvent: {}
+[105.431097] (-) TimerEvent: {}
+[105.531532] (-) TimerEvent: {}
+[105.632009] (-) TimerEvent: {}
+[105.732492] (-) TimerEvent: {}
+[105.832964] (-) TimerEvent: {}
+[105.933420] (-) TimerEvent: {}
+[106.034021] (-) TimerEvent: {}
+[106.134483] (-) TimerEvent: {}
+[106.234917] (-) TimerEvent: {}
+[106.335324] (-) TimerEvent: {}
+[106.435725] (-) TimerEvent: {}
+[106.536374] (-) TimerEvent: {}
+[106.637144] (-) TimerEvent: {}
+[106.737516] (-) TimerEvent: {}
+[106.837912] (-) TimerEvent: {}
+[106.938316] (-) TimerEvent: {}
+[107.038740] (-) TimerEvent: {}
+[107.139166] (-) TimerEvent: {}
+[107.239612] (-) TimerEvent: {}
+[107.340097] (-) TimerEvent: {}
+[107.440817] (-) TimerEvent: {}
+[107.541417] (-) TimerEvent: {}
+[107.641828] (-) TimerEvent: {}
+[107.742247] (-) TimerEvent: {}
+[107.842707] (-) TimerEvent: {}
+[107.943367] (-) TimerEvent: {}
+[108.043874] (-) TimerEvent: {}
+[108.144416] (-) TimerEvent: {}
+[108.244929] (-) TimerEvent: {}
+[108.345400] (-) TimerEvent: {}
+[108.445873] (-) TimerEvent: {}
+[108.546355] (-) TimerEvent: {}
+[108.646851] (-) TimerEvent: {}
+[108.747418] (-) TimerEvent: {}
+[108.847901] (-) TimerEvent: {}
+[108.948381] (-) TimerEvent: {}
+[109.049163] (-) TimerEvent: {}
+[109.149631] (-) TimerEvent: {}
+[109.250114] (-) TimerEvent: {}
+[109.350634] (-) TimerEvent: {}
+[109.451117] (-) TimerEvent: {}
+[109.551619] (-) TimerEvent: {}
+[109.652099] (-) TimerEvent: {}
+[109.668797] (livox_sdk2) StdoutLine: {'line': b'[ 97%] Linking CXX shared library liblivox_lidar_sdk_shared.so\n'}
+[109.752272] (-) TimerEvent: {}
+[109.852720] (-) TimerEvent: {}
+[109.937396] (livox_sdk2) StdoutLine: {'line': b'[ 97%] Built target livox_lidar_sdk_shared\n'}
+[109.952922] (-) TimerEvent: {}
+[109.959901] (livox_sdk2) StdoutLine: {'line': b'[ 98%] Building CXX object samples/livox_lidar_info_get/CMakeFiles/livox_lidar_info_get.dir/main.cpp.o\n'}
+[110.053108] (-) TimerEvent: {}
+[110.153517] (-) TimerEvent: {}
+[110.253953] (-) TimerEvent: {}
+[110.354419] (-) TimerEvent: {}
+[110.454844] (-) TimerEvent: {}
+[110.555248] (-) TimerEvent: {}
+[110.631297] (livox_sdk2) StdoutLine: {'line': b'[100%] Linking CXX executable livox_lidar_info_get\n'}
+[110.655427] (-) TimerEvent: {}
+[110.755859] (-) TimerEvent: {}
+[110.856302] (-) TimerEvent: {}
+[110.906099] (livox_sdk2) StdoutLine: {'line': b'[100%] Built target livox_lidar_info_get\n'}
+[110.921918] (livox_sdk2) CommandEnded: {'returncode': 0}
+[110.924825] (livox_sdk2) JobProgress: {'identifier': 'livox_sdk2', 'progress': 'install'}
+[110.934887] (livox_sdk2) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/jetson/slop-bot_ws/build/livox_sdk2'], 'cwd': '/home/jetson/slop-bot_ws/build/livox_sdk2', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/jetson/slop-bot_ws'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('AI_AGENT', 'claude-code_2-1-314_agent'), ('USER', 'jetson'), ('CLAUDE_CODE_ENTRYPOINT', 'claude-vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('GIT_EDITOR', 'true'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'x11'), ('ALLUSERSPROFILE', '/opt/MVS/MVFG'), ('CLAUDE_AGENT_SDK_VERSION', '0.3.314'), ('CLAUDE_CODE_SESSION_ATTENDED', '1'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib:/opt/MVS/lib/aarch64:/usr/local/cuda-12.6/lib64:/opt/MVS/lib/aarch64:/opt/MVS/lib/aarch64:'), ('CLAUDE_CODE_MESSAGING_TOKEN', 'ef2d6536f069dba12f06ef0576e50619'), ('HOME', '/home/jetson'), ('CHROME_DESKTOP', 'com.microsoft.VSCode.desktop'), ('OLDPWD', '/home/jetson'), ('DESKTOP_SESSION', 'ubuntu'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-ed92d0d2-1.14-main.sock'), ('JETSON_L4T', '36.4.7'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('JETSON_MODEL', 'NVIDIA Jetson Orin NX Engineering Reference Developer Kit'), ('CLAUDE_CODE_CHILD_SESSION', '1'), ('COPILOT_OTEL_FILE_EXPORTER_PATH', '/dev/null'), ('MANAGERPID', '1947'), ('SYSTEMD_EXEC_PID', '2909'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3809'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/jetson/slop-bot_ws/install:/home/jetson/ros2_ws/install'), ('APPLICATION_INSIGHTS_NO_STATSBEAT', 'true'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'jetson'), ('JETSON_MODULE', 'NVIDIA Jetson Orin NX (16GB ram)'), ('JETSON_SERIAL_NUMBER', '1422525087275'), ('CLAUDE_CODE_EMIT_STARTUP_TIMING', '1'), ('JOURNAL_STREAM', '8:55587'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('CLAUDE_CODE_QUESTION_PREVIEW_FORMAT', 'markdown'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'jetson'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '1'), ('WINDOWPATH', '2'), ('MVCAM_SDK_PATH', '/opt/MVS'), ('MCP_CONNECTION_NONBLOCKING', 'true'), ('PATH', '/home/jetson/ethercat_venv/bin:/home/jetson/.local/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/opt/ros/humble/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2670,unix/ubuntu:/tmp/.ICE-unix/2670'), ('INVOCATION_ID', 'f11a0846954541da9650ff1402193b6b'), ('MVCAM_GENICAM_CLPROTOCOL', '/opt/MVS/lib/CLProtocol'), ('VSCODE_NODE_COMPILE_CACHE_ROOT', '/usr/share/code/resources/app/node-compile-cache'), ('COREPACK_ENABLE_AUTO_PIN', '0'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('CLAUDE_EFFORT', 'high'), ('DISPLAY', ':0'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('CLAUDE_PID', '7633'), ('NoDefaultCurrentDirectoryInExePath', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('IBUS_DISABLE_SNOOPER', '1'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('JETSON_SOC', 'tegra234'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:22e895b8-4389-40cf-a967-58c9c0950171'), ('CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '1'), ('MXC_BIN_DIR', '/usr/share/code/resources/app/node_modules.asar.unpacked/@microsoft/mxc-sdk/bin'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING', 'true'), ('CLAUDE_CODE_SESSION_ID', '1c697e8f-dd4f-4e5c-b241-6697ec2e7c21'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('CLAUDECODE', '1'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('VIRTUAL_ENV', '/home/jetson/ethercat_venv'), ('QT_IM_MODULE', 'ibus'), ('JETSON_CUDA_ARCH_BIN', '8.7'), ('PWD', '/home/jetson/slop-bot_ws/build/livox_sdk2'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('VSCODE_CODE_CACHE_PATH', '/home/jetson/.config/Code/CachedData/2a59476c9bfcb90b3ddc372c36762471b7dfad1c'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLAUDE_CODE_EXECPATH', '/home/jetson/.vscode/extensions/anthropic.claude-code-2.1.314-linux-arm64/resources/native-binary/claude'), ('PYTHONPATH', '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_chain_drive/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_base/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('CLAUDE_CODE_ENABLE_TASKS', '0'), ('COLCON', '1'), ('COPILOT_CLI_ENABLED_FEATURE_FLAGS', 'SHELL_SPAWN_BACKEND'), ('VTE_VERSION', '6800'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('CLAUDE_CODE_MESSAGING_SOCKET', '/run/user/1000/cc-socks/7633.sock'), ('CMAKE_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup'), ('VSCODE_PID', '6735'), ('MVCAM_COMMON_RUNENV', '/opt/MVS/lib'), ('JETSON_P_NUMBER', 'p3767-0000')]), 'shell': False}
+[110.943629] (livox_sdk2) StdoutLine: {'line': b'-- Install configuration: "Release"\n'}
+[110.944236] (livox_sdk2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_sdk2/lib/liblivox_lidar_sdk_static.a\n'}
+[110.956469] (-) TimerEvent: {}
+[110.965670] (livox_sdk2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_sdk2/include/livox_lidar_def.h\n'}
+[110.966233] (livox_sdk2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_sdk2/include/livox_lidar_api.h\n'}
+[110.966377] (livox_sdk2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_sdk2/include/livox_lidar_cfg.h\n'}
+[110.966491] (livox_sdk2) StdoutLine: {'line': b'-- Installing: /home/jetson/slop-bot_ws/install/livox_sdk2/lib/liblivox_lidar_sdk_shared.so\n'}
+[110.975197] (livox_sdk2) CommandEnded: {'returncode': 0}
+[110.994264] (livox_sdk2) JobEnded: {'identifier': 'livox_sdk2', 'rc': 0}
+[110.996681] (livox_ros_driver2) JobStarted: {'identifier': 'livox_ros_driver2'}
+[111.015080] (livox_ros_driver2) JobProgress: {'identifier': 'livox_ros_driver2', 'progress': 'cmake'}
+[111.016219] (livox_ros_driver2) Command: {'cmd': ['/usr/bin/cmake', '/home/jetson/slop-bot_ws/src/third_party/livox_ros_driver2', '-DROS_EDITION=ROS2', '-DDISTRO_ROS=humble', '-DCMAKE_BUILD_TYPE=Release', '-DCMAKE_POLICY_VERSION_MINIMUM=3.5', '-DPython3_EXECUTABLE=/usr/bin/python3', '-DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/livox_ros_driver2'], 'cwd': '/home/jetson/slop-bot_ws/build/livox_ros_driver2', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('VSCODE_CWD', '/home/jetson/slop-bot_ws'), ('VSCODE_ESM_ENTRYPOINT', 'vs/workbench/api/node/extensionHostProcess'), ('AI_AGENT', 'claude-code_2-1-314_agent'), ('USER', 'jetson'), ('CLAUDE_CODE_ENTRYPOINT', 'claude-vscode'), ('VSCODE_NLS_CONFIG', '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/code/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}'), ('GIT_EDITOR', 'true'), ('VSCODE_HANDLES_UNCAUGHT_ERRORS', 'true'), ('XDG_SESSION_TYPE', 'x11'), ('ALLUSERSPROFILE', '/opt/MVS/MVFG'), ('CLAUDE_AGENT_SDK_VERSION', '0.3.314'), ('CLAUDE_CODE_SESSION_ATTENDED', '1'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/jetson/slop-bot_ws/install/livox_sdk2/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib:/opt/MVS/lib/aarch64:/usr/local/cuda-12.6/lib64:/opt/MVS/lib/aarch64:/opt/MVS/lib/aarch64'), ('CLAUDE_CODE_MESSAGING_TOKEN', 'ef2d6536f069dba12f06ef0576e50619'), ('HOME', '/home/jetson'), ('CHROME_DESKTOP', 'com.microsoft.VSCode.desktop'), ('OLDPWD', '/home/jetson'), ('DESKTOP_SESSION', 'ubuntu'), ('VSCODE_IPC_HOOK', '/run/user/1000/vscode-ed92d0d2-1.14-main.sock'), ('JETSON_L4T', '36.4.7'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('JETSON_MODEL', 'NVIDIA Jetson Orin NX Engineering Reference Developer Kit'), ('CLAUDE_CODE_CHILD_SESSION', '1'), ('COPILOT_OTEL_FILE_EXPORTER_PATH', '/dev/null'), ('MANAGERPID', '1947'), ('SYSTEMD_EXEC_PID', '2909'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator21a9d5db22c73a993ff0b42f64b396873'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3809'), ('VSCODE_CRASH_REPORTER_PROCESS_TYPE', 'extensionHost'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/jetson/slop-bot_ws/install:/home/jetson/ros2_ws/install'), ('APPLICATION_INSIGHTS_NO_STATSBEAT', 'true'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'jetson'), ('JETSON_MODULE', 'NVIDIA Jetson Orin NX (16GB ram)'), ('JETSON_SERIAL_NUMBER', '1422525087275'), ('CLAUDE_CODE_EMIT_STARTUP_TIMING', '1'), ('JOURNAL_STREAM', '8:55587'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('CLAUDE_CODE_QUESTION_PREVIEW_FORMAT', 'markdown'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'jetson'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '1'), ('WINDOWPATH', '2'), ('MVCAM_SDK_PATH', '/opt/MVS'), ('MCP_CONNECTION_NONBLOCKING', 'true'), ('PATH', '/home/jetson/ethercat_venv/bin:/home/jetson/.local/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/opt/ros/humble/bin:/home/jetson/.pixi/bin:/usr/local/cuda-12.6/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2670,unix/ubuntu:/tmp/.ICE-unix/2670'), ('INVOCATION_ID', 'f11a0846954541da9650ff1402193b6b'), ('MVCAM_GENICAM_CLPROTOCOL', '/opt/MVS/lib/CLProtocol'), ('VSCODE_NODE_COMPILE_CACHE_ROOT', '/usr/share/code/resources/app/node-compile-cache'), ('COREPACK_ENABLE_AUTO_PIN', '0'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('CLAUDE_EFFORT', 'high'), ('DISPLAY', ':0'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('CLAUDE_PID', '7633'), ('NoDefaultCurrentDirectoryInExePath', '1'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('IBUS_DISABLE_SNOOPER', '1'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('JETSON_SOC', 'tegra234'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:22e895b8-4389-40cf-a967-58c9c0950171'), ('CLAUDE_CODE_STARTUP_FAILURE_RESULTS', '1'), ('MXC_BIN_DIR', '/usr/share/code/resources/app/node_modules.asar.unpacked/@microsoft/mxc-sdk/bin'), ('QT_ACCESSIBILITY', '1'), ('ELECTRON_RUN_AS_NODE', '1'), ('GDMSESSION', 'ubuntu'), ('CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING', 'true'), ('CLAUDE_CODE_SESSION_ID', '1c697e8f-dd4f-4e5c-b241-6697ec2e7c21'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('CLAUDECODE', '1'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('VIRTUAL_ENV', '/home/jetson/ethercat_venv'), ('QT_IM_MODULE', 'ibus'), ('JETSON_CUDA_ARCH_BIN', '8.7'), ('PWD', '/home/jetson/slop-bot_ws/build/livox_ros_driver2'), ('VSCODE_CLI', '1'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('VSCODE_CODE_CACHE_PATH', '/home/jetson/.config/Code/CachedData/2a59476c9bfcb90b3ddc372c36762471b7dfad1c'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLAUDE_CODE_EXECPATH', '/home/jetson/.vscode/extensions/anthropic.claude-code-2.1.314-linux-arm64/resources/native-binary/claude'), ('PYTHONPATH', '/home/jetson/slop-bot_ws/install/slop_teleop/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_base/local/lib/python3.10/dist-packages:/home/jetson/slop-bot_ws/install/slop_safety/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_chain_drive/local/lib/python3.10/dist-packages:/home/jetson/ros2_ws/install/b_base/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('CLAUDE_CODE_ENABLE_TASKS', '0'), ('COLCON', '1'), ('COPILOT_CLI_ENABLED_FEATURE_FLAGS', 'SHELL_SPAWN_BACKEND'), ('VTE_VERSION', '6800'), ('ELECTRON_NO_ATTACH_CONSOLE', '1'), ('CLAUDE_CODE_MESSAGING_SOCKET', '/run/user/1000/cc-socks/7633.sock'), ('CMAKE_PREFIX_PATH', '/home/jetson/slop-bot_ws/install/slop_teleop:/home/jetson/slop-bot_ws/install/slop_base:/home/jetson/slop-bot_ws/install/slop_safety:/home/jetson/ros2_ws/install/f_navigation:/home/jetson/ros2_ws/install/f_nav2_crab_plugin:/home/jetson/ros2_ws/install/e_localisation:/home/jetson/ros2_ws/install/d_savety:/home/jetson/ros2_ws/install/c_sensor_preprocessing:/home/jetson/ros2_ws/install/b_swerve:/home/jetson/ros2_ws/install/b_simulation:/home/jetson/ros2_ws/install/b_description:/home/jetson/ros2_ws/install/b_chain_drive:/home/jetson/ros2_ws/install/b_base:/home/jetson/ros2_ws/install/a_system_test:/home/jetson/ros2_ws/install/a_interfaces:/home/jetson/ros2_ws/install/a_bringup:/opt/ros/humble'), ('VSCODE_PID', '6735'), ('MVCAM_COMMON_RUNENV', '/opt/MVS/lib'), ('JETSON_P_NUMBER', 'p3767-0000')]), 'shell': False}
+[111.056662] (-) TimerEvent: {}
+[111.116612] (livox_ros_driver2) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[111.156858] (-) TimerEvent: {}
+[111.242295] (livox_ros_driver2) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[111.255887] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[111.256967] (-) TimerEvent: {}
+[111.357333] (-) TimerEvent: {}
+[111.375841] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[111.407378] (livox_ros_driver2) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[111.407776] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[111.407912] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[111.427127] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[111.457537] (-) TimerEvent: {}
+[111.556487] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[111.557605] (-) TimerEvent: {}
+[111.599289] (livox_ros_driver2) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[111.600728] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[111.602699] (livox_ros_driver2) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[111.618896] (livox_ros_driver2) StdoutLine: {'line': b'-- livox_ros_driver2 version: 1.2.8\n'}
+[111.629301] (livox_ros_driver2) StdoutLine: {'line': b'-- Found ament_cmake_auto: 1.3.14 (/opt/ros/humble/share/ament_cmake_auto/cmake)\n'}
+[111.657934] (-) TimerEvent: {}
+[111.758414] (-) TimerEvent: {}
+[111.858866] (-) TimerEvent: {}
+[111.959386] (-) TimerEvent: {}
+[111.978567] (livox_ros_driver2) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter\n'}
+[112.059711] (-) TimerEvent: {}
+[112.160107] (-) TimerEvent: {}
+[112.260565] (-) TimerEvent: {}
+[112.361036] (-) TimerEvent: {}
+[112.461513] (-) TimerEvent: {}
+[112.499004] (livox_ros_driver2) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[112.534611] (livox_ros_driver2) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.9 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[112.561683] (-) TimerEvent: {}
+[112.662073] (-) TimerEvent: {}
+[112.682876] (livox_ros_driver2) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[112.762238] (-) TimerEvent: {}
+[112.862632] (-) TimerEvent: {}
+[112.963048] (-) TimerEvent: {}
+[112.974002] (livox_ros_driver2) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 6.1.4 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)\n'}
+[112.985075] (livox_ros_driver2) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)\n'}
+[113.063219] (-) TimerEvent: {}
+[113.163633] (-) TimerEvent: {}
+[113.223164] (livox_ros_driver2) StdoutLine: {'line': b'-- Found OpenSSL: /usr/lib/aarch64-linux-gnu/libcrypto.so (found version "3.0.2")\n'}
+[113.263837] (-) TimerEvent: {}
+[113.313854] (livox_ros_driver2) StdoutLine: {'line': b'-- Found FastRTPS: /opt/ros/humble/include\n'}
+[113.364170] (-) TimerEvent: {}
+[113.415583] (livox_ros_driver2) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[113.447917] (livox_ros_driver2) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD\n'}
+[113.464357] (-) TimerEvent: {}
+[113.564911] (-) TimerEvent: {}
+[113.570866] (livox_ros_driver2) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success\n'}
+[113.574304] (livox_ros_driver2) StdoutLine: {'line': b'-- Found Threads: TRUE\n'}
+[113.665032] (-) TimerEvent: {}
+[113.765519] (-) TimerEvent: {}
+[113.865982] (-) TimerEvent: {}
+[113.966456] (-) TimerEvent: {}
+[114.012451] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:146 (find_package):\n'}
+[114.013154] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0144 is not set: find_package uses upper-case <PACKAGENAME>_ROOT\n'}
+[114.013424] (livox_ros_driver2) StderrLine: {'line': b'  variables.  Run "cmake --help-policy CMP0144" for policy details.  Use the\n'}
+[114.013653] (livox_ros_driver2) StderrLine: {'line': b'  cmake_policy command to set the policy and suppress this warning.\n'}
+[114.014174] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[114.014381] (livox_ros_driver2) StderrLine: {'line': b'  CMake variable EIGEN_ROOT is set to:\n'}
+[114.014565] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[114.014735] (livox_ros_driver2) StderrLine: {'line': b'    /usr/include/eigen3\n'}
+[114.014899] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[114.015065] (livox_ros_driver2) StderrLine: {'line': b'  For compatibility, find_package is ignoring the variable, but code in a\n'}
+[114.015233] (livox_ros_driver2) StderrLine: {'line': b'  .cmake module might still use it.\n'}
+[114.015391] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[114.015547] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:299 (find_eigen)\n'}
+[114.015707] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:543 (find_external_library)\n'}
+[114.015886] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/ament_cmake_export_dependencies-extras.cmake:21 (find_package)\n'}
+[114.016051] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/pcl_conversionsConfig.cmake:41 (include)\n'}
+[114.016213] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_auto/cmake/ament_auto_find_build_dependencies.cmake:67 (find_package)\n'}
+[114.016614] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:225 (ament_auto_find_build_dependencies)\n'}
+[114.016831] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[114.017046] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[114.020661] (livox_ros_driver2) StdoutLine: {'line': b"-- Checking for module 'eigen3'\n"}
+[114.041270] (livox_ros_driver2) StdoutLine: {'line': b'--   Found eigen3, version 3.4.0\n'}
+[114.066625] (-) TimerEvent: {}
+[114.114763] (livox_ros_driver2) StdoutLine: {'line': b'-- Found Eigen: /usr/include/eigen3 (Required is at least version "3.1")\n'}
+[114.115302] (livox_ros_driver2) StdoutLine: {'line': b'-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)\n'}
+[114.115967] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:128 (find_package):\n'}
+[114.116224] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake\n'}
+[114.116436] (livox_ros_driver2) StderrLine: {'line': b'  --help-policy CMP0167" for policy details.  Use the cmake_policy command to\n'}
+[114.116609] (livox_ros_driver2) StderrLine: {'line': b'  set the policy and suppress this warning.\n'}
+[114.116777] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[114.116910] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[114.117031] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:297 (find_boost)\n'}
+[114.117151] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:543 (find_external_library)\n'}
+[114.117269] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/ament_cmake_export_dependencies-extras.cmake:21 (find_package)\n'}
+[114.117388] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/pcl_conversionsConfig.cmake:41 (include)\n'}
+[114.117502] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_auto/cmake/ament_auto_find_build_dependencies.cmake:67 (find_package)\n'}
+[114.117616] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:225 (ament_auto_find_build_dependencies)\n'}
+[114.117728] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[114.117851] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[114.166817] (-) TimerEvent: {}
+[114.206517] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /usr/lib/aarch64-linux-gnu/cmake/pcl/Modules/FindFLANN.cmake:44 (find_package):\n'}
+[114.207049] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0144 is not set: find_package uses upper-case <PACKAGENAME>_ROOT\n'}
+[114.207203] (livox_ros_driver2) StderrLine: {'line': b'  variables.  Run "cmake --help-policy CMP0144" for policy details.  Use the\n'}
+[114.207327] (livox_ros_driver2) StderrLine: {'line': b'  cmake_policy command to set the policy and suppress this warning.\n'}
+[114.207440] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[114.207548] (livox_ros_driver2) StderrLine: {'line': b'  CMake variable FLANN_ROOT is set to:\n'}
+[114.207653] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[114.207754] (livox_ros_driver2) StderrLine: {'line': b'    /usr\n'}
+[114.207893] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[114.207992] (livox_ros_driver2) StderrLine: {'line': b'  For compatibility, find_package is ignoring the variable, but code in a\n'}
+[114.208089] (livox_ros_driver2) StderrLine: {'line': b'  .cmake module might still use it.\n'}
+[114.208185] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[114.208282] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:256 (find_package)\n'}
+[114.208379] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:301 (find_flann)\n'}
+[114.208478] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:543 (find_external_library)\n'}
+[114.208577] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/ament_cmake_export_dependencies-extras.cmake:21 (find_package)\n'}
+[114.208681] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/pcl_conversionsConfig.cmake:41 (include)\n'}
+[114.208826] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_auto/cmake/ament_auto_find_build_dependencies.cmake:67 (find_package)\n'}
+[114.208937] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:225 (ament_auto_find_build_dependencies)\n'}
+[114.209041] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[114.209139] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[114.238931] (livox_ros_driver2) StdoutLine: {'line': b"-- Checking for module 'flann'\n"}
+[114.264966] (livox_ros_driver2) StdoutLine: {'line': b'--   Found flann, version 1.9.1\n'}
+[114.266900] (-) TimerEvent: {}
+[114.367206] (-) TimerEvent: {}
+[114.388236] (livox_ros_driver2) StdoutLine: {'line': b'-- Found FLANN: /usr/lib/aarch64-linux-gnu/libflann_cpp.so\n'}
+[114.388991] (livox_ros_driver2) StdoutLine: {'line': b'-- FLANN found (include: /usr/include, lib: /usr/lib/aarch64-linux-gnu/libflann_cpp.so)\n'}
+[114.467404] (-) TimerEvent: {}
+[114.568235] (-) TimerEvent: {}
+[114.668698] (-) TimerEvent: {}
+[114.769356] (-) TimerEvent: {}
+[114.870044] (-) TimerEvent: {}
+[114.970472] (-) TimerEvent: {}
+[115.071522] (-) TimerEvent: {}
+[115.172140] (-) TimerEvent: {}
+[115.272689] (-) TimerEvent: {}
+[115.373728] (-) TimerEvent: {}
+[115.474391] (-) TimerEvent: {}
+[115.574802] (-) TimerEvent: {}
+[115.675172] (-) TimerEvent: {}
+[115.775607] (-) TimerEvent: {}
+[115.876041] (-) TimerEvent: {}
+[115.976583] (-) TimerEvent: {}
+[116.076975] (-) TimerEvent: {}
+[116.177397] (-) TimerEvent: {}
+[116.277829] (-) TimerEvent: {}
+[116.378330] (-) TimerEvent: {}
+[116.478840] (-) TimerEvent: {}
+[116.579307] (-) TimerEvent: {}
+[116.679696] (-) TimerEvent: {}
+[116.780092] (-) TimerEvent: {}
+[116.849772] (livox_ros_driver2) StdoutLine: {'line': b"-- Checking for module 'libusb-1.0'\n"}
+[116.879581] (livox_ros_driver2) StdoutLine: {'line': b'--   Found libusb-1.0, version 1.0.25\n'}
+[116.880078] (-) TimerEvent: {}
+[116.958000] (livox_ros_driver2) StdoutLine: {'line': b'-- Found libusb: /usr/lib/aarch64-linux-gnu/libusb-1.0.so\n'}
+[116.963279] (livox_ros_driver2) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[116.980948] (-) TimerEvent: {}
+[117.081806] (-) TimerEvent: {}
+[117.115629] (livox_ros_driver2) StdoutLine: {'line': b'-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/aarch64-linux-gnu/libOpenNI2.so;libusb::libusb)\n'}
+[117.182030] (-) TimerEvent: {}
+[117.282472] (-) TimerEvent: {}
+[117.382872] (-) TimerEvent: {}
+[117.483261] (-) TimerEvent: {}
+[117.583669] (-) TimerEvent: {}
+[117.632206] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:128 (find_package):\n'}
+[117.632624] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake\n'}
+[117.632781] (livox_ros_driver2) StderrLine: {'line': b'  --help-policy CMP0167" for policy details.  Use the cmake_policy command to\n'}
+[117.632899] (livox_ros_driver2) StderrLine: {'line': b'  set the policy and suppress this warning.\n'}
+[117.633003] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[117.633100] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[117.633195] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:297 (find_boost)\n'}
+[117.633290] (livox_ros_driver2) StderrLine: {'line': b'  /usr/lib/aarch64-linux-gnu/cmake/pcl/PCLConfig.cmake:543 (find_external_library)\n'}
+[117.633387] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/ament_cmake_export_dependencies-extras.cmake:21 (find_package)\n'}
+[117.633483] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/pcl_conversions/cmake/pcl_conversionsConfig.cmake:41 (include)\n'}
+[117.633577] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_auto/cmake/ament_auto_find_build_dependencies.cmake:67 (find_package)\n'}
+[117.633669] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:225 (ament_auto_find_build_dependencies)\n'}
+[117.633762] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[117.633891] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[117.654480] (livox_ros_driver2) StdoutLine: {'line': b'-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)\n'}
+[117.667942] (livox_ros_driver2) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[117.681668] (livox_ros_driver2) StdoutLine: {'line': b'-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/aarch64-linux-gnu/libOpenNI2.so;libusb::libusb)\n'}
+[117.683717] (-) TimerEvent: {}
+[117.783986] (-) TimerEvent: {}
+[117.884411] (-) TimerEvent: {}
+[117.984826] (-) TimerEvent: {}
+[118.085217] (-) TimerEvent: {}
+[118.174217] (livox_ros_driver2) StdoutLine: {'line': b'-- Found Qhull version 8.0.2\n'}
+[118.185366] (-) TimerEvent: {}
+[118.285743] (-) TimerEvent: {}
+[118.386337] (-) TimerEvent: {}
+[118.486830] (-) TimerEvent: {}
+[118.587250] (-) TimerEvent: {}
+[118.687644] (-) TimerEvent: {}
+[118.693022] (livox_ros_driver2) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[118.787804] (-) TimerEvent: {}
+[118.888192] (-) TimerEvent: {}
+[118.988590] (-) TimerEvent: {}
+[119.089052] (-) TimerEvent: {}
+[119.187722] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_COMMON: /usr/lib/aarch64-linux-gnu/libpcl_common.so\n'}
+[119.189106] (-) TimerEvent: {}
+[119.196347] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_KDTREE: /usr/lib/aarch64-linux-gnu/libpcl_kdtree.so\n'}
+[119.199641] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_OCTREE: /usr/lib/aarch64-linux-gnu/libpcl_octree.so\n'}
+[119.202759] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_SEARCH: /usr/lib/aarch64-linux-gnu/libpcl_search.so\n'}
+[119.205897] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_SAMPLE_CONSENSUS: /usr/lib/aarch64-linux-gnu/libpcl_sample_consensus.so\n'}
+[119.209001] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_FILTERS: /usr/lib/aarch64-linux-gnu/libpcl_filters.so\n'}
+[119.210158] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_2D: /usr/include/pcl-1.12\n'}
+[119.211232] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_GEOMETRY: /usr/include/pcl-1.12\n'}
+[119.214972] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_IO: /usr/lib/aarch64-linux-gnu/libpcl_io.so\n'}
+[119.219095] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_FEATURES: /usr/lib/aarch64-linux-gnu/libpcl_features.so\n'}
+[119.222703] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_ML: /usr/lib/aarch64-linux-gnu/libpcl_ml.so\n'}
+[119.226136] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_SEGMENTATION: /usr/lib/aarch64-linux-gnu/libpcl_segmentation.so\n'}
+[119.229908] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_VISUALIZATION: /usr/lib/aarch64-linux-gnu/libpcl_visualization.so\n'}
+[119.233848] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_SURFACE: /usr/lib/aarch64-linux-gnu/libpcl_surface.so\n'}
+[119.237203] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_REGISTRATION: /usr/lib/aarch64-linux-gnu/libpcl_registration.so\n'}
+[119.240565] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_KEYPOINTS: /usr/lib/aarch64-linux-gnu/libpcl_keypoints.so\n'}
+[119.243998] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_TRACKING: /usr/lib/aarch64-linux-gnu/libpcl_tracking.so\n'}
+[119.247930] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_RECOGNITION: /usr/lib/aarch64-linux-gnu/libpcl_recognition.so\n'}
+[119.251841] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_STEREO: /usr/lib/aarch64-linux-gnu/libpcl_stereo.so\n'}
+[119.255159] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_APPS: /usr/lib/aarch64-linux-gnu/libpcl_apps.so\n'}
+[119.257327] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_IN_HAND_SCANNER: /usr/include/pcl-1.12\n'}
+[119.258403] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_MODELER: /usr/include/pcl-1.12\n'}
+[119.259952] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_POINT_CLOUD_EDITOR: /usr/include/pcl-1.12\n'}
+[119.263612] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_OUTOFCORE: /usr/lib/aarch64-linux-gnu/libpcl_outofcore.so\n'}
+[119.266956] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PCL_PEOPLE: /usr/lib/aarch64-linux-gnu/libpcl_people.so\n'}
+[119.289358] (-) TimerEvent: {}
+[119.389914] (-) TimerEvent: {}
+[119.390648] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PkgConfig: /usr/bin/pkg-config (found version "0.29.2")\n'}
+[119.393962] (livox_ros_driver2) StdoutLine: {'line': b"-- Checking for module 'apr-1'\n"}
+[119.402177] (livox_ros_driver2) StdoutLine: {'line': b"--   No package 'apr-1' found\n"}
+[119.489987] (-) TimerEvent: {}
+[119.590404] (-) TimerEvent: {}
+[119.690968] (-) TimerEvent: {}
+[119.791393] (-) TimerEvent: {}
+[119.891858] (-) TimerEvent: {}
+[119.992360] (-) TimerEvent: {}
+[120.093303] (-) TimerEvent: {}
+[120.193704] (-) TimerEvent: {}
+[120.294078] (-) TimerEvent: {}
+[120.348568] (livox_ros_driver2) StdoutLine: {'line': b'-- Found ament_cmake_ros: 0.10.1 (/opt/ros/humble/share/ament_cmake_ros/cmake)\n'}
+[120.394281] (-) TimerEvent: {}
+[120.494766] (-) TimerEvent: {}
+[120.595272] (-) TimerEvent: {}
+[120.695671] (-) TimerEvent: {}
+[120.796082] (-) TimerEvent: {}
+[120.896518] (-) TimerEvent: {}
+[120.997024] (-) TimerEvent: {}
+[121.097504] (-) TimerEvent: {}
+[121.197987] (-) TimerEvent: {}
+[121.298428] (-) TimerEvent: {}
+[121.398898] (-) TimerEvent: {}
+[121.499336] (-) TimerEvent: {}
+[121.537812] (livox_ros_driver2) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[121.599550] (-) TimerEvent: {}
+[121.699966] (-) TimerEvent: {}
+[121.800390] (-) TimerEvent: {}
+[121.900889] (-) TimerEvent: {}
+[122.001343] (-) TimerEvent: {}
+[122.101793] (-) TimerEvent: {}
+[122.202178] (-) TimerEvent: {}
+[122.302530] (-) TimerEvent: {}
+[122.402958] (-) TimerEvent: {}
+[122.503398] (-) TimerEvent: {}
+[122.603819] (-) TimerEvent: {}
+[122.704173] (-) TimerEvent: {}
+[122.804543] (-) TimerEvent: {}
+[122.905006] (-) TimerEvent: {}
+[123.005494] (-) TimerEvent: {}
+[123.102178] (livox_ros_driver2) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[123.105680] (-) TimerEvent: {}
+[123.118313] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /opt/ros/humble/share/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake:20 (find_package):\n'}
+[123.118869] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0148 is not set: The FindPythonInterp and FindPythonLibs modules\n'}
+[123.119114] (livox_ros_driver2) StderrLine: {'line': b'  are removed.  Run "cmake --help-policy CMP0148" for policy details.  Use\n'}
+[123.119333] (livox_ros_driver2) StderrLine: {'line': b'  the cmake_policy command to set the policy and suppress this warning.\n'}
+[123.119534] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[123.119730] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[123.119921] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_execute_extensions.cmake:48 (include)\n'}
+[123.120114] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:286 (ament_execute_extensions)\n'}
+[123.120225] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:241 (rosidl_generate_interfaces)\n'}
+[123.120321] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[123.120417] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[123.162272] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PythonInterp: /home/jetson/ethercat_venv/bin/python3 (found suitable version "3.10.12", minimum required is "3.6")\n'}
+[123.177750] (livox_ros_driver2) StdoutLine: {'line': b'-- Found python_cmake_module: 0.10.0 (/opt/ros/humble/share/python_cmake_module/cmake)\n'}
+[123.181968] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /opt/ros/humble/share/python_cmake_module/cmake/Modules/FindPythonExtra.cmake:52 (find_package):\n'}
+[123.182427] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0148 is not set: The FindPythonInterp and FindPythonLibs modules\n'}
+[123.182701] (livox_ros_driver2) StderrLine: {'line': b'  are removed.  Run "cmake --help-policy CMP0148" for policy details.  Use\n'}
+[123.182916] (livox_ros_driver2) StderrLine: {'line': b'  the cmake_policy command to set the policy and suppress this warning.\n'}
+[123.183045] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[123.183148] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[123.183247] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake:23 (find_package)\n'}
+[123.183346] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_execute_extensions.cmake:48 (include)\n'}
+[123.183451] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:286 (ament_execute_extensions)\n'}
+[123.183546] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:241 (rosidl_generate_interfaces)\n'}
+[123.183640] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[123.183732] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[123.205911] (-) TimerEvent: {}
+[123.215536] (livox_ros_driver2) StderrLine: {'line': b'CMake Warning (dev) at /opt/ros/humble/share/python_cmake_module/cmake/Modules/FindPythonExtra.cmake:140 (find_package):\n'}
+[123.215979] (livox_ros_driver2) StderrLine: {'line': b'  Policy CMP0148 is not set: The FindPythonInterp and FindPythonLibs modules\n'}
+[123.216153] (livox_ros_driver2) StderrLine: {'line': b'  are removed.  Run "cmake --help-policy CMP0148" for policy details.  Use\n'}
+[123.216279] (livox_ros_driver2) StderrLine: {'line': b'  the cmake_policy command to set the policy and suppress this warning.\n'}
+[123.216396] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[123.216512] (livox_ros_driver2) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[123.216622] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake:23 (find_package)\n'}
+[123.216731] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_execute_extensions.cmake:48 (include)\n'}
+[123.216886] (livox_ros_driver2) StderrLine: {'line': b'  /opt/ros/humble/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:286 (ament_execute_extensions)\n'}
+[123.216994] (livox_ros_driver2) StderrLine: {'line': b'  CMakeLists.txt:241 (rosidl_generate_interfaces)\n'}
+[123.217094] (livox_ros_driver2) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[123.217197] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[123.248513] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PythonLibs: /usr/lib/aarch64-linux-gnu/libpython3.10.so (found suitable version "3.10.12", minimum required is "3.5")\n'}
+[123.249153] (livox_ros_driver2) StdoutLine: {'line': b'-- Using PYTHON_EXECUTABLE: /home/jetson/ethercat_venv/bin/python3\n'}
+[123.249385] (livox_ros_driver2) StdoutLine: {'line': b'-- Using PYTHON_INCLUDE_DIRS: /usr/include/python3.10\n'}
+[123.249592] (livox_ros_driver2) StdoutLine: {'line': b'-- Using PYTHON_LIBRARIES: /usr/lib/aarch64-linux-gnu/libpython3.10.so\n'}
+[123.286044] (livox_ros_driver2) StdoutLine: {'line': b'-- Found PythonExtra: .so\n'}
+[123.306105] (-) TimerEvent: {}
+[123.406564] (-) TimerEvent: {}
+[123.506982] (-) TimerEvent: {}
+[123.607368] (-) TimerEvent: {}
+[123.707780] (-) TimerEvent: {}
+[123.808464] (-) TimerEvent: {}
+[123.865992] (livox_ros_driver2) StderrLine: {'line': b'CMake Error at CMakeLists.txt:249 (find_library):\n'}
+[123.866712] (livox_ros_driver2) StderrLine: {'line': b'  Could not find LIVOX_LIDAR_SDK_LIBRARY using the following names:\n'}
+[123.866974] (livox_ros_driver2) StderrLine: {'line': b'  liblivox_lidar_sdk_shared.so, /usr/local/lib\n'}
+[123.867196] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[123.867397] (livox_ros_driver2) StderrLine: {'line': b'\n'}
+[123.869613] (livox_ros_driver2) StdoutLine: {'line': b'-- Configuring incomplete, errors occurred!\n'}
+[123.908685] (-) TimerEvent: {}
+[123.943066] (livox_ros_driver2) CommandEnded: {'returncode': 1}
+[123.981934] (livox_ros_driver2) JobEnded: {'identifier': 'livox_ros_driver2', 'rc': 1}
+[123.993322] (slop_sensors) JobSkipped: {'identifier': 'slop_sensors'}
+[123.993531] (-) EventReactorShutdown: {}
