@@ -1,0 +1,61 @@
+# EKF der Odometrie (robot_localization). Ausgang: /odom und TF odom → base_footprint (einzige Quelle dafür).
+# Neue Sensoren: unten einen weiteren Block (odom1, imu0, ...) einfügen, alles andere bleibt. Die Vorlagen sind auskommentiert.
+#
+# Eingänge: Wahl der Größen je Sensor über <name>_config, Reihenfolge der 15 Werte:
+#   x, y, z,  roll, pitch, yaw,  vx, vy, vz,  vroll, vpitch, vyaw,  ax, ay, az
+# Faustregeln: Geschwindigkeiten statt Positionen fusionieren (sonst wird doppelt integriert), jede Größe nur aus der
+# besten Quelle. Die Unsicherheit je Größe kommt aus der Kovarianz der Nachricht (Sensortreiber / diff_drive_node).
+ekf_filter_node:
+  ros__parameters:
+    frequency: 50.0           # Hz, Takt von Ausgang und TF
+    sensor_timeout: 0.2       # s ohne Nachricht → die Quelle zählt nicht mehr
+    two_d_mode: true          # Bodenroboter: z, roll, pitch und deren Geschwindigkeiten bleiben 0
+    publish_tf: true
+    publish_acceleration: false
+    print_diagnostics: true
+
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_footprint   # wie child_frame_id der Radodometrie
+    world_frame: odom                 # nur odom-Quellen: kontinuierlich, ohne Sprünge. map → odom macht später das SLAM
+
+    # --- Quelle 1: Radodometrie (diff_drive_node, Schritte ohne Encoder) ---
+    # Nur Vorwärts- und Drehgeschwindigkeit; die Pose daraus bildet der EKF selbst.
+    odom0: /wheel/odom
+    odom0_config: [false, false, false,
+                   false, false, false,
+                   true,  false, false,
+                   false, false, true,
+                   false, false, false]
+    odom0_queue_size: 10
+    odom0_differential: false
+    odom0_relative: false
+
+    # --- Quelle 2: Gyro der Livox-IMU (nur die Drehrate um z) ---
+    # Kommt von imu_adapter (slop_localization): Beschleunigung in m/s², Gyro-Bias abgezogen, Kovarianzen gesetzt.
+    # Der Gyro driftet viel weniger als Radschlupf; die Drehrate der Räder zählt wegen der größeren Kovarianz kaum noch.
+    # Die Umrechnung livox_frame → base_footprint macht der EKF über das TF des Modells (robot_state_publisher).
+    # Beschleunigung bleibt aus: im 2D-Betrieb bei max. 0,18 m/s nur Rauschen und Vibration.
+    imu0: /imu/livox
+    imu0_config: [false, false, false,
+                  false, false, false,
+                  false, false, false,
+                  false, false, true,
+                  false, false, false]
+    imu0_queue_size: 50
+    imu0_differential: false
+    imu0_relative: false
+    imu0_remove_gravitational_acceleration: false
+
+    # --- Vorlage: LIO/SLAM-Odometrie (z. B. /lio/odom, nav_msgs/Odometry) ---
+    # Mit Positionen fusionieren: differential: true macht daraus Änderungen zwischen zwei Nachrichten, damit Sprünge
+    # des SLAM (Schleifenschluss) nicht in odom landen. Dann Radodometrie ggf. schwächer gewichten oder entfernen.
+    # odom1: /lio/odom
+    # odom1_config: [true,  true,  false,
+    #                false, false, true,
+    #                false, false, false,
+    #                false, false, false,
+    #                false, false, false]
+    # odom1_queue_size: 10
+    # odom1_differential: true
+    # odom1_relative: false

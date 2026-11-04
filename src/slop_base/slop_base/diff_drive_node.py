@@ -3,9 +3,9 @@
 
 Topics:
   /cmd_vel        geometry_msgs/Twist     Sub  linear.x [m/s], angular.z [rad/s]; Rest wird ignoriert
-  /odom           nav_msgs/Odometry       Pub  Radodometrie aus den ausgegebenen Schritten
+  /wheel/odom     nav_msgs/Odometry       Pub  Radodometrie aus den ausgegebenen Schritten (odom_topic)
   /joint_states   sensor_msgs/JointState  Pub  Radwinkel [rad] und -geschwindigkeit [rad/s] (ausgegebene Schritte)
-  TF              odom → base_footprint   (publish_tf)
+  TF              odom → base_footprint   nur mit publish_tf (Standard aus, das macht der EKF aus slop_localization)
 Services:
   diff_drive/enable  std_srvs/SetBool     true = Fault-Reset + Freigabe, false = Endstufen aus
 
@@ -26,8 +26,9 @@ Sicherheit:
 
 Radodometrie: Open Loop, die Odometrie zählt die ausgegebenen Schritte (Sollposition des Treibers). Verlorene
 Schritte oder durchrutschende Räder merkt sie nicht, sie ist also nur so genau wie Getriebe, Raddurchmesser und
-Spurweite in der Config. Ein SLAM muss die Drift korrigieren. Soll ein anderer Knoten odom → base_footprint senden,
-publish_tf: false setzen (nur eine Quelle für diese Transformation).
+Spurweite in der Config. Sie ist ein Eingang für den EKF (slop_localization), der /odom und das TF odom → base_footprint
+aus allen Sensoren bildet; deshalb Topic /wheel/odom und publish_tf: false. Ohne EKF kann publish_tf: true gesetzt werden
+(nur eine Quelle für diese Transformation).
 
 Braucht CAP_NET_RAW + CAP_NET_ADMIN für den Raw-Socket und CAP_SYS_NICE für die Echtzeit-Priorität:
   ros2 run slop_base with_netcaps ros2 launch slop_base diff_drive.launch.py
@@ -41,6 +42,7 @@ import gc
 import math
 import os
 import sys
+import time
 
 import rclpy
 from geometry_msgs.msg import TransformStamped, Twist
@@ -103,9 +105,10 @@ class DiffDriveNode(Node):
             ('allowed_cmd_vel_nodes', ['twist_mux']),  # leere Liste = nicht prüfen
             ('unknown_sender_grace', 3.0),  # s: Publisher ohne Namen (Startphase) erst danach als Fehler melden
             ('rate', 50.0),                # Hz: Sollwerte, Odometrie, Gelenkzustände
+            ('odom_topic', '/wheel/odom'),  # Rohodometrie der Räder, Eingang des EKF
             ('odom_frame', 'odom'),
             ('base_frame', 'base_footprint'),
-            ('publish_tf', True),          # false, wenn ein anderer Knoten odom → base_frame sendet
+            ('publish_tf', False),         # true nur ohne EKF: sonst zwei Quellen für odom → base_frame
             ('left_joint', 'left_wheel_joint'),
             ('right_joint', 'right_wheel_joint'),
             ('rt_priority', 80),           # SCHED_FIFO des Zyklus-Threads, 0 = aus
@@ -113,6 +116,7 @@ class DiffDriveNode(Node):
             ('main_nice', -10),            # nice des ROS-Threads (hält das GIL kürzer), 0 = unverändert
             ('gil_switch_ms', 0.5),        # GIL-Umschaltintervall (Python-Standard 5 ms)
             ('stats_period', 10.0),        # s zwischen zwei Zyklusstatistiken im Log, 0 = aus
+            ('slow_update_ms', 50.0),      # ms: dauert update() oder liegt zwischen zwei Aufrufen mehr, steht eine Warnung im Log
         ]:
             self.declare_parameter(name, default)
         self._setup_process()
@@ -157,6 +161,8 @@ class DiffDriveNode(Node):
                                f'{self.proc_status}')
 
         self.odom = Odometry2D(self.track)
+        self.last_update_t = None
+        self.timing = {}
         self.last_t = None
         self.cmd = (0.0, 0.0)
         self.last_cmd_time = None
@@ -175,7 +181,7 @@ class DiffDriveNode(Node):
         self.senders_waiting = False
         self.last_sender_check = None
 
-        self.odom_pub = self.create_publisher(Odometry, '/odom', 10)
+        self.odom_pub = self.create_publisher(Odometry, self._p('odom_topic'), 10)
         self.joint_pub = self.create_publisher(JointState, '/joint_states', 10)
         self.tf_broadcaster = TransformBroadcaster(self) if self._p('publish_tf') else None
         self.create_subscription(Twist, '/cmd_vel', self.cmd_vel_callback, 10)
@@ -347,6 +353,24 @@ class DiffDriveNode(Node):
 
     # ---------------------------------------------------------------- Zyklus
     def update(self):
+        """Zeitüberwachung um _update: Blockiert der ROS-Thread (Graph-Abfrage, Publish, GIL), steht im Log wo."""
+        t0 = time.perf_counter()
+        gap = None if self.last_update_t is None else t0 - self.last_update_t
+        self.last_update_t = t0
+        self.timing = {}
+        try:
+            self._update()
+        finally:
+            took = time.perf_counter() - t0
+            limit = self._p('slow_update_ms') / 1000.0
+            if limit > 0 and (took > limit or (gap is not None and gap > 2 * limit + 1.0 / self._p('rate'))):
+                parts = ', '.join(f'{k} {v * 1000:.0f} ms' for k, v in self.timing.items())
+                self.get_logger().warn(
+                    f'ROS-Thread blockiert: update() {took * 1000:.0f} ms'
+                    + (f', {gap * 1000:.0f} ms seit dem letzten Aufruf' if gap is not None else '')
+                    + (f' ({parts})' if parts else ''), throttle_duration_sec=1.0)
+
+    def _update(self):
         st = self.bus.status()
         if st['comm_lost']:
             raise Cl57eError(f'EtherCAT-Kommunikation verloren ({st["thread_error"] or "keine Antwort"})')
@@ -358,7 +382,12 @@ class DiffDriveNode(Node):
         self.was_watchdog = st['watchdog']
 
         now = self.get_clock().now()
-        blocked = self._check_lock(now) | self._check_senders(now)
+        t = time.perf_counter()
+        blocked = self._check_lock(now)
+        self.timing['Fahrsperre'] = time.perf_counter() - t
+        t = time.perf_counter()
+        blocked |= self._check_senders(now)
+        self.timing['Publisher-Prüfung'] = time.perf_counter() - t
         if not self.armed and st['enabled'] and self.arm_since is not None \
                 and (now - self.arm_since).nanoseconds * 1e-9 >= self._p('arm_delay'):
             self._arm()
@@ -377,7 +406,9 @@ class DiffDriveNode(Node):
         self.bus.set_velocity({wh.axis: wh.rad_s_to_units(ws) for wh, ws in zip(self.wheels, (wl, wr))})
 
         if st['valid']:
+            t = time.perf_counter()
             self.publish_state(st, now)
+            self.timing['publish'] = time.perf_counter() - t
 
     def publish_state(self, st, now):
         t = st['t']

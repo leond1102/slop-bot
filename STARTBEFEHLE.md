@@ -8,7 +8,7 @@ source ~/slop-bot_ws/install/setup.bash
 # 1. Roboter steuern
 
 ## Fahren per Tastatur (2 Terminals: Antrieb, Tastatur; bestromt Motoren, fragt nach sudo-Passwort, Fahren nur mit RustDesk-Sitzung)
-ros2 run slop_base with_netcaps ros2 launch slop_base bringup.launch.py
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
 
 ros2 run slop_teleop keyboard_teleop
 
@@ -25,10 +25,10 @@ ros2 service call /diff_drive/enable std_srvs/srv/SetBool "data: true"
 ## Nur das Modell, ohne Hardware (1 Terminal, Räder per Schieberegler)
 ros2 launch slop_description description.launch.py rviz:=true gui:=true
 
-## Roboter live mit Modell, Rädern und Odometrie (3 Terminals: Antrieb, Modell + RViz, Tastatur)
-ros2 run slop_base with_netcaps ros2 launch slop_base bringup.launch.py
+## Roboter live mit Modell, Rädern und Odometrie (3 Terminals: Antrieb + Modell + EKF, RViz, Tastatur; Gyro-Bias aus calib/ geladen, sonst Roboter beim Start 5 s stillhalten)
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
 
-ros2 launch slop_description description.launch.py rviz:=true
+ros2 launch slop_description rviz.launch.py
 
 ros2 run slop_teleop keyboard_teleop
 
@@ -48,13 +48,13 @@ ros2 launch slop_description view.launch.py
 ## Dasselbe ohne Kamera-Punktwolke (weniger CPU)
 ros2 launch slop_description view.launch.py camera_pointcloud:=false
 
-## Alles zusammen: fahren und Sensoren im Modell sehen (4 Terminals: Antrieb, Sensoren, Modell + RViz mit allen Anzeigen, Tastatur)
+## Alles zusammen: fahren und Sensoren im Modell sehen (4 Terminals: Antrieb + Modell + EKF, Sensoren, RViz mit allen Anzeigen, Tastatur)
 ## Fixed Frame odom; Kamera-Punktwolke in RViz einschalten und Sensoren dann mit camera_pointcloud:=true starten
-ros2 run slop_base with_netcaps ros2 launch slop_base bringup.launch.py
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
 
 ros2 launch slop_sensors sensors.launch.py xfer_format:=0
 
-ros2 launch slop_description description.launch.py rviz:=true rviz_config:=all
+ros2 launch slop_description rviz.launch.py
 
 ros2 run slop_teleop keyboard_teleop
 
@@ -63,19 +63,50 @@ ros2 launch slop_sensors sensors.launch.py
 
 ros2 run rqt_plot rqt_plot /livox/imu/linear_acceleration/z /camera/imu/linear_acceleration/y
 
+# 3. Kalibrierung
+
+## Alle Kalibrierungen messen (2 Terminals: Sensoren, Messung; Roboter dabei stillstellen, waagrecht, nicht anfassen; ca. 15 s)
+ros2 launch slop_sensors sensors.launch.py
+
+ros2 run slop_calibration calibrate all
+
+## Nur Gyro-Bias (Livox- und Kamera-IMU; der EKF braucht dann beim Start keine 5 s Wartezeit mehr)
+ros2 run slop_calibration calibrate gyro
+
+## Nur Sensorneigung Roll/Pitch aus der Schwerkraft (danach bringup bzw. description neu starten, das URDF liest sie beim Start)
+ros2 run slop_calibration calibrate mount
+
+## Längeres Messfenster (Standard 10 s)
+ros2 run slop_calibration calibrate all --duration 20
+
+## Stand anzeigen: welche Kalibrierungen es gibt und wie alt die gespeicherten Werte sind
+ros2 run slop_calibration calibrate list
+
+## Gespeicherte Werte ansehen (Ordner calib/, siehe calib/README.md)
+cat ~/slop-bot_ws/calib/gyro.yaml ~/slop-bot_ws/calib/mounts.yaml
+
+## Gyro-Bias nur einmal neu messen, ohne zu speichern (Roboter stillhalten; läuft im imu_adapter)
+ros2 service call /imu_adapter/recalibrate std_srvs/srv/Trigger
+
 # A. Bauen, Tests und einzelne Befehle
 
 ## Bauen – immer über das Skript (saubere Umgebung, ohne ~/ros2_ws und venv-Python)
 cd ~/slop-bot_ws && ./colcon_build.sh && source install/setup.bash
 
 ## Einzelne Pakete bauen
-./colcon_build.sh --packages-select slop_base slop_safety slop_teleop slop_sensors slop_description
+./colcon_build.sh --packages-select slop_base slop_safety slop_teleop slop_sensors slop_description slop_localization slop_bringup slop_calibration
 
 ## Tests (ohne Hardware)
-colcon test --packages-select slop_base slop_safety slop_teleop && colcon test-result --verbose
+colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration && colcon test-result --verbose
 
 ## Nur Antrieb
 ros2 run slop_base with_netcaps ros2 launch slop_base diff_drive.launch.py
+
+## Nur EKF (/odom und TF odom → base_footprint aus /wheel/odom und weiteren Quellen; braucht: sudo apt install ros-humble-robot-localization)
+ros2 launch slop_localization localization.launch.py
+
+## Antrieb + Sicherheit ohne EKF (dann kein /odom)
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py ekf:=false
 
 ## Nur Sicherheit (twist_mux + RustDesk-Fahrsperre)
 ros2 launch slop_safety safety.launch.py

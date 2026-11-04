@@ -1,7 +1,7 @@
 """twist_mux und RustDesk-Fahrsperre starten.
 
     ros2 launch slop_safety safety.launch.py
-Teil von slop_base/launch/bringup.launch.py, einzeln nur zum Testen nötig.
+Teil von slop_bringup/launch/bringup.launch.py, einzeln nur zum Testen nötig.
 """
 import os
 

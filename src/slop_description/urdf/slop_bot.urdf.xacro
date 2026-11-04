@@ -14,6 +14,13 @@
   <xacro:property name="wheel_radius" value="${drive['wheel_diameter'] / 2.0}"/>
   <xacro:property name="track" value="${drive['track_width']}"/>
 
+  <!-- Neigung (Roll/Pitch, rad) der Sensoren aus der Kalibrierung (calib/mounts.yaml); description.launch.py reicht sie
+       als Argumente durch. Ohne Kalibrierung 0 = waagrecht. -->
+  <xacro:arg name="livox_roll" default="0.0"/>
+  <xacro:arg name="livox_pitch" default="0.0"/>
+  <xacro:arg name="camera_roll" default="0.0"/>
+  <xacro:arg name="camera_pitch" default="0.0"/>
+
   <!-- Sensorposition relativ zum Drehpunkt (base_link, Achshöhe), gemessen. -->
   <xacro:property name="lidar_x" value="0.03"/>
   <xacro:property name="lidar_y" value="0.0"/>
@@ -131,7 +138,7 @@
   <joint name="livox_joint" type="fixed">
     <parent link="base_link"/>
     <child link="livox_frame"/>
-    <origin xyz="${lidar_x} ${lidar_y} ${lidar_z}" rpy="0 0 0"/>
+    <origin xyz="${lidar_x} ${lidar_y} ${lidar_z}" rpy="$(arg livox_roll) $(arg livox_pitch) 0"/>
   </joint>
 
   <!-- RealSense D435i: camera_link wie im Treiber (camera_name camera), schaut geradeaus (+x) -->
@@ -144,7 +151,7 @@
   <joint name="camera_joint" type="fixed">
     <parent link="base_link"/>
     <child link="camera_link"/>
-    <origin xyz="${camera_x} ${camera_y} ${camera_z}" rpy="0 0 0"/>
+    <origin xyz="${camera_x} ${camera_y} ${camera_z}" rpy="$(arg camera_roll) $(arg camera_pitch) 0"/>
   </joint>
 
 </robot>

@@ -16,6 +16,7 @@ diff_drive_node:
     main_nice: -10            # ROS-Thread der Node bevorzugen (teilt sich das GIL mit dem Zyklus)
     gil_switch_ms: 0.5
     stats_period: 10.0        # s, Zyklusstatistik im Log (verspätete Zyklen, max. Periode), 0 = aus
+    slow_update_ms: 50.0      # ms, Warnung im Log, wenn der ROS-Thread so lange blockiert (zeigt wo), 0 = aus
 
     # Planetengetriebe NEMA 17, am Motor: Achse 3 = 1:5,18, Achse 4 = 1:13,73 (Nennwerte, mit tools/diff_motor.py
     # jog --revs 10 nachgezählt: links 5,13, rechts 13,7)
@@ -44,10 +45,11 @@ diff_drive_node:
     allowed_cmd_vel_nodes: [twist_mux]   # nur twist_mux darf auf /cmd_vel senden
     rate: 50.0
 
-    # Radodometrie aus den ausgegebenen Schritten (Open Loop, driftet). publish_tf: false, wenn ein anderer
-    # Knoten (SLAM) odom → base_footprint sendet.
+    # Radodometrie aus den ausgegebenen Schritten (Open Loop, driftet). Sie geht als Rohwert nach /wheel/odom in den
+    # EKF (slop_localization), der /odom und das TF odom → base_footprint sendet. publish_tf: true nur ohne EKF.
+    odom_topic: /wheel/odom
     odom_frame: odom
     base_frame: base_footprint
-    publish_tf: true
+    publish_tf: false
     left_joint: left_wheel_joint
     right_joint: right_wheel_joint

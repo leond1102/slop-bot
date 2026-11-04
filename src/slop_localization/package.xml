@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>slop_localization</name>
+  <version>0.1.0</version>
+  <description>Slop-Bot Lokalisierung: Extended Kalman Filter (robot_localization), der /odom und das TF odom → base_footprint aus allen Odometrie- und IMU-Quellen bildet</description>
+  <maintainer email="leodresel11@gmail.com">Leon</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+
+  <!-- sudo apt install ros-humble-robot-localization -->
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <!-- calib/gyro.yaml -->
+  <exec_depend>slop_calibration</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_srvs</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+
+  <test_depend>ament_cmake_pytest</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

@@ -18,6 +18,8 @@
   <exec_depend>rviz2</exec_depend>
   <!-- Radmaße, Spur und Gelenknamen kommen aus slop_base/config/diff_drive.yaml -->
   <exec_depend>slop_base</exec_depend>
+  <!-- Sensorneigung aus calib/mounts.yaml -->
+  <exec_depend>slop_calibration</exec_depend>
   <exec_depend>ament_index_python</exec_depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>

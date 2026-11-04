@@ -20,6 +20,20 @@ from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
 
+def mount_tilt_args():
+    """Roll/Pitch der Sensoren aus calib/mounts.yaml als xacro-Argumente (fehlt die Kalibrierung: waagrecht)."""
+    try:
+        from slop_calibration import store
+    except ImportError:
+        return ''
+    args = []
+    for sensor in ('livox', 'camera'):
+        entry = store.load_entry('mounts', sensor) or {}
+        for axis in ('roll', 'pitch'):
+            args.append(f' {sensor}_{axis}:={float(entry.get(axis, 0.0))}')
+    return ''.join(args)
+
+
 def generate_launch_description():
     share = get_package_share_directory('slop_description')
     urdf = os.path.join(share, 'urdf', 'slop_bot.urdf.xacro')
@@ -31,7 +45,7 @@ def generate_launch_description():
         DeclareLaunchArgument('gui', default_value='false',
                               description='joint_state_publisher_gui (nur ohne Antrieb)'),
         Node(package='robot_state_publisher', executable='robot_state_publisher', output='screen',
-             parameters=[{'robot_description': ParameterValue(Command(['xacro ', urdf]), value_type=str)}]),
+             parameters=[{'robot_description': ParameterValue(Command(['xacro ', urdf, mount_tilt_args()]), value_type=str)}]),
         Node(package='joint_state_publisher_gui', executable='joint_state_publisher_gui',
              condition=IfCondition(LaunchConfiguration('gui'))),
         Node(package='rviz2', executable='rviz2', output='log',

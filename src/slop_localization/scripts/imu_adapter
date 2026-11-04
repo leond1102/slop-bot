@@ -1,0 +1,4 @@
+#!/usr/bin/python3
+from slop_localization.imu_adapter_node import main
+
+main()

@@ -3,7 +3,7 @@
 Differentialantrieb mit zwei Schrittmotoren am EtherCAT-Treiber CL57E-4A, Livox Mid-360s und RealSense D435i.
 
 **Stand (Branch `slam-neu`):** Grundgerüst ohne SLAM. Enthalten sind nur Antrieb, Sicherheit, Tastatursteuerung und
-die Sensortreiber. Die Antriebsnode sendet Radodometrie (`/odom`, TF `odom → base_footprint`); TFs zwischen
+die Sensortreiber. Die Antriebsnode sendet Rohodometrie der Räder (`/wheel/odom`), der EKF daraus `/odom` und das TF `odom → base_footprint`; TFs zwischen
 Roboter und Sensoren gibt es **nicht** – das ist die Aufgabe des SLAM, der hier neu aufgebaut wird. (Der alte FAST-LIO-Stack liegt auf `main`.)
 
 Alle Startbefehle: [STARTBEFEHLE.md](STARTBEFEHLE.md)
@@ -12,7 +12,10 @@ Alle Startbefehle: [STARTBEFEHLE.md](STARTBEFEHLE.md)
 
 | Paket | Inhalt |
 |---|---|
-| [slop_base](src/slop_base) | `diff_drive_node`: `/cmd_vel` → Räder über EtherCAT (pysoem, CSP, 2-ms-Zyklus als Echtzeit-Thread), `/joint_states` zurück. `with_netcaps` startet mit den nötigen Rechten. `bringup.launch.py` = Antrieb + Sicherheit |
+| [slop_base](src/slop_base) | `diff_drive_node`: `/cmd_vel` → Räder über EtherCAT (pysoem, CSP, 2-ms-Zyklus als Echtzeit-Thread), `/joint_states` zurück. `with_netcaps` startet mit den nötigen Rechten. |
+| [slop_localization](src/slop_localization) | EKF (`robot_localization`): bildet `/odom` und das TF `odom → base_footprint` aus allen Odometrie-/IMU-Quellen. Quellen (Radodometrie, Livox-Gyro über `imu_adapter`) stehen in `config/ekf.yaml`, neue Sensoren werden dort als Block ergänzt. Braucht `sudo apt install ros-humble-robot-localization` |
+| [slop_bringup](src/slop_bringup) | `bringup.launch.py`: Antrieb + Sicherheit + Robotermodell + EKF in einem Start (`ekf:=false` ohne EKF) |
+| [slop_calibration](src/slop_calibration) | `calibrate`-Befehl (Gyro-Bias, Sensorneigung) und Speicher für die Ergebnisse im Ordner `calib/` (siehe [calib/README.md](calib/README.md)) |
 | [slop_safety](src/slop_safety) | `twist_mux`-Konfiguration und `remote_guard`: Fahrsperre, solange keine RustDesk-Sitzung besteht |
 | [slop_teleop](src/slop_teleop) | `keyboard_teleop`: Tastatursteuerung mit Totmann (Taste halten = fahren) |
 | [slop_description](src/slop_description) | URDF/xacro des Roboters (Räder, Schleppräder, Livox, RealSense) und `description.launch.py` mit `robot_state_publisher`. Radmaße, Spur und Gelenknamen liest es aus `diff_drive.yaml` |
@@ -83,7 +86,7 @@ baut in einer leeren Umgebung, nur mit `/opt/ros/humble`, und umgeht so drei Fal
 Tests (40, ohne Hardware):
 
 ```bash
-source install/setup.bash && colcon test --packages-select slop_base slop_safety slop_teleop && colcon test-result --verbose
+source install/setup.bash && colcon test --packages-select slop_base slop_safety slop_teleop slop_localization && colcon test-result --verbose
 ```
 
 ## Neu aufsetzen
@@ -116,8 +119,9 @@ Weitere Build-Optionen in `colcon.meta`: Livox-SDK2 braucht `-DCMAKE_POLICY_VERS
 
 - `motor_current_ma` in [diff_drive.yaml](src/slop_base/config/diff_drive.yaml) ist noch nicht eingetragen (Typenschild).
 - **Radodometrie ist Open Loop:** Sie zählt die ausgegebenen Schritte (Getriebe 1:5,18 links, 1:13,73 rechts, nachgezählt
-  mit `tools/diff_motor.py jog --revs 10`) und driftet bei Schlupf oder Schrittverlust. `base_footprint → Sensor` muss
-  der neue SLAM liefern; sendet er auch `odom → base_footprint`, `publish_tf: false` setzen.
+  mit `tools/diff_motor.py jog --revs 10`) und driftet bei Schlupf oder Schrittverlust. Sie geht als `/wheel/odom` (ohne TF)
+  in den EKF. Weitere Quellen (LIO, Kamera-IMU) kommen als Block in [ekf.yaml](src/slop_localization/config/ekf.yaml). Der EKF ist die
+  einzige Quelle für `odom → base_footprint`.
 - **Livox ohne Zeitsynchronisation (kein PTP):** Der Treiber stempelt mit der Empfangszeit des Jetson.
 - Der Livox-Treiber stürzt beim Beenden manchmal ab (exit −11) und ignoriert SIGINT. Harmlos, Reste beendet
   `pkill -9 -x livox_ros_drive`.
@@ -134,9 +138,13 @@ slop-bot_ws/
 ├── colcon_build.sh      Bauen (saubere Umgebung)
 ├── colcon.meta          CMake-Optionen je Paket
 ├── STARTBEFEHLE.md      alle Startbefehle
+├── calib/               Kalibrierergebnisse (gyro.yaml, mounts.yaml), siehe calib/README.md
 ├── src/
 │   ├── slop_base/       Antrieb (EtherCAT)
+│   ├── slop_bringup/    bringup.launch.py (alles zusammen)
+│   ├── slop_calibration/ Kalibrierbefehl + Speicher
 │   ├── slop_description/ URDF + robot_state_publisher
+│   ├── slop_localization/ EKF (robot_localization)
 │   ├── slop_safety/     twist_mux + RustDesk-Fahrsperre
 │   ├── slop_sensors/    Sensortreiber-Launch + Configs
 │   ├── slop_teleop/     Tastatursteuerung
