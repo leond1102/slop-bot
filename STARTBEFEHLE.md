@@ -18,7 +18,7 @@ colcon test --packages-select slop_base slop_safety slop_teleop && colcon test-r
 ## with_netcaps gibt dem EtherCAT-Zyklus Echtzeit-Priorität (Kern 7) und legt die USB-Interrupts von CPU0 auf CPU1
 ## (der EtherCAT-Interrupt selbst ist auf dem Orin fest auf CPU0).
 ## Alle 10 s steht die Zyklusstatistik im Log ("EtherCAT letzte 10 s: ... verspätet ... max. Periode").
-## Keine Radodometrie: kein /odom, kein TF odom → base_footprint.
+## Radodometrie aus den ausgegebenen Schritten: /odom und TF odom → base_footprint (publish_tf: false schaltet das TF ab).
 ros2 run slop_base with_netcaps ros2 launch slop_base bringup.launch.py
 
 ## Nur Antrieb

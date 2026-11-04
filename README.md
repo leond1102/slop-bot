@@ -3,8 +3,8 @@
 Differentialantrieb mit zwei Schrittmotoren am EtherCAT-Treiber CL57E-4A, Livox Mid-360s und RealSense D435i.
 
 **Stand (Branch `slam-neu`):** Grundgerüst ohne SLAM. Enthalten sind nur Antrieb, Sicherheit, Tastatursteuerung und
-die Sensortreiber. Es gibt **keine Odometrie und keine TFs** zwischen Roboter und Sensoren – das ist die Aufgabe des
-SLAM, der hier neu aufgebaut wird. (Der alte FAST-LIO-Stack liegt auf `main`.)
+die Sensortreiber. Die Antriebsnode sendet Radodometrie (`/odom`, TF `odom → base_footprint`); TFs zwischen
+Roboter und Sensoren gibt es **nicht** – das ist die Aufgabe des SLAM, der hier neu aufgebaut wird. (Der alte FAST-LIO-Stack liegt auf `main`.)
 
 Alle Startbefehle: [STARTBEFEHLE.md](STARTBEFEHLE.md)
 
@@ -113,10 +113,10 @@ Weitere Build-Optionen in `colcon.meta`: Livox-SDK2 braucht `-DCMAKE_POLICY_VERS
 
 ## Offene Punkte und Eigenheiten
 
-- **`right_gear: 20.0`** in [diff_drive.yaml](src/slop_base/config/diff_drive.yaml) ist ein ungeklärter Workaround
-  (Getriebe laut Test 1:14). `motor_current_ma` ist noch nicht eingetragen (Typenschild).
-- **Keine Odometrie:** Open Loop ohne Encoder war zu ungenau. `odom → base_footprint` und `base_footprint → Sensor`
-  muss der neue SLAM liefern.
+- `motor_current_ma` in [diff_drive.yaml](src/slop_base/config/diff_drive.yaml) ist noch nicht eingetragen (Typenschild).
+- **Radodometrie ist Open Loop:** Sie zählt die ausgegebenen Schritte (Getriebe 1:5,18 links, 1:13,73 rechts, nachgezählt
+  mit `tools/diff_motor.py jog --revs 10`) und driftet bei Schlupf oder Schrittverlust. `base_footprint → Sensor` muss
+  der neue SLAM liefern; sendet er auch `odom → base_footprint`, `publish_tf: false` setzen.
 - **Livox ohne Zeitsynchronisation (kein PTP):** Der Treiber stempelt mit der Empfangszeit des Jetson.
 - Der Livox-Treiber stürzt beim Beenden manchmal ab (exit −11) und ignoriert SIGINT. Harmlos, Reste beendet
   `pkill -9 -x livox_ros_drive`.

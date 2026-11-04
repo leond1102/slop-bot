@@ -91,7 +91,7 @@ ALL_VENDOR_PARAMS = [
 ]
 
 # Getriebe Motor : Rad je Achse (hängt am Motor, nicht an der Seite)
-DEFAULT_GEARS = {3: 7.5, 4: 14.0}
+DEFAULT_GEARS = {3: 5.18, 4: 13.73}
 
 CW_DISABLE_VOLTAGE = 0x0000
 CW_SHUTDOWN = 0x0006

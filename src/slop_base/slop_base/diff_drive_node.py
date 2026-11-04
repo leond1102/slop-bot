@@ -3,7 +3,9 @@
 
 Topics:
   /cmd_vel        geometry_msgs/Twist     Sub  linear.x [m/s], angular.z [rad/s]; Rest wird ignoriert
+  /odom           nav_msgs/Odometry       Pub  Radodometrie aus den ausgegebenen Schritten
   /joint_states   sensor_msgs/JointState  Pub  Radwinkel [rad] und -geschwindigkeit [rad/s] (ausgegebene Schritte)
+  TF              odom → base_footprint   (publish_tf)
 Services:
   diff_drive/enable  std_srvs/SetBool     true = Fault-Reset + Freigabe, false = Endstufen aus
 
@@ -22,8 +24,10 @@ Sicherheit:
     mehr (Jetson/Prozess abgestürzt), bleibt die Sollposition stehen und der Motor hält an. Der Treiber
     meldet danach einen Alarm (SyncCnt). Hängt nur die ROS-Node, bremst der Bus-Watchdog nach 0,3 s.
 
-Keine Radodometrie: Open Loop (Schritte ohne Encoder) war zu ungenau. Diese Node sendet weder /odom noch
-TF odom → base_footprint; die Roboterpose muss von außen kommen (z. B. SLAM).
+Radodometrie: Open Loop, die Odometrie zählt die ausgegebenen Schritte (Sollposition des Treibers). Verlorene
+Schritte oder durchrutschende Räder merkt sie nicht, sie ist also nur so genau wie Getriebe, Raddurchmesser und
+Spurweite in der Config. Ein SLAM muss die Drift korrigieren. Soll ein anderer Knoten odom → base_footprint senden,
+publish_tf: false setzen (nur eine Quelle für diese Transformation).
 
 Braucht CAP_NET_RAW + CAP_NET_ADMIN für den Raw-Socket und CAP_SYS_NICE für die Echtzeit-Priorität:
   ros2 run slop_base with_netcaps ros2 launch slop_base diff_drive.launch.py
@@ -39,16 +43,18 @@ import os
 import sys
 
 import rclpy
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import TransformStamped, Twist
+from nav_msgs.msg import Odometry
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Bool
 from std_srvs.srv import SetBool
+from tf2_ros import TransformBroadcaster
 
 from slop_base.cl57e_bus import (PARAM_DIV, PARAM_MAX_CURRENT, PARAM_RUN_MODE, PARAM_SENSOR_ERR,
                                  Cl57eBus, Cl57eError)
-from slop_base.kinematics import limit_wheel_speeds, wheel_speeds
+from slop_base.kinematics import Odometry2D, limit_wheel_speeds, wheel_speeds
 from slop_base.senders import SenderCheck
 
 TWO_PI = 2.0 * math.pi
@@ -79,8 +85,8 @@ class DiffDriveNode(Node):
             ('ifname', 'enP8p1s0'),        # Ethernet-Port des EtherCAT-Busses
             ('cycle_ms', 2.0),             # EtherCAT-Zyklus
             ('dc', False),                 # Distributed Clocks (Sync0)
-            ('left_axis', 3), ('left_gear', 7.5), ('left_dir', 1),
-            ('right_axis', 4), ('right_gear', 14.0), ('right_dir', -1),
+            ('left_axis', 3), ('left_gear', 5.18), ('left_dir', 1),
+            ('right_axis', 4), ('right_gear', 13.73), ('right_dir', -1),
             ('units_per_rev', 0),          # 0 = Treiberparameter DivSet
             ('wheel_diameter', 0.07),      # m
             ('track_width', 0.24),         # Abstand der Radmitten [m]
@@ -96,7 +102,10 @@ class DiffDriveNode(Node):
             ('lock_timeout', 1.0),         # s ohne Nachricht auf lock_topic → gesperrt
             ('allowed_cmd_vel_nodes', ['twist_mux']),  # leere Liste = nicht prüfen
             ('unknown_sender_grace', 3.0),  # s: Publisher ohne Namen (Startphase) erst danach als Fehler melden
-            ('rate', 50.0),                # Hz: Sollwerte, Gelenkzustände
+            ('rate', 50.0),                # Hz: Sollwerte, Odometrie, Gelenkzustände
+            ('odom_frame', 'odom'),
+            ('base_frame', 'base_footprint'),
+            ('publish_tf', True),          # false, wenn ein anderer Knoten odom → base_frame sendet
             ('left_joint', 'left_wheel_joint'),
             ('right_joint', 'right_wheel_joint'),
             ('rt_priority', 80),           # SCHED_FIFO des Zyklus-Threads, 0 = aus
@@ -147,6 +156,7 @@ class DiffDriveNode(Node):
         self.get_logger().info(f'EtherCAT-Zyklus {self._p("cycle_ms"):g} ms: {self.bus.rt_status}; ROS-Thread: '
                                f'{self.proc_status}')
 
+        self.odom = Odometry2D(self.track)
         self.last_t = None
         self.cmd = (0.0, 0.0)
         self.last_cmd_time = None
@@ -165,7 +175,9 @@ class DiffDriveNode(Node):
         self.senders_waiting = False
         self.last_sender_check = None
 
+        self.odom_pub = self.create_publisher(Odometry, '/odom', 10)
         self.joint_pub = self.create_publisher(JointState, '/joint_states', 10)
+        self.tf_broadcaster = TransformBroadcaster(self) if self._p('publish_tf') else None
         self.create_subscription(Twist, '/cmd_vel', self.cmd_vel_callback, 10)
         if self._p('lock_topic'):
             self.create_subscription(Bool, self._p('lock_topic'), self.lock_callback, 10)
@@ -384,12 +396,47 @@ class DiffDriveNode(Node):
         limit = self.w_max * 3.0 * max(dt, 0.02) + 0.2
         if any(abs(da) > limit for da in d_angle):
             self.get_logger().warn(f'Sprung im Positionszähler ({d_angle[0]:+.2f}/{d_angle[1]:+.2f} rad), '
-                                   'Schritt verworfen')
+                                   'Odometrie-Schritt verworfen')
             d_angle = [0.0, 0.0]
         for wh, da in zip(self.wheels, d_angle):
             wh.angle += da
+        ds, dyaw = self.odom.update(d_angle[0] * self.radius, d_angle[1] * self.radius)
+        vx = ds / dt if dt > 0 else 0.0
+        wz = dyaw / dt if dt > 0 else 0.0
 
         stamp = now.to_msg()
+        qz, qw = math.sin(self.odom.yaw / 2.0), math.cos(self.odom.yaw / 2.0)
+        msg = Odometry()
+        msg.header.stamp = stamp
+        msg.header.frame_id = self._p('odom_frame')
+        msg.child_frame_id = self._p('base_frame')
+        msg.pose.pose.position.x = self.odom.x
+        msg.pose.pose.position.y = self.odom.y
+        msg.pose.pose.orientation.z = qz
+        msg.pose.pose.orientation.w = qw
+        # Diagonale x, y, z, roll, pitch, yaw. Nicht gemessene Achsen sehr unsicher, x/y/yaw grobe Schätzung (Open Loop)
+        msg.pose.covariance[0] = msg.pose.covariance[7] = 0.01
+        msg.pose.covariance[14] = msg.pose.covariance[21] = msg.pose.covariance[28] = 1e6
+        msg.pose.covariance[35] = 0.05
+        msg.twist.twist.linear.x = vx
+        msg.twist.twist.angular.z = wz
+        msg.twist.covariance[0] = 0.001
+        msg.twist.covariance[7] = msg.twist.covariance[14] = msg.twist.covariance[21] = 1e6
+        msg.twist.covariance[28] = 1e6
+        msg.twist.covariance[35] = 0.01
+        self.odom_pub.publish(msg)
+
+        if self.tf_broadcaster is not None:
+            tf = TransformStamped()
+            tf.header.stamp = stamp
+            tf.header.frame_id = self._p('odom_frame')
+            tf.child_frame_id = self._p('base_frame')
+            tf.transform.translation.x = self.odom.x
+            tf.transform.translation.y = self.odom.y
+            tf.transform.rotation.z = qz
+            tf.transform.rotation.w = qw
+            self.tf_broadcaster.sendTransform(tf)
+
         js = JointState()
         js.header.stamp = stamp
         js.name = [wh.joint for wh in self.wheels]
