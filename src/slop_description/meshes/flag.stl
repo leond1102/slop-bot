@@ -1,0 +1,58 @@
+solid flag
+  facet normal 0.000000 1.000000 -0.000000
+    outer loop
+      vertex 0.000000 0.001500 -0.120000
+      vertex -0.200000 0.001500 -0.060000
+      vertex 0.000000 0.001500 0.000000
+    endloop
+  endfacet
+  facet normal 0.000000 -1.000000 0.000000
+    outer loop
+      vertex 0.000000 -0.001500 -0.120000
+      vertex 0.000000 -0.001500 0.000000
+      vertex -0.200000 -0.001500 -0.060000
+    endloop
+  endfacet
+  facet normal -1.000000 0.000000 0.000000
+    outer loop
+      vertex 0.000000 -0.001500 -0.120000
+      vertex 0.000000 -0.001500 0.000000
+      vertex 0.000000 0.001500 0.000000
+    endloop
+  endfacet
+  facet normal -1.000000 0.000000 0.000000
+    outer loop
+      vertex 0.000000 -0.001500 -0.120000
+      vertex 0.000000 0.001500 0.000000
+      vertex 0.000000 0.001500 -0.120000
+    endloop
+  endfacet
+  facet normal 0.287348 0.000000 -0.957826
+    outer loop
+      vertex 0.000000 -0.001500 0.000000
+      vertex -0.200000 -0.001500 -0.060000
+      vertex -0.200000 0.001500 -0.060000
+    endloop
+  endfacet
+  facet normal 0.287348 0.000000 -0.957826
+    outer loop
+      vertex 0.000000 -0.001500 0.000000
+      vertex -0.200000 0.001500 -0.060000
+      vertex 0.000000 0.001500 0.000000
+    endloop
+  endfacet
+  facet normal 0.287348 0.000000 0.957826
+    outer loop
+      vertex -0.200000 -0.001500 -0.060000
+      vertex 0.000000 -0.001500 -0.120000
+      vertex 0.000000 0.001500 -0.120000
+    endloop
+  endfacet
+  facet normal 0.287348 -0.000000 0.957826
+    outer loop
+      vertex -0.200000 -0.001500 -0.060000
+      vertex 0.000000 0.001500 -0.120000
+      vertex -0.200000 0.001500 -0.060000
+    endloop
+  endfacet
+endsolid flag

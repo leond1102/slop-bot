@@ -15,6 +15,7 @@ Alle Startbefehle: [STARTBEFEHLE.md](STARTBEFEHLE.md)
 | [slop_base](src/slop_base) | `diff_drive_node`: `/cmd_vel` → Räder über EtherCAT (pysoem, CSP, 2-ms-Zyklus als Echtzeit-Thread), `/joint_states` zurück. `with_netcaps` startet mit den nötigen Rechten. `bringup.launch.py` = Antrieb + Sicherheit |
 | [slop_safety](src/slop_safety) | `twist_mux`-Konfiguration und `remote_guard`: Fahrsperre, solange keine RustDesk-Sitzung besteht |
 | [slop_teleop](src/slop_teleop) | `keyboard_teleop`: Tastatursteuerung mit Totmann (Taste halten = fahren) |
+| [slop_description](src/slop_description) | URDF/xacro des Roboters (Räder, Schleppräder, Livox, RealSense) und `description.launch.py` mit `robot_state_publisher`. Radmaße, Spur und Gelenknamen liest es aus `diff_drive.yaml` |
 | [slop_sensors](src/slop_sensors) | Launch-Dateien und Configs für Livox Mid-360s und RealSense D435i, sonst nichts |
 | `src/third_party` (Git-Submodule) | `Livox-SDK2`, `livox_ros_driver2`, `realsense-ros` 4.58.4 |
 | [tools/diff_motor.py](tools/diff_motor.py) | Motortest ohne ROS (Parameter lesen, Achsen zuordnen, Getriebe prüfen), CSV-Logs in `tools/logs/` |
@@ -135,6 +136,7 @@ slop-bot_ws/
 ├── STARTBEFEHLE.md      alle Startbefehle
 ├── src/
 │   ├── slop_base/       Antrieb (EtherCAT)
+│   ├── slop_description/ URDF + robot_state_publisher
 │   ├── slop_safety/     twist_mux + RustDesk-Fahrsperre
 │   ├── slop_sensors/    Sensortreiber-Launch + Configs
 │   ├── slop_teleop/     Tastatursteuerung
