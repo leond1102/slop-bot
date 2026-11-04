@@ -6,10 +6,10 @@ keyboard_teleop:
   ros__parameters:
     cmd_vel_topic: teleop/cmd_vel   # Eingang "teleop" von twist_mux (slop_safety/config/twist_mux.yaml)
 
-    # Geschwindigkeit bei 100 %. Passend zu diff_drive.yaml (max_wheel_rpm 10 → 0,037 m/s, 0,31 rad/s).
+    # Geschwindigkeit bei 100 %. Passend zu diff_drive.yaml 
     # Wird dort max_wheel_rpm erhöht, hier mit anheben. Zu hohe Werte bremst diff_drive_node ohnehin ein.
-    max_linear: 0.03         # m/s
-    max_angular: 0.2         # rad/s
+    max_linear: 0.18         # m/s
+    max_angular: 0.4         # rad/s
     scale: 1.0                # Start-Tempo 0,1…1 (Anteil von max_*), mit +/- änderbar
     scale_step: 0.1           # Schrittweite von +/-
 

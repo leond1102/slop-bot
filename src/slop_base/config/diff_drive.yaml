@@ -29,7 +29,7 @@ diff_drive_node:
 
     wheel_diameter: 0.07      # m
     track_width: 0.24         # m, Abstand der Radmitten
-    max_wheel_rpm: 10.0       # Ausgang 4 schafft im Test nicht mehr → 0,037 m/s, 0,31 rad/s
+    max_wheel_rpm: 50.0       # → 0,183 m/s, 1,53 rad/s (einzige Stelle für die Tempogrenze, auch für tools/diff_motor.py)
     wheel_acc: 6.0            # rad/s² am Rad (≈ 1 U/s², 10 U/min in 0,2 s)
 
     loop: open                # Schrittmotoren ohne Encoder

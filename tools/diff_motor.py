@@ -19,6 +19,9 @@ Modi:
 Alle Drehzahlen gelten am RAD (hinter dem Getriebe), die Motorwerte werden mit ausgegeben.
 Vorzeichen: positiv = Rad dreht vorwärts. Die Zählrichtung je Seite legen --left-dir/--right-dir fest.
 
+Grenzen (max_wheel_rpm, wheel_acc, max_ferr_rev), Getriebe, Achsen und Zählrichtungen liest das Skript aus
+src/slop_base/config/diff_drive.yaml; nur dort ändern. Optionen auf der Kommandozeile gelten für den einen Lauf.
+
 Die Radmotoren sind Schrittmotoren OHNE Encoder (Open Loop, --loop open ist Standard).
 Die Istposition vom Treiber ist dann nur der Schrittzähler, kein Messwert.
 
@@ -38,6 +41,7 @@ import argparse
 import csv
 import math
 import os
+import re
 import struct
 import sys
 import threading
@@ -90,8 +94,33 @@ ALL_VENDOR_PARAMS = [
     (0x2708, 'Spd_Ki'), (0x2709, 'Spd_Kvff'),
 ]
 
-# Getriebe Motor : Rad je Achse (hängt am Motor, nicht an der Seite)
-DEFAULT_GEARS = {3: 5.18, 4: 13.73}
+# Grenzen, Getriebe, Achsen und Zählrichtungen stehen nur in der Config der Node. Das Skript liest sie von dort,
+# damit es keine zweite Kopie gibt; Kommandozeilenoptionen überschreiben sie nur für den einzelnen Lauf.
+DRIVE_YAML = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'src', 'slop_base', 'config',
+                          'diff_drive.yaml')
+
+
+def load_drive_yaml(path):
+    """Einfache Werte (Schlüssel: Zahl/Text) aus diff_drive.yaml. Reicht für die flache Parameterdatei,
+    pyyaml gibt es in der EtherCAT-venv nicht. Fehlt die Datei, ist das Ergebnis leer."""
+    cfg = {}
+    try:
+        with open(path, encoding='utf-8') as f:
+            for line in f:
+                m = re.match(r'^\s+([A-Za-z_]\w*):\s*([^\s#][^#]*?)\s*(#.*)?$', line)
+                if not m:
+                    continue
+                raw = m.group(2)
+                try:
+                    cfg[m.group(1)] = int(raw)
+                except ValueError:
+                    try:
+                        cfg[m.group(1)] = float(raw)
+                    except ValueError:
+                        cfg[m.group(1)] = raw
+    except OSError:
+        pass
+    return cfg
 
 CW_DISABLE_VOLTAGE = 0x0000
 CW_SHUTDOWN = 0x0006
@@ -759,17 +788,19 @@ def check_params(a, args):
 
 
 def main():
+    cfg = load_drive_yaml(DRIVE_YAML)
+    cfg_acc = cfg['wheel_acc'] / (2 * math.pi) if 'wheel_acc' in cfg else None   # rad/s² → U/s²
     p = argparse.ArgumentParser(description='Test der Antriebsmotoren (Differentialantrieb) am CL57E-4A')
     p.add_argument('mode', choices=['info', 'compare', 'monitor', 'jog', 'drive'])
     p.add_argument('--ifname', default='enP8p1s0', help='Ethernet-Interface (default enP8p1s0)')
-    p.add_argument('--left-axis', type=int, default=3, choices=[1, 2, 3, 4], help='Achse linkes Rad (default 3)')
-    p.add_argument('--right-axis', type=int, default=4, choices=[1, 2, 3, 4], help='Achse rechtes Rad (default 4)')
-    p.add_argument('--left-dir', type=int, default=1, choices=[1, -1], help='Zählrichtung links (default +1)')
-    p.add_argument('--right-dir', type=int, default=-1, choices=[1, -1],
+    p.add_argument('--left-axis', type=int, default=int(cfg.get('left_axis', 3)), choices=[1, 2, 3, 4], help='Achse linkes Rad (default 3)')
+    p.add_argument('--right-axis', type=int, default=int(cfg.get('right_axis', 4)), choices=[1, 2, 3, 4], help='Achse rechtes Rad (default 4)')
+    p.add_argument('--left-dir', type=int, default=int(cfg.get('left_dir', 1)), choices=[1, -1], help='Zählrichtung links (default +1)')
+    p.add_argument('--right-dir', type=int, default=int(cfg.get('right_dir', -1)), choices=[1, -1],
                    help='Zählrichtung rechts (default -1, Motor gespiegelt eingebaut)')
     p.add_argument('--only', choices=['both', 'left', 'right'], default='both', help='Nur ein Rad testen')
     p.add_argument('--gear', action='append', default=[], metavar='ACHSE=I',
-                   help='Getriebe Motor:Rad je Achse, z.B. --gear 3=7.5 --gear 4=14 (default wie dort)')
+                   help='Getriebe Motor:Rad je Achse, z.B. --gear 3=5.18 --gear 4=13.73 (default: aus diff_drive.yaml)')
     # jog
     p.add_argument('--rpm', type=float, default=10.0, help='Raddrehzahl [U/min] für jog (default 10)')
     p.add_argument('--left-rpm', type=float, help='Raddrehzahl links, überschreibt --rpm')
@@ -784,13 +815,15 @@ def main():
     p.add_argument('--wheel-diameter', type=float, help='Raddurchmesser [m]')
     p.add_argument('--track', type=float, help='Spurweite (Abstand Radmitten) [m]')
     # Grenzen / Bus
-    p.add_argument('--acc', type=float, default=1.0, help='Beschleunigung am Rad [U/s²] (default 1)')
-    p.add_argument('--max-wheel-rpm', type=float, default=10.0,
-                   help='Obergrenze Raddrehzahl [U/min] (default 10, im Test sicher erreicht)')
+    p.add_argument('--acc', type=float, default=cfg_acc, help='Beschleunigung am Rad [U/s²] (default: wheel_acc '
+                   'aus diff_drive.yaml)')
+    p.add_argument('--max-wheel-rpm', type=float, default=cfg.get('max_wheel_rpm'),
+                   help='Obergrenze Raddrehzahl [U/min] (default: max_wheel_rpm aus diff_drive.yaml)')
     p.add_argument('--loop', choices=['open', 'closed'], default='open',
                    help='open = Schrittmotor ohne Encoder (default), closed = mit Encoder')
-    p.add_argument('--max-ferr-rev', type=float, default=1.0,
-                   help='Abbruch ab diesem Schleppfehler in Motorumdrehungen (default 1)')
+    p.add_argument('--max-ferr-rev', type=float, default=cfg.get('max_ferr_rev'),
+                   help='Abbruch ab diesem Schleppfehler in Motorumdrehungen (default: max_ferr_rev aus '
+                        'diff_drive.yaml)')
     p.add_argument('--motor-ma', type=int, help='Nennstrom der Radmotoren [mA] (Prüfung gegen MaxCurrent)')
     p.add_argument('--units-per-rev', type=int, default=0, help='Einheiten pro Motorumdrehung (default: DivSet)')
     p.add_argument('--settle', type=float, default=1.0, help='Wartezeit nach Freigabe in s')
@@ -805,9 +838,14 @@ def main():
 
     if args.left_axis == args.right_axis:
         p.error('--left-axis und --right-axis müssen verschieden sein')
+    for opt, val in (('--acc', args.acc), ('--max-wheel-rpm', args.max_wheel_rpm),
+                     ('--max-ferr-rev', args.max_ferr_rev)):
+        if val is None:
+            p.error(f'{opt} fehlt und {os.path.normpath(DRIVE_YAML)} liefert keinen Wert')
     if args.acc <= 0:
         p.error('--acc muss > 0 sein')
-    gears = dict(DEFAULT_GEARS)
+    gears = {int(cfg[f'{side}_axis']): float(cfg[f'{side}_gear'])
+             for side in ('left', 'right') if f'{side}_axis' in cfg and f'{side}_gear' in cfg}
     for g in args.gear:
         try:
             num, ratio = g.split('=')
