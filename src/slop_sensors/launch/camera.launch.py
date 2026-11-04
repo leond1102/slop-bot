@@ -2,7 +2,7 @@
 
     ros2 launch slop_sensors camera.launch.py
     ros2 launch slop_sensors camera.launch.py camera_config:=/pfad/zu.yaml
-    ros2 launch slop_sensors camera.launch.py camera_pointcloud:=true
+    ros2 launch slop_sensors camera.launch.py camera_pointcloud:=true   # mit Punktwolke, Tiefe auf 1/3 verkleinert
 
 Topics u. a.: /camera/color/image_raw, /camera/depth/image_rect_raw,
 /camera/imu (Gyro + Accel, braucht den RSUSB-Build, siehe config/realsense.yaml)
@@ -33,5 +33,7 @@ def generate_launch_description():
         Node(package='realsense2_camera', executable='realsense2_camera_node', name='camera', namespace='',
              output='screen', additional_env={'LD_LIBRARY_PATH': ld_path_without_mvs()},
              parameters=[LaunchConfiguration('camera_config'),
-                         {'pointcloud__neon_.enable': ParameterValue(LaunchConfiguration('camera_pointcloud'), value_type=bool)}]),
+                         # mit Punktwolke auch die Tiefe verkleinern (decimation_filter.filter_magnitude in der Config)
+                         {'pointcloud__neon_.enable': ParameterValue(LaunchConfiguration('camera_pointcloud'), value_type=bool),
+                          'decimation_filter.enable': ParameterValue(LaunchConfiguration('camera_pointcloud'), value_type=bool)}]),
     ])

@@ -1,9 +1,11 @@
 """Robotermodell veröffentlichen: robot_state_publisher mit dem URDF (/robot_description, TF base_footprint → Sensoren).
 
     ros2 launch slop_description description.launch.py
-    ros2 launch slop_description description.launch.py rviz:=true             # mit RViz
+    ros2 launch slop_description description.launch.py rviz:=true             # mit RViz (nur Modell)
+    ros2 launch slop_description description.launch.py rviz:=true rviz_config:=all   # Modell, Odometrie, Lidar, Kamera
     ros2 launch slop_description description.launch.py rviz:=true gui:=true   # Räder per Schieberegler (ohne Antrieb)
 
+Roboter ohne Antrieb, aber mit Sensoren: view.launch.py.
 Die Radwinkel kommen von diff_drive_node (/joint_states). gui:=true nur ohne laufenden Antrieb benutzen,
 sonst gibt es zwei Quellen für /joint_states.
 """
@@ -23,6 +25,9 @@ def generate_launch_description():
     urdf = os.path.join(share, 'urdf', 'slop_bot.urdf.xacro')
     return LaunchDescription([
         DeclareLaunchArgument('rviz', default_value='false', description='RViz mit dem Modell öffnen'),
+        DeclareLaunchArgument('rviz_config', default_value='description',
+                              description='RViz-Konfiguration aus rviz/: description = nur Modell, '
+                                          'all = Modell, Odometrie, Lidar und Kamera (Fixed Frame odom)'),
         DeclareLaunchArgument('gui', default_value='false',
                               description='joint_state_publisher_gui (nur ohne Antrieb)'),
         Node(package='robot_state_publisher', executable='robot_state_publisher', output='screen',
@@ -30,6 +35,6 @@ def generate_launch_description():
         Node(package='joint_state_publisher_gui', executable='joint_state_publisher_gui',
              condition=IfCondition(LaunchConfiguration('gui'))),
         Node(package='rviz2', executable='rviz2', output='log',
-             arguments=['-d', PathJoinSubstitution([share, 'rviz', 'description.rviz'])],
+             arguments=['-d', PathJoinSubstitution([share, 'rviz', [LaunchConfiguration('rviz_config'), '.rviz']])],
              condition=IfCondition(LaunchConfiguration('rviz'))),
     ])

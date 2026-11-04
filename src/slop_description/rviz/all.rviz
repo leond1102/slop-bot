@@ -1,0 +1,111 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Tree Height: 600
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Cell Size: 0.5
+      Plane Cell Count: 20
+    - Class: rviz_default_plugins/RobotModel
+      Name: Roboter
+      Enabled: true
+      Description Topic:
+        Value: /robot_description
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: false
+      Show Names: true
+      Marker Scale: 0.15
+    - Class: rviz_default_plugins/Odometry
+      Name: Odometrie (/odom)
+      Enabled: true
+      Topic:
+        Value: /odom
+        Reliability Policy: Best Effort
+      Keep: 200
+      Shape:
+        Value: Arrow
+        Alpha: 1
+        Head Length: 0.08
+        Head Radius: 0.04
+        Shaft Length: 0.08
+        Shaft Radius: 0.02
+        Color: 255; 255; 0
+      Covariance:
+        Position:
+          Alpha: 0.3
+          Color: 204; 51; 204
+          Scale: 1
+          Value: false
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Scale: 1
+          Value: false
+        Value: false
+    # Lidar: braucht xfer_format:=0 (PointCloud2). Punkte bleiben Decay Time s stehen, so sieht man den Raum beim Fahren.
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Lidar (/livox/lidar)
+      Enabled: true
+      Topic:
+        Value: /livox/lidar
+        Depth: 5
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Style: Flat Squares
+      Size (m): 0.02
+      Decay Time: 1
+      Position Transformer: XYZ
+      Color Transformer: AxisColor
+      Axis: Z
+      Use Fixed Frame: true
+      Use rainbow: true
+      Invert Rainbow: false
+      Autocompute Value Bounds: true
+    # Kamerabild
+    - Class: rviz_default_plugins/Image
+      Name: Kamera (Farbe)
+      Enabled: true
+      Topic:
+        Value: /camera/color/image_raw
+        Depth: 5
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Normalize Range: true
+    # Farbige Punktwolke der Kamera: nur mit camera_pointcloud:=true (kostet CPU), daher aus. Die Kamera sieht nur ca. 80°
+    # (Hardware); mit Decay Time baut sich beim Fahren und Drehen der Raum in odom auf.
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Kamera (Punktwolke)
+      Enabled: false
+      Topic:
+        Value: /camera/depth/color/points
+        Depth: 5
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Style: Flat Squares
+      Size (m): 0.02
+      Decay Time: 1
+      Position Transformer: XYZ
+      Color Transformer: RGB8
+      Use Fixed Frame: true
+  Global Options:
+    Fixed Frame: odom
+    Frame Rate: 30
+  Tools:
+    - Class: rviz_default_plugins/MoveCamera
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 3.0
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0.2
+      Pitch: 0.6
+      Yaw: 3.3

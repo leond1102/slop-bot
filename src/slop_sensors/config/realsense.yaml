@@ -31,7 +31,10 @@ camera:
     rgb_camera.power_line_frequency: 1
 
     # Filter gegen Löcher/Rauschen in der Tiefe
+    # Decimation: Tiefe/Punktwolke auf 1/magnitude je Achse verkleinern (3 → 213×160 statt 640×480 Punkte). Schaltet
+    # camera.launch.py bei camera_pointcloud:=true ein, damit sich die Wolke in RViz über Sekunden aufbauen lässt.
     decimation_filter.enable: false
+    decimation_filter.filter_magnitude: 3
     spatial_filter.enable: false
     temporal_filter.enable: false
 

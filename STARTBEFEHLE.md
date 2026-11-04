@@ -42,12 +42,19 @@ ros2 launch slop_sensors sensors.launch.py lidar:=false camera_pointcloud:=true
 
 rviz2 -f camera_link
 
-## Alles zusammen: fahren und Sensoren im Modell sehen (4 Terminals: Antrieb, Sensoren, Modell + RViz, Tastatur)
+## Modell + Lidar-Punktwolke + Kamerabild + Kamera-Punktwolke, ohne Antrieb (1 Terminal; Roboter steht, nicht zusammen mit dem Antrieb)
+ros2 launch slop_description view.launch.py
+
+## Dasselbe ohne Kamera-Punktwolke (weniger CPU)
+ros2 launch slop_description view.launch.py camera_pointcloud:=false
+
+## Alles zusammen: fahren und Sensoren im Modell sehen (4 Terminals: Antrieb, Sensoren, Modell + RViz mit allen Anzeigen, Tastatur)
+## Fixed Frame odom; Kamera-Punktwolke in RViz einschalten und Sensoren dann mit camera_pointcloud:=true starten
 ros2 run slop_base with_netcaps ros2 launch slop_base bringup.launch.py
 
 ros2 launch slop_sensors sensors.launch.py xfer_format:=0
 
-ros2 launch slop_description description.launch.py rviz:=true
+ros2 launch slop_description description.launch.py rviz:=true rviz_config:=all
 
 ros2 run slop_teleop keyboard_teleop
 
