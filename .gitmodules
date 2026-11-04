@@ -1,0 +1,11 @@
+[submodule "src/third_party/Livox-SDK2"]
+	path = src/third_party/Livox-SDK2
+	url = https://github.com/Livox-SDK/Livox-SDK2.git
+	branch = master
+[submodule "src/third_party/livox_ros_driver2"]
+	path = src/third_party/livox_ros_driver2
+	url = https://github.com/Livox-SDK/livox_ros_driver2.git
+	branch = master
+[submodule "src/third_party/realsense-ros"]
+	path = src/third_party/realsense-ros
+	url = https://github.com/IntelRealSense/realsense-ros.git

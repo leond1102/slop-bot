@@ -5,7 +5,6 @@
     ros2 launch slop_sensors camera.launch.py camera_pointcloud:=true
 
 Topics u. a.: /camera/color/image_raw, /camera/depth/image_rect_raw,
-/camera/aligned_depth_to_color/image_raw
 /camera/imu (Gyro + Accel, braucht den RSUSB-Build, siehe config/realsense.yaml)
 """
 import os
@@ -20,7 +19,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 def ld_path_without_mvs():
     """LD_LIBRARY_PATH ohne /opt/MVS: ~/.bashrc stellt das Hikrobot-MVS-SDK voran, dessen alte libusb
-    (ohne libusb_set_option) sonst statt der System-libusb geladen wird (PCL/FAST-LIO stürzt ab)."""
+    (ohne libusb_set_option) sonst statt der System-libusb geladen wird (symbol lookup error)."""
     return ':'.join(p for p in os.environ.get('LD_LIBRARY_PATH', '').split(':') if p and not p.startswith('/opt/MVS'))
 
 

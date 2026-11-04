@@ -1,8 +1,0 @@
-setup.py
-slop_safety/__init__.py
-slop_safety/remote_guard.py
-slop_safety/remote_guard_node.py
-slop_safety.egg-info/PKG-INFO
-slop_safety.egg-info/SOURCES.txt
-slop_safety.egg-info/dependency_links.txt
-slop_safety.egg-info/top_level.txt

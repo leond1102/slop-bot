@@ -3,7 +3,7 @@
 camera:
   ros__parameters:
     camera_name: camera
-    base_frame_id: link   # wird zu <camera_name>_link = camera_link (Montage-TF in mounts.yaml)
+    base_frame_id: link   # wird zu <camera_name>_link = camera_link
 
     enable_color: true
     enable_depth: true
@@ -12,8 +12,8 @@ camera:
     rgb_camera.color_profile: 640,480,30
     depth_module.depth_profile: 640,480,30
 
-    # Tiefe auf Farbbild ausgerichtet: /camera/aligned_depth_to_color/image_raw
-    align_depth.enable: true
+    # Tiefe aufs Farbbild umrechnen (/camera/aligned_depth_to_color/image_raw): aus, kostet CPU
+    align_depth.enable: false
     # Punktwolke /camera/depth/color/points (kostet CPU). Auf dem Jetson heißt der Filter
     # "Pointcloud (NEON)" → Parameter pointcloud__neon_.* statt pointcloud.* (ein-/ausschalten
     # per Launch-Argument camera_pointcloud:=true, überschreibt diesen Wert).
@@ -35,6 +35,7 @@ camera:
     spatial_filter.enable: false
     temporal_filter.enable: false
 
+    # TFs innerhalb der Kamera (camera_link → Sensor- und optische Frames), vom Treiber selbst
     publish_tf: true
     tf_publish_rate: 0.0
     initial_reset: false

@@ -1,9 +1,0 @@
-setup.py
-slop_base/__init__.py
-slop_base/cl57e_bus.py
-slop_base/diff_drive_node.py
-slop_base/kinematics.py
-slop_base.egg-info/PKG-INFO
-slop_base.egg-info/SOURCES.txt
-slop_base.egg-info/dependency_links.txt
-slop_base.egg-info/top_level.txt

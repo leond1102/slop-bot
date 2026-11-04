@@ -1,4 +1,0 @@
-#!/usr/bin/python3
-from slop_base.diff_drive_node import main
-
-main()

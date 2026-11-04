@@ -1,8 +1,0 @@
-setup.py
-slop_teleop/__init__.py
-slop_teleop/keyboard_teleop_node.py
-slop_teleop/keys.py
-slop_teleop.egg-info/PKG-INFO
-slop_teleop.egg-info/SOURCES.txt
-slop_teleop.egg-info/dependency_links.txt
-slop_teleop.egg-info/top_level.txt

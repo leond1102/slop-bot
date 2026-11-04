@@ -1,2 +1,0 @@
-Invoking command in '/home/jetson/slop-bot_ws/build/livox_sdk2': /usr/bin/cmake /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/livox_sdk2
-Invoked command in '/home/jetson/slop-bot_ws/build/livox_sdk2' returned '1': /usr/bin/cmake /home/jetson/slop-bot_ws/src/third_party/Livox-SDK2 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/jetson/slop-bot_ws/install/livox_sdk2

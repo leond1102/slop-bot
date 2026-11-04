@@ -1,8 +1,0 @@
-Built target ament_cmake_python_copy_slop_teleop
-running egg_info
-writing slop_teleop.egg-info/PKG-INFO
-writing dependency_links to slop_teleop.egg-info/dependency_links.txt
-writing top-level names to slop_teleop.egg-info/top_level.txt
-reading manifest file 'slop_teleop.egg-info/SOURCES.txt'
-writing manifest file 'slop_teleop.egg-info/SOURCES.txt'
-Built target ament_cmake_python_build_slop_teleop_egg

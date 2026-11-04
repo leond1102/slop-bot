@@ -1,4 +1,0 @@
-#!/usr/bin/python3
-from slop_sensors.mount_tf_node import main
-
-main()

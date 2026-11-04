@@ -1,4 +1,0 @@
-Invoking command in '/home/jetson/slop-bot_ws/build/livox_sdk2': /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/livox_sdk2 -- -j8 -l8
-Invoked command in '/home/jetson/slop-bot_ws/build/livox_sdk2' returned '0': /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/livox_sdk2 -- -j8 -l8
-Invoking command in '/home/jetson/slop-bot_ws/build/livox_sdk2': /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/livox_sdk2
-Invoked command in '/home/jetson/slop-bot_ws/build/livox_sdk2' returned '0': /usr/bin/cmake --install /home/jetson/slop-bot_ws/build/livox_sdk2

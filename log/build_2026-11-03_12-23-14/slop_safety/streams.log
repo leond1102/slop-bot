@@ -1,9 +1,0 @@
-[0.042s] Invoking command in '/home/jetson/slop-bot_ws/build/slop_safety': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/jetson/slop-bot_ws/build/slop_safety -- -j8 -l8
-[0.114s] Built target ament_cmake_python_copy_slop_safety
-[0.700s] running egg_info
-[0.701s] writing slop_safety.egg-info/PKG-INFO
-[0.702s] writing dependency_links to slop_safety.egg-info/dependency_links.txt
-[0.702s] writing top-level names to slop_safety.egg-info/top_level.txt
-[0.708s] reading manifest file 'slop_safety.egg-info/SOURCES.txt'
-[0.709s] writing manifest file 'slop_safety.egg-info/SOURCES.txt'
-[0.785s] Built target ament_cmake_python_build_slop_safety_egg

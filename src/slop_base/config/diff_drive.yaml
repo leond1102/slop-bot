@@ -8,12 +8,23 @@ diff_drive_node:
     cycle_ms: 2.0
     dc: false
 
-    # Getriebe hängt am Motor: Achse 3 = 1:7,5, Achse 4 = 1:14 (mit diff_motor_test.py geprüft)
+    # Echtzeit für den Zyklus-Thread (braucht den Start über with_netcaps, sonst nur Warnung im Log).
+    # rt_cpu: eigener Kern. Der Interrupt der EtherCAT-Karte bleibt auf dem Orin fest auf CPU0 (PCIe-MSI);
+    # with_netcaps legt dafür die USB-Interrupts von CPU0 auf CPU1.
+    rt_priority: 80           # SCHED_FIFO, 0 = aus
+    rt_cpu: 7                 # -1 = beliebiger Kern
+    main_nice: -10            # ROS-Thread der Node bevorzugen (teilt sich das GIL mit dem Zyklus)
+    gil_switch_ms: 0.5
+    stats_period: 10.0        # s, Zyklusstatistik im Log (verspätete Zyklen, max. Periode), 0 = aus
+
+    # Getriebe hängt am Motor: Achse 3 = 1:7,5, Achse 4 = 1:14 (mit tools/diff_motor.py geprüft)
     left_axis: 3
     left_gear: 7.5
     left_dir: 1
     right_axis: 4
-    right_gear: 20.0          #14 eigentlich aber so läufts irgendwie
+    # TODO: Getriebe ist laut Test 1:14, mit 20 läuft es aber besser – ungeklärter Workaround.
+    # Ursache klären (Verdacht, ungeprüft: Achse 4 verliert Schritte, vgl. max_wheel_rpm), dann wieder 14.
+    right_gear: 20.0
     right_dir: -1             # Motor gespiegelt eingebaut
     units_per_rev: 0          # 0 = aus Treiber (DivSet, aktuell 10000)
 
@@ -34,8 +45,6 @@ diff_drive_node:
     allowed_cmd_vel_nodes: [twist_mux]   # nur twist_mux darf auf /cmd_vel senden
     rate: 50.0
 
-    odom_frame: odom
-    base_frame: base_footprint
-    publish_tf: true
+    # Keine Radodometrie (kein /odom, kein TF odom → base_footprint): Open Loop ohne Encoder ist zu ungenau.
     left_joint: left_wheel_joint
     right_joint: right_wheel_joint

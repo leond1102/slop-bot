@@ -41,8 +41,8 @@ class KeyboardTeleopNode(Node):
         # Standardwerte, falls die Config fehlt. Erklärung der Werte in config/keyboard_teleop.yaml
         for name, default in [
             ('cmd_vel_topic', 'teleop/cmd_vel'),
-            ('max_linear', 0.037),
-            ('max_angular', 0.31),
+            ('max_linear', 0.03),
+            ('max_angular', 0.2),
             ('scale', 1.0),
             ('scale_step', 0.1),
             ('first_timeout', 0.7),

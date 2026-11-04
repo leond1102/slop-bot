@@ -1,3 +1,0 @@
-source;share/slop_base/environment/ament_prefix_path.sh
-source;share/slop_base/environment/path.sh
-source;share/slop_base/environment/pythonpath.sh

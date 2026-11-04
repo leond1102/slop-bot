@@ -1,6 +1,6 @@
 """CL57E-4A über EtherCAT (pysoem): mehrere Achsen im CSP-Modus mit Drehzahlvorgabe, ohne ROS.
 
-Vorlage: b_chain_drive/cl57e.py (eine Achse, Positionsziel) und tests/diff_motor_test.py (erprobt).
+Vorlage: b_chain_drive/cl57e.py (eine Achse, Positionsziel) und tools/diff_motor.py (erprobt).
 Objektindizes aus der ESI LC-EH_4A_V1.0.xml (Vendor 0x0A79, Product 0x6100):
 Achse n = Index + (n-1)*0x800, PDOs 0x16n0 / 0x1An0, Herstellerparameter ab 0x2300.
 
@@ -15,6 +15,7 @@ Sicherheit:
 - Stirbt der ganze Prozess, kommen keine Frames mehr und der Treiber meldet nach SyncCnt
   verlorenen Frames einen Alarm.
 """
+import os
 import struct
 import threading
 import time
@@ -109,7 +110,9 @@ class _Axis:
 class Cl57eBus:
     """Ein EtherCAT-Master, ein CL57E-4A, mehrere Achsen im CSP-Modus mit Drehzahlvorgabe."""
 
-    def __init__(self, ifname, axis_nums, cycle_s=0.002, dc=False, cmd_timeout_s=0.3):
+    def __init__(self, ifname, axis_nums, cycle_s=0.002, dc=False, cmd_timeout_s=0.3, rt_priority=0, rt_cpu=-1):
+        """rt_priority > 0: Zyklus-Thread mit SCHED_FIFO dieser Priorität (braucht CAP_SYS_NICE).
+        rt_cpu >= 0: Zyklus-Thread auf diesen Kern festlegen."""
         if not axis_nums or len(set(axis_nums)) != len(axis_nums) or any(n not in (1, 2, 3, 4) for n in axis_nums):
             raise ValueError('axis_nums: verschiedene Achsen aus 1..4')
         self.ifname = ifname
@@ -117,6 +120,9 @@ class Cl57eBus:
         self.cycle = cycle_s
         self.dc = dc
         self.cmd_timeout = cmd_timeout_s
+        self.rt_priority = int(rt_priority)
+        self.rt_cpu = int(rt_cpu)
+        self.rt_status = ''           # Ergebnis der Echtzeit-Einstellung (für das Log der Node)
         self.settle_s = 1.0           # Lock-Phase des Treibers nach dem Freigeben
 
         self._pysoem = None
@@ -139,6 +145,8 @@ class Cl57eBus:
         self._thread = None
         self._op = False
         self.stats = {'cycles': 0, 'overruns': 0, 'wkc_errors': 0, 'max_period': 0.0}
+        # dasselbe seit dem letzten window_stats()-Aufruf, plus Zyklen > 1,5 × Sollzeit
+        self._win = {'cycles': 0, 'overruns': 0, 'wkc_errors': 0, 'max_period': 0.0, 'late': 0}
 
     # ---------------------------------------------------------------- Verbindung / SDO
     def open(self):
@@ -251,7 +259,33 @@ class Cl57eBus:
         raise Cl57eError(f'{msg}: AL-Status 0x{code:04X} ({self._pysoem.al_status_code_to_string(code)})')
 
     # ---------------------------------------------------------------- Zyklus
+    def _setup_realtime(self):
+        """Im Zyklus-Thread aufrufen: Kern festlegen und SCHED_FIFO setzen (beides gilt nur für diesen Thread).
+        Fehlt CAP_SYS_NICE, läuft der Zyklus normal weiter, rt_status sagt warum."""
+        msgs = []
+        if self.rt_cpu >= 0:
+            try:
+                os.sched_setaffinity(0, {self.rt_cpu})
+                msgs.append(f'Kern {self.rt_cpu}')
+            except OSError as e:
+                msgs.append(f'Kern {self.rt_cpu} NICHT gesetzt ({e.strerror})')
+        if self.rt_priority > 0:
+            try:
+                os.sched_setscheduler(0, os.SCHED_FIFO, os.sched_param(self.rt_priority))
+                msgs.append(f'SCHED_FIFO {self.rt_priority}')
+            except OSError as e:
+                msgs.append(f'SCHED_FIFO NICHT gesetzt ({e.strerror}; über with_netcaps starten)')
+        self.rt_status = ', '.join(msgs) if msgs else 'ohne Echtzeit-Einstellungen'
+
+    def window_stats(self):
+        """Zyklusstatistik seit dem letzten Aufruf (und zurücksetzen)."""
+        with self._lock:
+            w = dict(self._win)
+            self._win = {k: (0.0 if k == 'max_period' else 0) for k in self._win}
+        return w
+
     def _cyclic(self):
+        self._setup_realtime()
         out = bytearray(self.rx_size)
         loss_limit = max(10, int(0.1 / self.cycle))   # ~100 ms ohne gültige Antwort
         wkc_bad = 0
@@ -283,12 +317,18 @@ class Cl57eBus:
                 else:
                     wkc_bad += 1
                     self.stats['wkc_errors'] += 1
+                    self._win['wkc_errors'] += 1
                     if wkc_bad >= loss_limit and self._op:
                         self.comm_lost = True
 
                 self.stats['cycles'] += 1
+                self._win['cycles'] += 1
                 if self.stats['cycles'] > 5:
-                    self.stats['max_period'] = max(self.stats['max_period'], now - last)
+                    period = now - last
+                    self.stats['max_period'] = max(self.stats['max_period'], period)
+                    self._win['max_period'] = max(self._win['max_period'], period)
+                    if period > 1.5 * self.cycle:
+                        self._win['late'] += 1
                 last = now
                 nxt += self.cycle
                 sleep = nxt - time.perf_counter()
@@ -296,6 +336,7 @@ class Cl57eBus:
                     time.sleep(sleep)
                 else:
                     self.stats['overruns'] += 1
+                    self._win['overruns'] += 1
                     if sleep < -10 * self.cycle:
                         nxt = time.perf_counter()
         except Exception as e:

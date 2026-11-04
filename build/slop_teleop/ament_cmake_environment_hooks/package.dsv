@@ -1,4 +1,0 @@
-source;share/slop_teleop/local_setup.bash
-source;share/slop_teleop/local_setup.dsv
-source;share/slop_teleop/local_setup.sh
-source;share/slop_teleop/local_setup.zsh

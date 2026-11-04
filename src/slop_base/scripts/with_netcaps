@@ -1,6 +1,6 @@
 #!/bin/bash
-# Startet einen Befehl als aktueller Nutzer, aber mit CAP_NET_RAW + CAP_NET_ADMIN.
-# EtherCAT (pysoem) braucht einen Raw-Socket. Die Node läuft trotzdem NICHT als root,
+# Startet einen Befehl als aktueller Nutzer, aber mit CAP_NET_RAW + CAP_NET_ADMIN + CAP_SYS_NICE.
+# EtherCAT (pysoem) braucht einen Raw-Socket, der Zyklus-Thread Echtzeit-Priorität. Die Node läuft trotzdem NICHT als root,
 # damit DDS-Shared-Memory mit den anderen Nodes und die Logs unter ~/.ros normal funktionieren.
 #
 #   ros2 run slop_base with_netcaps ros2 launch slop_base diff_drive.launch.py
@@ -26,8 +26,40 @@ if [ -n "$VIRTUAL_ENV" ]; then
     P=$(echo "$PATH" | tr ':' '\n' | grep -v -x "$VIRTUAL_ENV/bin" | paste -sd:)
 fi
 
-# sudo verwirft PATH, LD_LIBRARY_PATH und HOME, deshalb ausdrücklich über env weitergeben
+# Interrupts verteilen (gilt bis zum Neustart; irqbalance darf nicht laufen, es würde sie wieder verteilen).
+#
+# 1. EtherCAT-Karte auf den Echtzeit-Kern (RT_CPU, gleicher Kern wie rt_cpu in diff_drive.yaml).
+#    Geht auf dem Jetson Orin NICHT: Alle PCIe-MSIs eines Controllers laufen über einen gemeinsamen
+#    Sammel-Interrupt, der fest auf CPU0 liegt (auch die NVMe-Queues landen alle dort). Der Versuch bleibt
+#    für andere Hardware drin. Abschalten: RT_CPU=-1.
+# 2. Deshalb USB (Kamera, Lidar-LAN-Adapter, mehrere tausend Interrupts/s) von CPU0 weg auf USB_IRQ_CPU,
+#    damit CPU0 die EtherCAT-Pakete ohne Wartezeit bearbeitet. Abschalten: USB_IRQ_CPU=-1.
+ETHERCAT_IF="${ETHERCAT_IF:-enP8p1s0}"
+RT_CPU="${RT_CPU:-7}"
+USB_IRQ_CPU="${USB_IRQ_CPU:-1}"
+set_irq_cpu() {   # $1 = IRQ, $2 = Kern, $3 = Name fürs Log
+    if sudo sh -c "echo $2 > /proc/irq/$1/smp_affinity_list" 2>/dev/null; then
+        echo "with_netcaps: Interrupt $1 ($3) → CPU $2"
+        return 0
+    fi
+    return 1
+}
+if [ "$RT_CPU" -ge 0 ] 2>/dev/null && [ -d "/sys/class/net/$ETHERCAT_IF/device" ]; then
+    IRQS=$(ls "/sys/class/net/$ETHERCAT_IF/device/msi_irqs" 2>/dev/null || cat "/sys/class/net/$ETHERCAT_IF/device/irq")
+    for irq in $IRQS; do
+        set_irq_cpu "$irq" "$RT_CPU" "$ETHERCAT_IF" || \
+            echo "with_netcaps: Interrupt $irq ($ETHERCAT_IF) bleibt auf CPU0 (PCIe-MSI, auf dem Orin nicht verschiebbar)"
+    done
+fi
+if [ "$USB_IRQ_CPU" -ge 0 ] 2>/dev/null; then
+    for irq in $(awk -F: '/xhci/ {gsub(/ /, "", $1); print $1}' /proc/interrupts); do
+        set_irq_cpu "$irq" "$USB_IRQ_CPU" "USB" || echo "with_netcaps: Interrupt $irq (USB) nicht verschoben"
+    done
+fi
+
+# sudo verwirft PATH, LD_LIBRARY_PATH und HOME, deshalb ausdrücklich über env weitergeben.
+# sys_nice: SCHED_FIFO für den EtherCAT-Zyklus und negatives nice (diff_drive.yaml: rt_priority, main_nice)
 exec sudo -E setpriv --reuid="$(id -u)" --regid="$(id -g)" --init-groups \
-    --inh-caps=+net_raw,+net_admin --ambient-caps=+net_raw,+net_admin -- \
+    --inh-caps=+net_raw,+net_admin,+sys_nice --ambient-caps=+net_raw,+net_admin,+sys_nice -- \
     env "HOME=$HOME" "PATH=$P" "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}" \
         "PYTHONPATH=$SITE${PYTHONPATH:+:$PYTHONPATH}" "$@"

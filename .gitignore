@@ -1,3 +1,12 @@
+# colcon-Ausgaben
+build/
 install/
 log/
-build/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# lokale venv (VS Code-Interpreter), wird nicht versioniert
+.venv/

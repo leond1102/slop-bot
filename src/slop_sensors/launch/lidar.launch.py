@@ -23,7 +23,7 @@ def generate_launch_description():
         DeclareLaunchArgument('lidar_config', default_value=default_config,
                               description='Livox-Netzwerkkonfiguration (JSON)'),
         DeclareLaunchArgument('xfer_format', default_value='1',
-                              description='0 = PointCloud2 (RViz), 1 = livox CustomMsg (FAST-LIO)'),
+                              description='0 = PointCloud2 (Standard, RViz), 1 = Livox CustomMsg (Livox-eigenes Format)'),
         DeclareLaunchArgument('publish_freq', default_value='10.0',
                               description='Punktwolken pro Sekunde'),
         DeclareLaunchArgument('frame_id', default_value='livox_frame'),

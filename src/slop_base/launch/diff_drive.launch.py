@@ -18,7 +18,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('config', default_value=default_config,
                               description='Parameterdatei des Differentialantriebs'),
-        # /cmd_vel → Räder, /odom + TF odom→base_footprint + /joint_states zurück
+        # /cmd_vel → Räder, /joint_states zurück (keine Odometrie, kein TF)
         Node(package='slop_base', executable='diff_drive', name='diff_drive_node', output='screen',
              parameters=[LaunchConfiguration('config')]),
     ])
