@@ -7,8 +7,7 @@ ros2 launch slop_sensors sensors.launch.py                # Lidar + Kamera + TFs
 ros2 launch slop_sensors sensors.launch.py camera:=false  # nur Lidar
 ros2 launch slop_sensors sensors.launch.py xfer_format:=0 # Lidar als PointCloud2 (RViz)
 
-ros2 launch slop_sensors view.launch.py                   # Sensoren + RViz, Fixed Frame odom (braucht Antrieb)
-ros2 launch slop_sensors view.launch.py fixed_frame:=base_footprint   # ohne Antrieb
+ros2 launch slop_sensors view.launch.py                   # Sensoren + RViz, Ansicht fest am Roboter (base_footprint)
 ros2 launch slop_sensors view.launch.py camera_pointcloud:=false
 ```
 
@@ -20,14 +19,15 @@ anzeigen kann, und schaltet die farbige Kamera-Punktwolke ein. Für FAST-LIO wie
 |---|---|---|
 | `/livox/lidar` | 10 Hz | Livox Mid-360s (CustomMsg, mit `xfer_format:=0` PointCloud2) |
 | `/livox/imu` | 200 Hz | IMU im Lidar, Beschleunigung in **g** |
-| `/camera/color/image_raw`, `/camera/aligned_depth_to_color/image_raw` | ~27 Hz | RealSense D435i |
+| `/camera/color/image_raw` (`/camera/aligned_depth_to_color/image_raw` nur mit `align_depth.enable: true` in data_reduction.yaml) | 15 Hz | RealSense D435i |
 | `/camera/imu` | 200 Hz | IMU der D435i, in m/s² |
 
-Montage-TFs kommen von der Node `mount_tf`: roll/pitch misst sie beim Start aus der Schwerkraft der
-Sensor-IMUs (Roboter still und waagrecht halten), x/y/z/yaw kommen aus `config/mounts.yaml`
-(noch Platzhalter, nachmessen). Die Blickrichtung (yaw) ist aus der Schwerkraft nicht bestimmbar.
-Neu messen: `ros2 service call /mount_tf/recalibrate std_srvs/srv/Trigger`.
-Abschalten: `mount_from_gravity:=false`.
+Montage-TFs kommen von der Node `mount_tf`: x/y/z aus `config/mounts.yaml` (noch Platzhalter, nachmessen),
+die Drehung aus `~/slop-bot_ws/calib/mounts_lio.yaml`, falls der Sensor dort steht, sonst aus `mounts.yaml`.
+Beim Start wird **nichts gemessen**. roll/pitch aus der Schwerkraft der Sensor-IMUs neu messen (Roboter still und
+waagrecht): `ros2 service call /mount_tf/recalibrate std_srvs/srv/Trigger` – das Ergebnis wird gespeichert und gilt
+ab dann bei jedem Start. Die Blickrichtung (yaw) ist aus der Schwerkraft nicht bestimmbar.
+Bei jedem Start messen (wie früher): `mount_gravity_on_start:=true`.
 In RViz (beide Ansichten, Anzeige „Schwerkraft (mount_tf)“ auf `/mount_tf/markers`): orange Pfeil = live
 gemessene Schwerkraft im Sensor, grüner Pfeil = senkrecht laut base_footprint, Text = Status, roll/pitch und
 Abweichung live. Liegen beide Pfeile übereinander, passt die Montage.

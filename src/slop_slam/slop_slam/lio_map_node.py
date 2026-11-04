@@ -60,6 +60,9 @@ class LioMapNode(Node):
         self.voxel = self.get_parameter('voxel').value
         self.keys = np.zeros((0,), np.int64)       # sortierte Voxel-Schlüssel
         self.points = np.zeros((0, 3), np.float32)
+        # neue Voxel seit dem letzten Einsortieren: einmal je Veröffentlichung sortieren statt je Scan
+        # (die ganze Karte je Scan neu zu sortieren wurde mit wachsender Karte immer teurer)
+        self.pending_keys, self.pending_points = [], []
         self.dirty = False
         qos = QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE, durability=DurabilityPolicy.TRANSIENT_LOCAL)
         self.pub = self.create_publisher(PointCloud2, '/lio/map', qos)
@@ -90,16 +93,28 @@ class LioMapNode(Node):
         new = (pos >= len(self.keys)) | (self.keys[np.minimum(pos, len(self.keys) - 1)] != k) if len(self.keys) else np.ones(len(k), bool)
         if not new.any():
             return
-        self.keys = np.concatenate([self.keys, k[new]])
-        self.points = np.concatenate([self.points, xyz[idx[new]]])
-        order = np.argsort(self.keys)
-        self.keys, self.points = self.keys[order], self.points[order]
+        self.pending_keys.append(k[new])
+        self.pending_points.append(xyz[idx[new]])
         self.dirty = True
+
+    def merge_pending(self):
+        """Gesammelte neue Voxel in die sortierte Karte einsortieren (doppelte zwischen zwei Scans entfernen)."""
+        if not self.pending_keys:
+            return
+        k = np.concatenate(self.pending_keys)
+        pts = np.concatenate(self.pending_points)
+        self.pending_keys, self.pending_points = [], []
+        k, idx = np.unique(k, return_index=True)
+        self.keys = np.concatenate([self.keys, k])
+        self.points = np.concatenate([self.points, pts[idx]])
+        order = np.argsort(self.keys, kind='stable')
+        self.keys, self.points = self.keys[order], self.points[order]
 
     def publish(self):
         if not self.dirty:
             return
         self.dirty = False
+        self.merge_pending()
         msg = PointCloud2()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = self.get_parameter('frame').value
@@ -111,6 +126,7 @@ class LioMapNode(Node):
 
     def save_cb(self, request, response):
         path = self.get_parameter('map_file').value
+        self.merge_pending()
         write_pcd(path, self.points)
         response.success = True
         response.message = f'{len(self.points)} Punkte nach {path}'
@@ -120,6 +136,7 @@ class LioMapNode(Node):
     def clear_cb(self, request, response):
         self.keys = np.zeros((0,), np.int64)
         self.points = np.zeros((0, 3), np.float32)
+        self.pending_keys, self.pending_points = [], []
         self.dirty = True
         response.success, response.message = True, 'Karte geleert'
         return response

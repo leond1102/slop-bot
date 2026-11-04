@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
-"""Montage-TFs base_footprint → Sensor, Neigung (roll/pitch) automatisch aus der Schwerkraft der Sensor-IMUs.
+"""Montage-TFs base_footprint → Sensor, Neigung (roll/pitch) auf Anforderung aus der Schwerkraft der Sensor-IMUs.
 
     ros2 run slop_sensors mount_tf --ros-args -p mounts_file:=.../mounts.yaml -p sensors:="['livox','camera']"
     (normalerweise über sensors.launch.py)
 
 Ablauf:
-  1. Sofort: TFs mit den Werten aus mounts.yaml senden (damit alles gleich angezeigt wird).
-  2. Für jeden Sensor mit `gravity: true` und `imu_topic`: `sample_time` s lang die Beschleunigung mitteln.
+  1. Start: TFs senden. x/y/z aus mounts.yaml, Drehung (roll/pitch/yaw) aus calib_file, falls der Sensor dort
+     steht, sonst aus mounts.yaml. Beim Start wird NICHT gemessen (gravity_on_start: false).
+  2. Messen nur auf Anforderung: ros2 service call /mount_tf/recalibrate std_srvs/srv/Trigger
+     Für jeden Sensor mit `gravity: true` und `imu_topic`: `sample_time` s lang die Beschleunigung mitteln.
      Bewegt sich der Roboter dabei, wird neu gemessen. Dann roll/pitch aus der Schwerkraft setzen,
-     x/y/z/yaw bleiben aus mounts.yaml (yaw ist aus der Schwerkraft nicht bestimmbar).
-  3. Neu messen: ros2 service call /mount_tf/recalibrate std_srvs/srv/Trigger
-  4. Laufend: slop_slam/mount_calib schickt aus LIO bessere Montagen auf ~/update (RealSense komplett per ICP,
-     Lidar-yaw aus Geradeausfahrt). Die werden sofort übernommen und in calib_file gespeichert.
-     Beim nächsten Start lädt mount_tf calib_file (falls vorhanden) statt der Werte aus mounts.yaml;
-     roll/pitch misst es trotzdem neu aus der Schwerkraft.
+     x/y/z/yaw bleiben (yaw ist aus der Schwerkraft nicht bestimmbar). Das Ergebnis geht in calib_file.
+  3. slop_slam/mount_calib (nur mit lio.launch.py calibrate:=true) schickt aus LIO bessere Montagen auf ~/update
+     (RealSense-Drehung per ICP, Lidar-yaw aus Geradeausfahrt). Die werden sofort übernommen; mount_calib
+     speichert sie selbst in calib_file.
 
 Annahme: Der Roboter steht beim Messen still und WAAGRECHT (base_footprint z senkrecht).
+Die IMUs werden trotzdem immer gelesen (gedrosselt): für die Live-Anzeige in RViz und die Messung auf Anforderung.
 Liegt die IMU in einem anderen Frame als der Montage-Frame (RealSense: camera_imu_optical_frame unter
 camera_link), wird ihre Messung über die TF des Treibers in den Montage-Frame gedreht.
 
@@ -40,12 +41,13 @@ from geometry_msgs.msg import Point, TransformStamped
 from rclpy.duration import Duration
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
-from rclpy.qos import qos_profile_sensor_data
+from rclpy.qos import DurabilityPolicy, QoSProfile, qos_profile_sensor_data
 from rclpy.serialization import deserialize_message
 from rclpy.time import Time
 from sensor_msgs.msg import Imu
 from std_srvs.srv import Trigger
-from tf2_ros import Buffer, StaticTransformBroadcaster, TransformException, TransformListener
+from tf2_msgs.msg import TFMessage
+from tf2_ros import Buffer, StaticTransformBroadcaster, TransformException
 from visualization_msgs.msg import Marker, MarkerArray
 
 from slop_sensors.gravity import StillWindow, quat_from_rpy, roll_pitch_from_up, rotate, rpy_from_quat
@@ -73,13 +75,15 @@ class Mount:
         self.lio_updates = 0
         self.imu_count = 0            # empfangene IMU-Nachrichten (für das Ausdünnen nach der Messung)
         self.imu_rot = None           # Drehung IMU-Frame → Montage-Frame (statisch, einmal nachgeschlagen)
+        self.calibrated = False       # Drehung aus calib_file geladen
 
     def load_calib(self, c):
-        """Gespeicherte LIO-Kalibrierung übernehmen: nur die Drehung (roll/pitch misst die Schwerkraft danach
-        neu), die Position bleibt aus mounts.yaml (nachgemessen ist sie genauer als aus LIO/ICP)."""
+        """Gespeicherte Kalibrierung übernehmen: nur die Drehung, die Position bleibt aus mounts.yaml
+        (nachgemessen ist sie genauer als aus LIO/ICP)."""
         self.yaml_rpy = tuple(float(c[k]) for k in ('roll', 'pitch', 'yaw'))
         self.rpy = self.yaml_rpy
         self.source = 'Kalibrierdatei'
+        self.calibrated = True
 
 
 class MountTfNode(Node):
@@ -90,14 +94,15 @@ class MountTfNode(Node):
             ('mounts_file', ''),
             ('sensors', ['']),           # Einträge aus mounts.yaml, leer = alle
             ('base_frame', 'base_footprint'),
-            ('gravity', True),           # false = nur mounts.yaml, keine Messung
+            ('gravity', True),           # false = IMUs gar nicht lesen (keine Messung, keine Live-Anzeige)
+            ('gravity_on_start', False), # true = roll/pitch bei jedem Start messen (sonst nur über ~/recalibrate)
             ('sample_time', 2.0),        # s mitteln
             ('max_rms_deg', 2.0),        # Streuung der Richtung, darüber gilt der Sensor als bewegt
             ('wait_warn', 10.0),         # s ohne Ergebnis → Warnung (IMU fehlt? Roboter bewegt?)
             ('markers', True),           # Anzeige in RViz auf ~/markers
             ('arrow_length', 0.3),       # m
             ('live_smoothing', 0.05),    # Tiefpass der Live-Richtung je IMU-Messung (0..1, kleiner = ruhiger)
-            ('calib_file', ''),          # gespeicherte LIO-Kalibrierung (slop_slam/mount_calib), '' = keine
+            ('calib_file', ''),          # gespeicherte Kalibrierung (mount_calib und ~/recalibrate), '' = keine
             ('live_every', 10),          # nach der Messung nur jede n-te IMU-Nachricht auswerten (nur für die Anzeige)
         ]:
             self.declare_parameter(name, default)
@@ -109,7 +114,7 @@ class MountTfNode(Node):
         if not self._p('gravity'):
             for m in self.mounts:
                 m.gravity, m.done = False, True
-        calib_file = os.path.expanduser(self._p('calib_file'))
+        calib_file = self.calib_file = os.path.expanduser(self._p('calib_file'))
         if calib_file and os.path.exists(calib_file):
             with open(calib_file) as f:
                 calib = yaml.safe_load(f) or {}
@@ -118,13 +123,25 @@ class MountTfNode(Node):
                     m.load_calib(calib[m.frame])
                     self.get_logger().info(f'{m.name}: Montage aus {calib_file}')
 
+        # Nur /tf_static lesen: gebraucht wird nur die feste Lage der IMU im Sensor (RealSense-Treiber-TF).
+        # Ein TransformListener liest auch /tf mit (LIO) – in Python kostete das CPU für nichts.
         self.tf_buffer = Buffer()
-        self.tf_listener = TransformListener(self.tf_buffer, self)
+        self.create_subscription(TFMessage, '/tf_static', self.tf_static_callback,
+                                 QoSProfile(depth=100, durability=DurabilityPolicy.TRANSIENT_LOCAL))
         self.broadcaster = StaticTransformBroadcaster(self)
+        on_start = self._p('gravity_on_start')
+        for m in self.mounts:
+            m.done = True                     # gemessen wird erst auf Anforderung (oder gleich, gravity_on_start)
+            m.status = 'aus ' + m.source
         self.publish_all()
         for m in self.mounts:
-            src = 'Schwerkraft (' + m.imu_topic + ')' if m.gravity else 'mounts.yaml'
-            self.get_logger().info(f'{m.name}: {self._p("base_frame")} → {m.frame}, roll/pitch aus {src}')
+            r, p, y = (math.degrees(a) for a in m.rpy)
+            self.get_logger().info(f'{m.name}: {self._p("base_frame")} → {m.frame}, roll {r:+.1f}° pitch {p:+.1f}° '
+                                   f'yaw {y:+.1f}° aus {m.source}')
+            if m.gravity and not m.calibrated and not on_start:
+                self.get_logger().warn(f'{m.name}: Neigung nie gemessen (nicht in {calib_file or "calib_file"}). '
+                                       'Roboter waagrecht und still: ros2 service call /mount_tf/recalibrate '
+                                       'std_srvs/srv/Trigger')
 
         for m in self.mounts:
             if m.gravity:
@@ -139,20 +156,29 @@ class MountTfNode(Node):
         if self._p('markers'):
             self.marker_pub = self.create_publisher(MarkerArray, '~/markers', 10)
             self.create_timer(0.2, self.publish_markers)
-        self.recalibrate()
+        if on_start:
+            self.recalibrate()
 
     def _p(self, name):
         return self.get_parameter(name).value
 
+    def tf_static_callback(self, msg):
+        for t in msg.transforms:
+            self.tf_buffer.set_transform_static(t, 'mount_tf')
+
     def recalibrate(self):
+        """Schwerkraftmessung starten. Rückgabe: Anzahl Sensoren, die gemessen werden."""
         now = self.get_clock().now()
+        n = 0
         for m in self.mounts:
             if m.gravity:
+                n += 1
                 m.window = StillWindow(self._p('sample_time'), self._p('max_rms_deg'))
                 m.done = False
                 m.start_time = now
                 m.warned = False
                 m.status = 'messe …'
+        return n
 
     def update_callback(self, msg):
         m = next((m for m in self.mounts if m.frame == msg.child_frame_id), None)
@@ -169,9 +195,12 @@ class MountTfNode(Node):
         self.publish_all()
 
     def recalibrate_callback(self, request, response):
-        self.recalibrate()
-        response.success = True
-        response.message = 'Messung gestartet, Roboter ' + f'{self._p("sample_time"):g} s still halten'
+        n = self.recalibrate()
+        response.success = n > 0
+        response.message = (f'Messung gestartet ({n} Sensoren), Roboter waagrecht und {self._p("sample_time"):g} s '
+                            'still halten; Ergebnis im Log und in RViz, gespeichert in ' + (self.calib_file or '(nichts)')
+                            if n else 'Keine Sensor-IMU (gravity: false?)')
+        self.get_logger().info(response.message)
         return response
 
     def imu_raw(self, m, data):
@@ -219,10 +248,11 @@ class MountTfNode(Node):
         m.done = True
         m.status = 'aus Schwerkraft'
         self.publish_all()
+        self.save_calib()
         self.get_logger().info(
             f'{m.name}: roll {math.degrees(roll):+.1f}°, pitch {math.degrees(pitch):+.1f}° aus Schwerkraft '
-            f'(Streuung {rms:.2f}°; mounts.yaml: roll {math.degrees(m.yaml_rpy[0]):+.1f}°, '
-            f'pitch {math.degrees(m.yaml_rpy[1]):+.1f}°), yaw {math.degrees(m.rpy[2]):+.1f}° aus mounts.yaml')
+            f'(Streuung {rms:.2f}°; vorher aus {m.source}: roll {math.degrees(m.yaml_rpy[0]):+.1f}°, '
+            f'pitch {math.degrees(m.yaml_rpy[1]):+.1f}°), yaw {math.degrees(m.rpy[2]):+.1f}° unverändert')
 
     def check_waiting(self):
         now = self.get_clock().now()
@@ -237,6 +267,8 @@ class MountTfNode(Node):
                     m.status = f'keine Daten auf {m.imu_topic}, mounts.yaml'
 
     def publish_markers(self):
+        if self.marker_pub.get_subscription_count() == 0:
+            return   # niemand schaut zu (kein RViz)
         base = self._p('base_frame')
         length = self._p('arrow_length')
         stamp = self.get_clock().now().to_msg()
@@ -283,6 +315,26 @@ class MountTfNode(Node):
             text.text = '\n'.join(lines)
             arr.markers.append(text)
         self.marker_pub.publish(arr)
+
+    def save_calib(self):
+        """Drehung aller Sensoren in calib_file schreiben (gleiches Format wie slop_slam/mount_calib)."""
+        if not self.calib_file:
+            return
+        data = {}
+        if os.path.exists(self.calib_file):
+            with open(self.calib_file) as f:
+                data = yaml.safe_load(f) or {}
+        for m in self.mounts:
+            data[m.frame] = {k: round(float(v), 5) for k, v in zip(('x', 'y', 'z', 'roll', 'pitch', 'yaw'),
+                                                                   (*m.xyz, *m.rpy))}
+            m.calibrated = True
+        os.makedirs(os.path.dirname(self.calib_file) or '.', exist_ok=True)
+        with open(self.calib_file, 'w') as f:
+            f.write('# Montage-Kalibrierung: slop_slam/mount_calib (LIO) und mount_tf/recalibrate (Schwerkraft).\n'
+                    '# slop_sensors/mount_tf lädt sie beim Start.\n'
+                    '# Löschen = wieder mit mounts.yaml anfangen. Frame → x/y/z [m], roll/pitch/yaw [rad]\n')
+            yaml.safe_dump(data, f, sort_keys=False)
+        self.get_logger().info(f'Montage gespeichert in {self.calib_file}')
 
     def publish_all(self):
         # Alle in EINER Nachricht: /tf_static hält nur die letzte Nachricht pro Publisher

@@ -41,7 +41,9 @@
             effect_map_en: false
             map_en: false            # /Laser_map aus: wächst unbegrenzt, macht RViz zäh → slop_slam/lio_map (/lio/map)
             scan_publish_en: true
-            scan_bodyframe_pub_en: true   # /cloud_registered_body: volle Scans im IMU-Frame (für mount_calib)
+            scan_bodyframe_pub_en: false  # /cloud_registered_body: volle Scans im IMU-Frame, nur für mount_calib
+                                          # (lio.launch.py schaltet es mit calibrate:=true ein)
+            # Alle Wolken gehen schlank raus (x, y, z, intensity = 16 Byte/Punkt, lokaler Patch in FAST_LIO)
 
         pcd_save:
             pcd_save_en: false       # Speichern stattdessen: ros2 service call /lio_map/save std_srvs/srv/Trigger

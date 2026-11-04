@@ -32,6 +32,31 @@ def q_rotate(q, v):
             vz + w * tz + (x * ty - y * tx))
 
 
+def q_scale(q, s):
+    """Drehung q auf s-fachen Winkel um dieselbe Achse skalieren (kürzerer Weg)."""
+    x, y, z, w = q
+    if w < 0:
+        x, y, z, w = -x, -y, -z, -w
+    n = math.sqrt(x * x + y * y + z * z)
+    if n < 1e-12:
+        return (0.0, 0.0, 0.0, 1.0)
+    half = math.atan2(n, w) * s
+    k = math.sin(half) / n
+    return (x * k, y * k, z * k, math.cos(half))
+
+
+def q_to_rotvec(q):
+    """Quaternion → Drehvektor (Achse · Winkel [rad]), kürzerer Weg."""
+    x, y, z, w = q
+    if w < 0:
+        x, y, z, w = -x, -y, -z, -w
+    n = math.sqrt(x * x + y * y + z * z)
+    if n < 1e-12:
+        return (0.0, 0.0, 0.0)
+    k = 2 * math.atan2(n, w) / n
+    return (x * k, y * k, z * k)
+
+
 def yaw_of(q):
     x, y, z, w = q
     return math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
@@ -76,3 +101,25 @@ def lio_to_map(T_base_imu, T_ci_body):
     Rückgabe: (T_map_ci, T_map_base)
     """
     return T_base_imu, T_base_imu * T_ci_body * T_base_imu.inverse()
+
+
+def predict(T_a, t_a, T_b, t_b, t):
+    """Pose zur Zeit t fortschreiben, mit der Bewegung von T_a (Zeit t_a) nach T_b (t_b < t), als konstante
+    Geschwindigkeit im Roboterframe: Die Bewegung a → b (in a ausgedrückt) wird auf (t - t_b) skaliert und an
+    T_b angehängt (Kreisbogen, Sehne mitgedreht). Für eine gleichmäßige Kreisfahrt bei t - t_b = t_b - t_a exakt."""
+    if t_b <= t_a:
+        return T_b
+    d = T_a.inverse() * T_b
+    s = (t - t_b) / (t_b - t_a)
+    # Sehne eines Kreisbogens zeigt um den halben Drehwinkel gedreht: beim Skalieren mitdrehen
+    chord = q_rotate(q_scale(d.q, (s - 1) / 2), d.t)
+    return T_b * Transform(q_scale(d.q, s), tuple(c * s for c in chord))
+
+
+def body_twist(T_a, t_a, T_b, t_b):
+    """Mittlere Geschwindigkeit von a nach b im Roboterframe: (linear [m/s], Drehrate [rad/s]) als 3-Tupel."""
+    if t_b <= t_a:
+        return (0.0, 0.0, 0.0), (0.0, 0.0, 0.0)
+    d = T_a.inverse() * T_b
+    dt = t_b - t_a
+    return tuple(c / dt for c in d.t), tuple(c / dt for c in q_to_rotvec(d.q))

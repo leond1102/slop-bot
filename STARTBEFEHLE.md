@@ -4,6 +4,9 @@ Jedes neue Terminal zuerst (und nach jedem Bauen in offenen Terminals neu):
 source ~/slop-bot_ws/install/setup.bash
 
 ## Antrieb + Sicherheit (bestromt Motoren, fragt nach sudo-Passwort, Fahren nur mit RustDesk-Sitzung)
+## with_netcaps gibt dem EtherCAT-Zyklus Echtzeit-Priorität (Kern 7) und legt die USB-Interrupts von CPU0 auf CPU1
+## (der EtherCAT-Interrupt selbst ist auf dem Orin fest auf CPU0).
+## Alle 10 s steht die Zyklusstatistik im Log ("EtherCAT letzte 10 s: ... verspätet ... max. Periode").
 ros2 run slop_base with_netcaps ros2 launch slop_base bringup.launch.py
 
 ## Nur Antrieb
@@ -32,19 +35,18 @@ ros2 launch slop_sensors sensors.launch.py camera:=false
 ## Nur Kamera
 ros2 launch slop_sensors sensors.launch.py lidar:=false
 
-## Sensor-Neigung neu aus der Schwerkraft messen (Roboter still und waagrecht)
+## Sensor-Neigung neu aus der Schwerkraft messen – nur auf Anforderung, beim Start wird nicht gemessen
+## (Roboter still und waagrecht; Ergebnis landet in ~/slop-bot_ws/calib/mounts_lio.yaml und gilt ab dann)
 ros2 service call /mount_tf/recalibrate std_srvs/srv/Trigger
 
-## Sensoren mit Neigung nur aus mounts.yaml
-ros2 launch slop_sensors sensors.launch.py mount_from_gravity:=false
+## Sensoren, Neigung bei jedem Start messen (wie früher)
+ros2 launch slop_sensors sensors.launch.py mount_gravity_on_start:=true
 
-## Nur Sensoren + RViz ohne LIO (Welt fest über Radodometrie, braucht Antrieb)
+## Nur Sensoren + RViz ohne LIO (Ansicht fest am Roboter; ohne LIO gibt es keine Roboterpose)
 ros2 launch slop_sensors view.launch.py
 
-## Sensoren + RViz ohne Antrieb (Ansicht fest am Roboter)
-ros2 launch slop_sensors view.launch.py fixed_frame:=base_footprint
-
-## ALLES in RViz: Lidar, Kamera, Karte, LIO, Montage (2-3 s still und waagrecht starten; NICHT zusätzlich view.launch.py)
+## ALLES in RViz: Lidar, Kamera, Karte, LIO, Montage (2-3 s still starten; NICHT zusätzlich view.launch.py)
+## Roboterpose allein aus LIO (keine Radodometrie), bis jetzt vorausgerechnet
 ros2 launch slop_slam lio.launch.py
 
 ## LIO ohne RViz / ohne Kamera
@@ -57,8 +59,8 @@ ros2 service call /lio_map/save std_srvs/srv/Trigger
 ## LIO mit Livox und FAST-LIO als getrennte Prozesse (statt gemeinsamem Container)
 ros2 launch slop_slam lio.launch.py composable:=false
 
-## LIO ohne Montage-Nachführung
-ros2 launch slop_slam lio.launch.py calibrate:=false
+## LIO mit Montage-Kalibrierung (RealSense per ICP, Lidar-yaw beim Geradeausfahren; kostet ~30 % CPU, nur bei Bedarf)
+ros2 launch slop_slam lio.launch.py calibrate:=true
 
 ## Gespeicherte Montage-Kalibrierung verwerfen (beim nächsten Start wieder mounts.yaml)
 rm ~/slop-bot_ws/calib/mounts_lio.yaml

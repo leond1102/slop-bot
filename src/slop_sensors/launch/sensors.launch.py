@@ -4,11 +4,11 @@
     ros2 launch slop_sensors sensors.launch.py camera:=false          # nur Lidar
     ros2 launch slop_sensors sensors.launch.py lidar:=false           # nur Kamera
     ros2 launch slop_sensors sensors.launch.py xfer_format:=0         # Lidar als PointCloud2
-    ros2 launch slop_sensors sensors.launch.py mount_from_gravity:=false   # Neigung nur aus mounts.yaml
+    ros2 launch slop_sensors sensors.launch.py mount_gravity_on_start:=true   # Neigung beim Start messen
 
-Montagepositionen stehen in config/mounts.yaml. roll/pitch misst mount_tf beim Start aus der Schwerkraft
-(Roboter still und waagrecht halten), x/y/z/yaw kommen aus mounts.yaml bzw. aus der von LIO nachgeführten
-Kalibrierung ~/slop-bot_ws/calib/mounts_lio.yaml (slop_slam/mount_calib), falls vorhanden.
+Montagepositionen stehen in config/mounts.yaml (x/y/z). Die Drehung kommt aus der gespeicherten Kalibrierung
+~/slop-bot_ws/calib/mounts_lio.yaml, falls vorhanden, sonst aus mounts.yaml. Beim Start wird nichts gemessen.
+Neigung neu messen (Roboter still und waagrecht): ros2 service call /mount_tf/recalibrate std_srvs/srv/Trigger
 """
 import os
 
@@ -43,7 +43,7 @@ def _mount_tf(context):
                  parameters=[LaunchConfiguration('data_config').perform(context), {
                      'mounts_file': LaunchConfiguration('mounts').perform(context),
                      'sensors': sensors,
-                     'gravity': LaunchConfiguration('mount_from_gravity').perform(context).lower() == 'true',
+                     'gravity_on_start': LaunchConfiguration('mount_gravity_on_start').perform(context).lower() == 'true',
                      'calib_file': LaunchConfiguration('mount_calib_file').perform(context),
                  }])]
 
@@ -94,10 +94,12 @@ def generate_launch_description():
                               description='Lidar: 0 = PointCloud2, 1 = livox CustomMsg'),
         DeclareLaunchArgument('camera_pointcloud', default_value='false',
                               description='Kamera: farbige Punktwolke /camera/depth/color/points'),
-        DeclareLaunchArgument('mount_from_gravity', default_value='true',
-                              description='roll/pitch der Sensoren beim Start aus der IMU-Schwerkraft messen'),
+        DeclareLaunchArgument('mount_gravity_on_start', default_value='false',
+                              description='roll/pitch bei jedem Start aus der IMU-Schwerkraft messen (sonst nur über '
+                                          '/mount_tf/recalibrate)'),
         DeclareLaunchArgument('mount_calib_file', default_value=os.path.expanduser('~/slop-bot_ws/calib/mounts_lio.yaml'),
-                              description='von slop_slam/mount_calib gespeicherte Montage, wird geladen falls vorhanden ("" = nicht laden)'),
+                              description='gespeicherte Montage (mount_tf/recalibrate, slop_slam/mount_calib), '
+                                          'wird geladen falls vorhanden ("" = nicht laden und nicht speichern)'),
         DeclareLaunchArgument('data_config', default_value=os.path.join(share, 'config', 'data_reduction.yaml'),
                               description='zentrale Kürzungen der Sensordaten (Auflösung, Raten, Ausdünnung)'),
         DeclareLaunchArgument('mounts', default_value=os.path.join(share, 'config', 'mounts.yaml'),

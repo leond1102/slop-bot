@@ -6,14 +6,18 @@
     ros2 launch slop_slam lio.launch.py camera:=false    # ohne RealSense (spart CPU/USB)
     ros2 launch slop_slam lio.launch.py sensors:=false   # Sensoren laufen schon (mit xfer_format 1!)
 
-Beim Start Roboter 2–3 s STILL und waagrecht stehen lassen (IMU-Initialisierung, Montage aus der Schwerkraft).
-map = Roboterlage beim Start. Läuft slop_base (Radodometrie), korrigiert LIO sie über map → odom,
-sonst liefert LIO odom → base_footprint selbst (siehe slop_slam/lio_tf_node.py).
+Beim Start Roboter 2–3 s STILL stehen lassen (IMU-Initialisierung von FAST-LIO). Die Sensor-Neigung wird beim
+Start nicht gemessen (gespeichert in ~/slop-bot_ws/calib/mounts_lio.yaml), neu messen auf Anforderung:
+    ros2 service call /mount_tf/recalibrate std_srvs/srv/Trigger      (Roboter still und waagrecht)
+map = Roboterlage beim Start. Die Roboterpose kommt allein aus LIO (keine Radodometrie): lio_tf sendet
+map → odom (Identität) und odom → base_footprint, bis jetzt vorausgerechnet (siehe slop_slam/lio_tf_node.py).
 
 Karte speichern (PCD):   ros2 service call /lio_map/save std_srvs/srv/Trigger
 
-mount_calib führt die Montage laufend nach (RealSense per ICP an die Lidar-Karte, Lidar-yaw aus
-Geradeausfahrt mit Antrieb) und speichert sie in ~/slop-bot_ws/calib/mounts_lio.yaml. Aus: calibrate:=false.
+Montage kalibrieren (nur bei Bedarf, kostet CPU):   ros2 launch slop_slam lio.launch.py calibrate:=true
+mount_calib führt dann die Montage nach (RealSense per ICP an die Lidar-Karte, Lidar-yaw aus Geradeausfahrt
+mit Fahrbefehlen auf /cmd_vel) und speichert sie in ~/slop-bot_ws/calib/mounts_lio.yaml. Ohne calibrate lädt
+mount_tf diese Datei.
 """
 import os
 
@@ -37,6 +41,9 @@ def ld_path_without_mvs():
 def generate_launch_description():
     share = get_package_share_directory('slop_slam')
     sensors_share = get_package_share_directory('slop_sensors')
+    # zweite volle Wolke (/cloud_registered_body) nur senden, wenn mount_calib sie braucht
+    lio_overrides = {'map_file_path': LaunchConfiguration('map_file'),
+                     'publish.scan_bodyframe_pub_en': ParameterValue(LaunchConfiguration('calibrate'), value_type=bool)}
     return LaunchDescription([
         DeclareLaunchArgument('rviz', default_value='true'),
         DeclareLaunchArgument('sensors', default_value='true', description='slop_sensors mitstarten'),
@@ -46,8 +53,9 @@ def generate_launch_description():
         DeclareLaunchArgument('composable', default_value='true',
                               description='Livox-Treiber und FAST-LIO in einem Container (Punktwolken ohne Serialisierung); '
                                           'false = getrennte Prozesse wie früher'),
-        DeclareLaunchArgument('calibrate', default_value='true',
-                              description='Montage von RealSense (ICP) und Lidar-yaw (Geradeausfahrt) laufend nachführen'),
+        DeclareLaunchArgument('calibrate', default_value='false',
+                              description='Montage von RealSense (ICP) und Lidar-yaw (Geradeausfahrt) nachführen. '
+                                          'Braucht /cloud_registered_body (FAST-LIO sendet es nur dann) und CPU'),
         DeclareLaunchArgument('lio_config', default_value=os.path.join(share, 'config', 'fast_lio_mid360s.yaml')),
         DeclareLaunchArgument('data_config', default_value=os.path.join(sensors_share, 'config', 'data_reduction.yaml'),
                               description='zentrale Kürzungen der Sensordaten (Auflösung, Raten, Ausdünnung)'),
@@ -70,14 +78,17 @@ def generate_launch_description():
         Node(package='fast_lio', executable='fastlio_mapping', name='fast_lio', output='screen',
              additional_env={'LD_LIBRARY_PATH': ld_path_without_mvs()},
              parameters=[LaunchConfiguration('lio_config'), LaunchConfiguration('data_config'),
-                         {'map_file_path': LaunchConfiguration('map_file')}],
+                         lio_overrides],
              condition=UnlessCondition(LaunchConfiguration('composable'))),
         # Container (composable:=true): Livox-Treiber + FAST-LIO, /livox/lidar und /livox/imu intra-process.
-        # Multithreaded, damit FAST-LIOs Rechenschleife den Treiber nicht aufhält. Nachteil: Stürzt einer ab
+        # Multithreaded (2 Threads), damit FAST-LIOs Rechenschleife den Treiber nicht aufhält. Nachteil: Stürzt einer ab
         # (der Livox-Treiber beim Beenden), endet der ganze Container – im Betrieb unkritisch.
         ComposableNodeContainer(
             name='lio_container', namespace='', package='rclcpp_components', executable='component_container_mt',
             output='screen', additional_env={'LD_LIBRARY_PATH': ld_path_without_mvs()},
+            # 2 Threads: FAST-LIO (eine Callback-Gruppe) + Livox-Treiber. Standard wäre einer je Kern (8):
+            # kostete ~20 % CPU nur fürs gegenseitige Aufwecken
+            parameters=[{'thread_num': 2}],
             composable_node_descriptions=[
                 ComposableNode(package='livox_ros_driver2', plugin='livox_ros::DriverNode',
                                name='livox_lidar_publisher',
@@ -93,7 +104,7 @@ def generate_launch_description():
                                extra_arguments=[{'use_intra_process_comms': True}]),
                 ComposableNode(package='fast_lio', plugin='LaserMappingNode', name='fast_lio',
                                parameters=[LaunchConfiguration('lio_config'), LaunchConfiguration('data_config'),
-                                           {'map_file_path': LaunchConfiguration('map_file')}],
+                                           lio_overrides],
                                extra_arguments=[{'use_intra_process_comms': True}]),
             ],
             condition=IfCondition(LaunchConfiguration('composable'))),

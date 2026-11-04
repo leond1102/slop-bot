@@ -3,9 +3,7 @@
 
 Topics:
   /cmd_vel        geometry_msgs/Twist     Sub  linear.x [m/s], angular.z [rad/s]; Rest wird ignoriert
-  /odom           nav_msgs/Odometry       Pub  Odometrie aus den ausgegebenen Schritten
-  /joint_states   sensor_msgs/JointState  Pub  Radwinkel [rad] und -geschwindigkeit [rad/s]
-  TF              odom → base_footprint   (publish_tf)
+  /joint_states   sensor_msgs/JointState  Pub  Radwinkel [rad] und -geschwindigkeit [rad/s] (ausgegebene Schritte)
 Services:
   diff_drive/enable  std_srvs/SetBool     true = Fault-Reset + Freigabe, false = Endstufen aus
 
@@ -24,27 +22,33 @@ Sicherheit:
     mehr (Jetson/Prozess abgestürzt), bleibt die Sollposition stehen und der Motor hält an. Der Treiber
     meldet danach einen Alarm (SyncCnt). Hängt nur die ROS-Node, bremst der Bus-Watchdog nach 0,3 s.
 
-Open Loop: Die Odometrie zählt die ausgegebenen Schritte. Verlorene Schritte oder durchrutschende Räder
-merkt sie nicht. Das korrigiert später das Lidar-SLAM.
+Keine Radodometrie: Open Loop (Schritte ohne Encoder) war zu ungenau. Die Roboterpose (odom → base_footprint)
+kommt allein aus LIO (slop_slam/lio_tf).
 
-Braucht CAP_NET_RAW + CAP_NET_ADMIN für den Raw-Socket:
+Braucht CAP_NET_RAW + CAP_NET_ADMIN für den Raw-Socket und CAP_SYS_NICE für die Echtzeit-Priorität:
   ros2 run slop_base with_netcaps ros2 launch slop_base diff_drive.launch.py
+
+Echtzeit (rt_priority, rt_cpu, main_nice): Der EtherCAT-Zyklus läuft als SCHED_FIFO-Thread auf einem eigenen
+Kern, damit FAST-LIO, RViz usw. ihn nicht verdrängen. Er teilt sich aber das GIL mit dem ROS-Teil dieser Node.
+Deshalb kurzes GIL-Umschaltintervall und der ROS-Thread mit höherer Priorität (nice). Alle stats_period s steht
+die Zyklusstatistik im Log.
 """
+import gc
 import math
+import os
+import sys
 
 import rclpy
-from geometry_msgs.msg import TransformStamped, Twist
-from nav_msgs.msg import Odometry
+from geometry_msgs.msg import Twist
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Bool
 from std_srvs.srv import SetBool
-from tf2_ros import TransformBroadcaster
 
 from slop_base.cl57e_bus import (PARAM_DIV, PARAM_MAX_CURRENT, PARAM_RUN_MODE, PARAM_SENSOR_ERR,
                                  Cl57eBus, Cl57eError)
-from slop_base.kinematics import Odometry2D, limit_wheel_speeds, wheel_speeds
+from slop_base.kinematics import limit_wheel_speeds, wheel_speeds
 from slop_base.senders import SenderCheck
 
 TWO_PI = 2.0 * math.pi
@@ -67,7 +71,7 @@ class Wheel:
 
 
 class DiffDriveNode(Node):
-    """Dünne ROS-Hülle um Cl57eBus: /cmd_vel → Räder, Odometrie + TF + Gelenkzustände zurück."""
+    """Dünne ROS-Hülle um Cl57eBus: /cmd_vel → Räder, Gelenkzustände zurück."""
 
     def __init__(self):
         super().__init__('diff_drive_node')
@@ -92,14 +96,17 @@ class DiffDriveNode(Node):
             ('lock_timeout', 1.0),         # s ohne Nachricht auf lock_topic → gesperrt
             ('allowed_cmd_vel_nodes', ['twist_mux']),  # leere Liste = nicht prüfen
             ('unknown_sender_grace', 3.0),  # s: Publisher ohne Namen (Startphase) erst danach als Fehler melden
-            ('rate', 50.0),                # Hz: Sollwerte, Odometrie, Publisher
-            ('odom_frame', 'odom'),
-            ('base_frame', 'base_footprint'),
-            ('publish_tf', True),
+            ('rate', 50.0),                # Hz: Sollwerte, Gelenkzustände
             ('left_joint', 'left_wheel_joint'),
             ('right_joint', 'right_wheel_joint'),
+            ('rt_priority', 80),           # SCHED_FIFO des Zyklus-Threads, 0 = aus
+            ('rt_cpu', 7),                 # Kern des Zyklus-Threads, -1 = beliebig
+            ('main_nice', -10),            # nice des ROS-Threads (hält das GIL kürzer), 0 = unverändert
+            ('gil_switch_ms', 0.5),        # GIL-Umschaltintervall (Python-Standard 5 ms)
+            ('stats_period', 10.0),        # s zwischen zwei Zyklusstatistiken im Log, 0 = aus
         ]:
             self.declare_parameter(name, default)
+        self._setup_process()
 
         self.radius = self._p('wheel_diameter') / 2.0
         self.track = self._p('track_width')
@@ -117,7 +124,8 @@ class DiffDriveNode(Node):
             raise Cl57eError("loop muss 'open' oder 'closed' sein")
 
         self.bus = Cl57eBus(self._p('ifname'), [wh.axis for wh in self.wheels], self._p('cycle_ms') / 1000.0,
-                            self._p('dc'), cmd_timeout_s=min(0.3, self._p('cmd_vel_timeout')))
+                            self._p('dc'), cmd_timeout_s=min(0.3, self._p('cmd_vel_timeout')),
+                            rt_priority=self._p('rt_priority'), rt_cpu=self._p('rt_cpu'))
         try:
             name = self.bus.open()
             self._check_drive_params()
@@ -136,8 +144,9 @@ class DiffDriveNode(Node):
             + ', '.join(f'{wh.name}: Achse {wh.axis}, 1:{wh.gear:g}, {wh.upr} Einh./U' for wh in self.wheels)
             + f'. Rad Ø {self._p("wheel_diameter") * 100:g} cm, Spur {self.track * 100:g} cm, '
             f'max {self._p("max_wheel_rpm"):g} U/min am Rad = {v_max:.3f} m/s, {2 * v_max / self.track:.2f} rad/s')
+        self.get_logger().info(f'EtherCAT-Zyklus {self._p("cycle_ms"):g} ms: {self.bus.rt_status}; ROS-Thread: '
+                               f'{self.proc_status}')
 
-        self.odom = Odometry2D(self.track)
         self.last_t = None
         self.cmd = (0.0, 0.0)
         self.last_cmd_time = None
@@ -156,20 +165,56 @@ class DiffDriveNode(Node):
         self.senders_waiting = False
         self.last_sender_check = None
 
-        self.odom_pub = self.create_publisher(Odometry, '/odom', 10)
         self.joint_pub = self.create_publisher(JointState, '/joint_states', 10)
-        self.tf_broadcaster = TransformBroadcaster(self) if self._p('publish_tf') else None
         self.create_subscription(Twist, '/cmd_vel', self.cmd_vel_callback, 10)
         if self._p('lock_topic'):
             self.create_subscription(Bool, self._p('lock_topic'), self.lock_callback, 10)
         self.create_service(SetBool, 'diff_drive/enable', self.enable_callback)
         self.create_timer(1.0 / self._p('rate'), self.update)
+        if self._p('stats_period') > 0:
+            self.create_timer(self._p('stats_period'), self.log_cycle_stats)
 
         if self._p('enable_on_start'):
             self._enable()
+        # Alles bis hier Angelegte aus der Garbage Collection nehmen: kürzere GC-Pausen (halten das GIL).
+        # Ohne gc.collect() davor: Das hielt bei laufendem Zyklus das GIL ~30 ms (eine Spitze von 32,7 ms)
+        gc.freeze()
 
     def _p(self, name):
         return self.get_parameter(name).value
+
+    def _setup_process(self):
+        """ROS-Thread vom Echtzeit-Kern fernhalten, Priorität anheben, GIL schneller abgeben.
+        Läuft vor dem Start des Zyklus-Threads; Fehler sind nicht fatal, nur im Log."""
+        msgs = []
+        sys.setswitchinterval(max(1e-4, self._p('gil_switch_ms') / 1000.0))
+        msgs.append(f'GIL-Intervall {sys.getswitchinterval() * 1000:g} ms')
+        cpu = self._p('rt_cpu')
+        if cpu >= 0:
+            others = os.sched_getaffinity(0) - {cpu}
+            if others:
+                os.sched_setaffinity(0, others)
+                msgs.append(f'Kerne ohne {cpu}')
+        nice = self._p('main_nice')
+        if nice:
+            try:
+                os.setpriority(os.PRIO_PROCESS, 0, nice)   # Linux: gilt für den aufrufenden Thread
+                msgs.append(f'nice {nice}')
+            except OSError as e:
+                msgs.append(f'nice {nice} NICHT gesetzt ({e.strerror})')
+        self.proc_status = ', '.join(msgs)
+
+    def log_cycle_stats(self):
+        w = self.bus.window_stats()
+        if not w['cycles']:
+            return
+        msg = (f'EtherCAT letzte {self._p("stats_period"):g} s: {w["cycles"]} Zyklen, '
+               f'{w["late"]} verspätet (> {1.5 * self._p("cycle_ms"):g} ms), {w["overruns"]} Überläufe, '
+               f'{w["wkc_errors"]} WKC-Fehler, max. Periode {w["max_period"] * 1000:.1f} ms')
+        if w['late'] or w['wkc_errors']:
+            self.get_logger().warn(msg)
+        else:
+            self.get_logger().info(msg)
 
     def _check_drive_params(self):
         """Gefährliche Treibereinstellungen ablehnen, Einheiten pro Umdrehung bestimmen."""
@@ -339,47 +384,12 @@ class DiffDriveNode(Node):
         limit = self.w_max * 3.0 * max(dt, 0.02) + 0.2
         if any(abs(da) > limit for da in d_angle):
             self.get_logger().warn(f'Sprung im Positionszähler ({d_angle[0]:+.2f}/{d_angle[1]:+.2f} rad), '
-                                   'Odometrie-Schritt verworfen')
+                                   'Schritt verworfen')
             d_angle = [0.0, 0.0]
         for wh, da in zip(self.wheels, d_angle):
             wh.angle += da
-        ds, dyaw = self.odom.update(d_angle[0] * self.radius, d_angle[1] * self.radius)
-        vx = ds / dt if dt > 0 else 0.0
-        wz = dyaw / dt if dt > 0 else 0.0
 
         stamp = now.to_msg()
-        qz, qw = math.sin(self.odom.yaw / 2.0), math.cos(self.odom.yaw / 2.0)
-        msg = Odometry()
-        msg.header.stamp = stamp
-        msg.header.frame_id = self._p('odom_frame')
-        msg.child_frame_id = self._p('base_frame')
-        msg.pose.pose.position.x = self.odom.x
-        msg.pose.pose.position.y = self.odom.y
-        msg.pose.pose.orientation.z = qz
-        msg.pose.pose.orientation.w = qw
-        # Diagonale x, y, z, roll, pitch, yaw. Unbenutzte Achsen sehr unsicher (Open Loop: grobe Schätzung)
-        msg.pose.covariance[0] = msg.pose.covariance[7] = 0.01
-        msg.pose.covariance[14] = msg.pose.covariance[21] = msg.pose.covariance[28] = 1e6
-        msg.pose.covariance[35] = 0.05
-        msg.twist.twist.linear.x = vx
-        msg.twist.twist.angular.z = wz
-        msg.twist.covariance[0] = 0.001
-        msg.twist.covariance[7] = msg.twist.covariance[14] = msg.twist.covariance[21] = 1e6
-        msg.twist.covariance[28] = 1e6
-        msg.twist.covariance[35] = 0.01
-        self.odom_pub.publish(msg)
-
-        if self.tf_broadcaster is not None:
-            tf = TransformStamped()
-            tf.header.stamp = stamp
-            tf.header.frame_id = self._p('odom_frame')
-            tf.child_frame_id = self._p('base_frame')
-            tf.transform.translation.x = self.odom.x
-            tf.transform.translation.y = self.odom.y
-            tf.transform.rotation.z = qz
-            tf.transform.rotation.w = qw
-            self.tf_broadcaster.sendTransform(tf)
-
         js = JointState()
         js.header.stamp = stamp
         js.name = [wh.joint for wh in self.wheels]

@@ -1,15 +1,15 @@
 # Montagepositionen der Sensoren relativ zu base_footprint (Boden unter Achsmitte).
 # x nach vorn, y nach links, z nach oben [m]; roll/pitch/yaw [rad].
 #
-# gravity: true → roll und pitch misst mount_tf beim Start mit der IMU des Sensors (Roboter muss still
-#   und waagrecht stehen). Die Werte roll/pitch hier gelten dann nur, bis die Messung fertig ist.
-#   Neu messen: ros2 service call /mount_tf/recalibrate std_srvs/srv/Trigger
+# gravity: true → roll und pitch kann mount_tf mit der IMU des Sensors messen, aber nur AUF ANFORDERUNG
+#   (Roboter still und waagrecht):  ros2 service call /mount_tf/recalibrate std_srvs/srv/Trigger
+#   Das Ergebnis landet in ~/slop-bot_ws/calib/mounts_lio.yaml und gilt ab dann bei jedem Start.
 # yaw (Blickrichtung) und x/y/z sind aus der Schwerkraft NICHT bestimmbar → hier eintragen.
-# x/y/z gelten immer von hier (auch mit LIO-Kalibrierung); die Drehung führt LIO nach.
+# x/y/z gelten immer von hier (auch mit Kalibrierung).
 #
 # TODO: x/y/z und yaw am Roboter nachmessen – die Werte hier sind Platzhalter!
-# Mit lio.launch.py führt slop_slam/mount_calib die Montage aus LIO nach und speichert sie in
-# ~/slop-bot_ws/calib/mounts_lio.yaml; die Datei hat beim Start Vorrang vor x/y/z/yaw hier.
+# Drehung (roll/pitch/yaw): Steht der Sensor in ~/slop-bot_ws/calib/mounts_lio.yaml (Schwerkraftmessung oder
+# slop_slam/mount_calib mit lio.launch.py calibrate:=true), gilt die von dort, sonst die von hier.
 livox:
   frame: livox_frame
   imu_topic: /livox/imu/slow  # IMU im Lidar (gleiche Achsen wie die Punktwolke), auf ~25 Hz gedrosselt

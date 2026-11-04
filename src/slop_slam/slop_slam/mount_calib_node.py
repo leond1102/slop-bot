@@ -9,10 +9,11 @@ RealSense (volle Lage x/y/z/roll/pitch/yaw):
   (nicht nur eine Wand/Boden), Korrektur nicht unplausibel groß.
 
 Lidar (yaw, also die Blickrichtung):
-  Ein Differentialantrieb fährt nur entlang seiner x-Achse. Fährt der Roboter laut Radodometrie (/odom)
-  geradeaus, zeigt die von FAST-LIO gemessene Verschiebung im IMU-Frame, wie der Lidar um die Senkrechte
+  Ein Differentialantrieb fährt nur entlang seiner x-Achse. Fährt der Roboter laut Fahrbefehl (/cmd_vel) und
+  LIO geradeaus, zeigt die von FAST-LIO gemessene Verschiebung im IMU-Frame, wie der Lidar um die Senkrechte
   verdreht montiert ist. roll/pitch kommen weiter aus der Schwerkraft (mount_tf), x/y/z aus mounts.yaml.
-  Braucht laufenden Antrieb (sonst unbekannt, ob vor- oder rückwärts).
+  Braucht Fahrbefehle auf /cmd_vel (sonst unbekannt, ob vor- oder rückwärts). Keine Radodometrie: Ob und wie
+  weit der Roboter wirklich fährt, misst LIO.
 
 Ergebnisse gehen an mount_tf (/mount_tf/update), das die TF sendet und in RViz anzeigt, und werden in
 `calib_file` gespeichert. mount_tf lädt die Datei beim nächsten Start.
@@ -20,7 +21,7 @@ Ergebnisse gehen an mount_tf (/mount_tf/update), das die TF sendet und in RViz a
 Topics:
   /cloud_registered_body          sensor_msgs/PointCloud2  Sub  volle Lidar-Scans im IMU-Frame (FAST-LIO)
   /Odometry                       nav_msgs/Odometry        Sub  IMU-Pose (FAST-LIO)
-  /odom                           nav_msgs/Odometry        Sub  Radodometrie (slop_base), nur für den Lidar-yaw
+  /cmd_vel                        geometry_msgs/Twist      Sub  Fahrbefehl (twist_mux), nur für den Lidar-yaw
   /camera/depth/image_rect_raw    sensor_msgs/Image        Sub
   /camera/depth/camera_info       sensor_msgs/CameraInfo   Sub
   /mount_tf/update                geometry_msgs/TransformStamped  Pub  neue Montage base → Sensor
@@ -28,16 +29,18 @@ Topics:
 import collections
 import math
 import os
+import struct
 
 import numpy as np
 import rclpy
 import yaml
-from geometry_msgs.msg import TransformStamped
+from geometry_msgs.msg import TransformStamped, Twist
 from nav_msgs.msg import Odometry
 from rclpy.duration import Duration
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
+from rclpy.serialization import deserialize_message
 from rclpy.time import Time
 from sensor_msgs.msg import CameraInfo, Image, PointCloud2
 from tf2_ros import Buffer, TransformException, TransformListener
@@ -116,8 +119,9 @@ class MountCalibNode(Node):
             ('yaw_window', 3.0),           # s
             ('yaw_min_dist', 0.04),        # m Fahrt je Abschnitt
             ('yaw_max_turn_deg', 3.0),     # Drehung je Abschnitt (LIO)
-            ('yaw_max_wheel_w', 0.05),     # rad/s laut Radodometrie
-            ('yaw_min_wheel_v', 0.004),    # m/s laut Radodometrie
+            ('yaw_max_cmd_w', 0.05),       # rad/s laut Fahrbefehl
+            ('yaw_min_cmd_v', 0.004),      # m/s laut Fahrbefehl
+            ('yaw_max_cmd_gap', 0.5),      # s ohne Fahrbefehl = Roboter steht (diff_drive cmd_vel_timeout)
             ('yaw_min_total', 0.15),       # m Fahrt gesamt, bevor yaw übernommen wird
             ('yaw_blend', 0.3),
         ]:
@@ -129,13 +133,13 @@ class MountCalibNode(Node):
         self.tf_listener = TransformListener(self.tf_buffer, self.tf_node, spin_thread=True)
         self.update_pub = self.create_publisher(TransformStamped, '/mount_tf/update', 10)
 
-        self.scans = collections.deque(maxlen=60)  # PointCloud2, erst beim ICP in map umgerechnet
+        self.scans = collections.deque(maxlen=60)  # (Zeit, PointCloud2 roh/serialisiert), erst beim ICP entpackt
         self.depth = None
-        self.depth_buf = collections.deque(maxlen=30)   # ~1 s Tiefenbilder: LIO-TF hinkt 0,1–0,3 s hinterher
+        self.depth_buf = collections.deque(maxlen=30)   # ~1 s Tiefenbilder (Stempel, roh): LIO hinkt 0,1–0,3 s nach
         self.info = None
         self.lio = collections.deque()             # (zeit, R, p) IMU in camera_init
         self.base_poses = collections.deque(maxlen=100)   # (zeit, T_map_base) aus /lio/odom
-        self.wheel = collections.deque()           # (zeit, v, w)
+        self.cmd = collections.deque()             # (Empfangszeit, v, w) der Fahrbefehle
         self.yaw_samples = collections.deque(maxlen=30)
         self.last_save = None
         self.o3d = None
@@ -150,12 +154,14 @@ class MountCalibNode(Node):
             if self.camera_ok:
                 self.get_logger().info(f'Kamera-Montage aus {calib} als Start, keine Grobsuche')
 
-        self.create_subscription(PointCloud2, self._p('cloud_topic'), self.scan_cb, 10)
+        # roh: 10 volle Scans/s in Python zu entpacken kostete ~30 % eines Kerns, gebraucht werden sie nur beim ICP
+        self.create_subscription(PointCloud2, self._p('cloud_topic'), self.scan_cb, 10, raw=True)
         self.create_subscription(Odometry, '/Odometry', self.lio_cb, 50)
-        self.create_subscription(Odometry, '/odom', self.wheel_cb, 50)
+        self.create_subscription(Twist, '/cmd_vel', self.cmd_cb, 50)
         self.create_subscription(Odometry, '/lio/odom', self.base_cb, 50)
         if self._p('camera'):
-            self.create_subscription(Image, '/camera/depth/image_rect_raw', self.depth_cb, qos_profile_sensor_data)
+            self.create_subscription(Image, '/camera/depth/image_rect_raw', self.depth_cb, qos_profile_sensor_data,
+                                     raw=True)   # entpackt wird nur das eine Bild je ICP-Lauf
             self.create_subscription(CameraInfo, '/camera/depth/camera_info', self.info_cb, qos_profile_sensor_data)
             self.camera_timer = self.create_timer(self._p('period'), self.camera_step)
             self.create_timer(30.0, self.report)
@@ -172,9 +178,19 @@ class MountCalibNode(Node):
         return stamp.sec + stamp.nanosec * 1e-9
 
     # ---------------------------------------------------------------- Eingänge
-    def scan_cb(self, msg):
-        # nur sammeln, nicht auf TF warten (blockiert sonst die Node); umgerechnet wird beim ICP
-        self.scans.append(msg)
+    @staticmethod
+    def _raw_stamp(data):
+        """header.stamp (sec, nanosec) direkt aus einer serialisierten Nachricht, die mit std_msgs/Header beginnt:
+        4 Byte CDR-Kopf (Byte 1 = 1: little endian), dann int32 sec, uint32 nanosec. None = zu kurz."""
+        if len(data) < 12:
+            return None
+        return struct.unpack_from('<iI' if data[1] == 1 else '>iI', data, 4)
+
+    def scan_cb(self, data):
+        # nur sammeln, nicht auf TF warten (blockiert sonst die Node); entpackt und umgerechnet wird beim ICP
+        st = self._raw_stamp(data)
+        if st is not None:
+            self.scans.append((st[0] + st[1] * 1e-9, data))
 
     def scans_in_map(self, t_ref):
         """Scans der letzten map_window s vor t_ref in map. Pose je Scan aus /Odometry mit gleichem Zeitstempel
@@ -185,12 +201,11 @@ class MountCalibNode(Node):
             return []
         poses = {round(t, 3): pose(R, p) for t, R, p in self.lio}
         out = []
-        for msg in self.scans:
-            t = self._sec(msg.header.stamp)
+        for t, data in self.scans:
             T_ci_body = poses.get(round(t, 3))
             if T_ci_body is None or not (t_ref - self._p('map_window') <= t <= t_ref + 0.5):
                 continue
-            out.append(transform_points(T_map_ci @ T_ci_body, cloud_xyz(msg)))
+            out.append(transform_points(T_map_ci @ T_ci_body, cloud_xyz(deserialize_message(data, PointCloud2))))
         return out
 
     def base_pose_at(self, t):
@@ -205,8 +220,10 @@ class MountCalibNode(Node):
             prev = (tb, T)
         return None
 
-    def depth_cb(self, msg):
-        self.depth_buf.append(msg)
+    def depth_cb(self, data):
+        st = self._raw_stamp(data)
+        if st is not None:
+            self.depth_buf.append((st, data))
 
     def info_cb(self, msg):
         self.info = msg
@@ -223,11 +240,12 @@ class MountCalibNode(Node):
         self.base_poses.append((self._sec(msg.header.stamp),
                                 pose(quat_to_matrix((o.x, o.y, o.z, o.w)), [p.x, p.y, p.z])))
 
-    def wheel_cb(self, msg):
-        t = self._sec(msg.header.stamp)
-        self.wheel.append((t, msg.twist.twist.linear.x, msg.twist.twist.angular.z))
-        while self.wheel and t - self.wheel[0][0] > 10.0:
-            self.wheel.popleft()
+    def cmd_cb(self, msg):
+        # Twist hat keinen Zeitstempel: Empfangszeit (LIO-Stempel sind ebenfalls ROS-Zeit des Jetson)
+        t = self._sec(self.get_clock().now().to_msg())
+        self.cmd.append((t, msg.linear.x, msg.angular.z))
+        while self.cmd and t - self.cmd[0][0] > 10.0:
+            self.cmd.popleft()
 
     def turn_rate(self):
         """Drehrate laut LIO über die letzten ~0,5 s [rad/s]."""
@@ -260,13 +278,12 @@ class MountCalibNode(Node):
         mp, base, cam = self._p('map_frame'), self._p('base_frame'), self._p('camera_frame')
         # neuestes noch nicht benutztes Tiefenbild, für das es schon eine LIO-Pose gibt (LIO hinkt ~0,1–0,3 s nach)
         self.depth, T_map_base = None, None
-        for msg in reversed(self.depth_buf):
-            key = (msg.header.stamp.sec, msg.header.stamp.nanosec)
+        for key, data in reversed(self.depth_buf):
             if self.last_depth_stamp is not None and key <= self.last_depth_stamp:
                 break
-            T_map_base = self.base_pose_at(self._sec(msg.header.stamp))
+            T_map_base = self.base_pose_at(key[0] + key[1] * 1e-9)
             if T_map_base is not None:
-                self.depth = msg
+                self.depth = deserialize_message(data, Image)
                 self.last_depth_stamp = key
                 break
         if self.depth is None:
@@ -429,19 +446,23 @@ class MountCalibNode(Node):
     # ---------------------------------------------------------------- Lidar-yaw aus Geradeausfahrt
     def lidar_yaw_step(self):
         win = self._p('yaw_window')
-        if len(self.lio) < 2 or not self.wheel:
+        if len(self.lio) < 2 or not self.cmd:
             return
         t1, R1, p1 = self.lio[-1]
         start = next(((t, R, p) for t, R, p in reversed(self.lio) if t1 - t >= win), None)
         if start is None:
             return
         t0, R0, p0 = start
-        wheel = [(v, w) for t, v, w in self.wheel if t0 <= t <= t1]
-        if len(wheel) < 5:
+        cmds = [(t, v, w) for t, v, w in self.cmd if t0 <= t <= t1]
+        if len(cmds) < 5:
             return
-        vs = [v for v, _ in wheel]
-        straight = all(abs(w) < self._p('yaw_max_wheel_w') for _, w in wheel)
-        moving = all(abs(v) > self._p('yaw_min_wheel_v') for v in vs) and (all(v > 0 for v in vs) or all(v < 0 for v in vs))
+        # Befehle müssen den ganzen Abschnitt abdecken (Lücke > cmd_vel_timeout: Antrieb hat angehalten)
+        times = [t0] + [t for t, _, _ in cmds] + [t1]
+        if max(b - a for a, b in zip(times, times[1:])) > self._p('yaw_max_cmd_gap'):
+            return
+        vs = [v for _, v, _ in cmds]
+        straight = all(abs(w) < self._p('yaw_max_cmd_w') for _, _, w in cmds)
+        moving = all(abs(v) > self._p('yaw_min_cmd_v') for v in vs) and (all(v > 0 for v in vs) or all(v < 0 for v in vs))
         turn = math.degrees(rotation_angle(R0.T @ R1))
         d_body = R0.T @ (p1 - p0)
         dist = float(np.linalg.norm(d_body))
@@ -504,7 +525,8 @@ class MountCalibNode(Node):
                                                                  (*Tf[:3, 3], r, p, y))}
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, 'w') as f:
-            f.write('# Von slop_slam/mount_calib aus LIO nachgeführt, von slop_sensors/mount_tf beim Start geladen.\n'
+            f.write('# Montage-Kalibrierung: slop_slam/mount_calib (LIO) und mount_tf/recalibrate (Schwerkraft).\n'
+                    '# slop_sensors/mount_tf lädt sie beim Start.\n'
                     '# Löschen = wieder mit mounts.yaml anfangen. Frame → x/y/z [m], roll/pitch/yaw [rad]\n')
             yaml.safe_dump(data, f, sort_keys=False)
 

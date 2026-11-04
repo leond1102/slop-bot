@@ -19,8 +19,9 @@ camera:
     # Mögliche Werte: ros2 run realsense2_camera ... oder rs-enumerate-devices
     rgb_camera.color_profile: 424,240,15
     depth_module.depth_profile: 424,240,15
-    # Tiefe zusätzlich aufs Farbbild umrechnen (/camera/aligned_depth_to_color/image_raw), kostet CPU
-    align_depth.enable: true
+    # Tiefe zusätzlich aufs Farbbild umrechnen (/camera/aligned_depth_to_color/image_raw), kostet CPU.
+    # Aus: Kein Node nutzt das Topic (mount_calib nimmt /camera/depth/image_rect_raw, die Farbwolke braucht es nicht).
+    align_depth.enable: false
     # Filter der Tiefe (decimation verkleinert das Tiefenbild, spatial/temporal glätten), alle aus
     decimation_filter.enable: false
     spatial_filter.enable: false
@@ -29,7 +30,8 @@ camera:
 # ---------------------------------------------------------------- Montage-TFs (slop_sensors/mount_tf)
 mount_tf:
   ros__parameters:
-    live_every: 1                # nach der Schwerkraftmessung nur jede n-te IMU-Nachricht auswerten (Anzeige in RViz)
+    live_every: 5                # nach der Schwerkraftmessung nur jede n-te IMU-Nachricht auswerten (Anzeige in RViz):
+                                 # 25 Hz / 5 = 5 Hz je Sensor reichen für die Anzeige (1 kostete ~15 % eines Kerns)
 
 # IMU-Drosseln für mount_tf (C++-Komponenten im Container sensor_helpers): /livox/imu → /livox/imu/slow usw.
 # mount_tf mittelt 2 s und braucht ≥ 50 Messungen → nicht unter 25 Hz gehen. Die Treiber-Topics selbst
@@ -51,9 +53,11 @@ livox_lidar_publisher:
 # ---------------------------------------------------------------- FAST-LIO2 (slop_slam/lio.launch.py)
 fast_lio:
   ros__parameters:
-    point_filter_num: 3          # nur jeden n-ten Lidar-Punkt verwenden
-    filter_size_surf: 0.3        # m, Voxelgröße des Scans für die Registrierung (Original 0.5, Innenräume feiner)
-    filter_size_map: 0.3         # m, Voxelgröße der internen Karte
+    # 4 / 0,4 m statt 3 / 0,3 m (2026-11-04): lio_container 64 % → 49 % CPU im Stand. Genauigkeit beim Fahren
+    # prüfen; wird es in engen Räumen ungenau, zurück auf 3 / 0.3. Original FAST-LIO mid360: 3 / 0,5 m.
+    point_filter_num: 4          # nur jeden n-ten Lidar-Punkt verwenden
+    filter_size_surf: 0.4        # m, Voxelgröße des Scans für die Registrierung (Original 0.5, Innenräume feiner)
+    filter_size_map: 0.4         # m, Voxelgröße der internen Karte
     preprocess:
       blind: 0.5                 # m, nähere Punkte ignorieren (eigener Roboter)
     mapping:

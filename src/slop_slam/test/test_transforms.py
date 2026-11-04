@@ -3,7 +3,7 @@ import math
 
 import pytest
 
-from slop_slam.transforms import Transform, lio_to_map, yaw_of
+from slop_slam.transforms import Transform, body_twist, lio_to_map, predict, q_scale, yaw_of
 
 
 def rpy_q(roll, pitch, yaw):
@@ -53,8 +53,38 @@ def test_lio_upside_down_lidar_keeps_robot_yaw_sign():
     assert T_map_base.t == pytest.approx((0, 0, 0), abs=1e-9)
 
 
-def test_map_to_odom_with_wheel_odometry():
-    T_map_base = Transform(rpy_q(0, 0, 0.8), (1.0, 2.0, 0.0))
-    T_odom_base = Transform(rpy_q(0, 0, 0.6), (0.9, 1.5, 0.0))      # Radodometrie driftet
-    T_map_odom = T_map_base * T_odom_base.inverse()
-    assert (T_map_odom * T_odom_base).close_to(T_map_base)
+def arc_pose(t, v=0.03, w=0.3):
+    """Gleichmäßige Kreisfahrt ab dem Ursprung: v [m/s] vorwärts, w [rad/s] links."""
+    yaw = w * t
+    return Transform(rpy_q(0, 0, yaw), (v / w * math.sin(yaw), v / w * (1 - math.cos(yaw)), 0.0))
+
+
+def test_q_scale():
+    q = rpy_q(0.0, 0.0, 0.8)
+    assert yaw_of(q_scale(q, 0.25)) == pytest.approx(0.2)
+    assert yaw_of(q_scale(q, -1.0)) == pytest.approx(-0.8)
+    assert Transform(q_scale(q, 0.0)).close_to(Transform())
+
+
+def test_predict_arc_exact_for_equal_step():
+    T = predict(arc_pose(0.5), 0.5, arc_pose(1.0), 1.0, 1.5)
+    assert T.close_to(arc_pose(1.5), 1e-9)
+
+
+def test_predict_arc_short_horizon():
+    # 0,15 s vorausgerechnet aus einem 0,5-s-Fenster: auf < 0,1 mm und < 0,01° genau
+    T = predict(arc_pose(0.5), 0.5, arc_pose(1.0), 1.0, 1.15)
+    ref = arc_pose(1.15)
+    assert math.dist(T.t, ref.t) < 1e-4
+    assert abs(yaw_of(T.q) - yaw_of(ref.q)) < math.radians(0.01)
+
+
+def test_predict_standing_still():
+    T0 = Transform(rpy_q(0.01, -0.02, 1.0), (1.0, 2.0, 0.1))
+    assert predict(T0, 0.0, T0, 0.5, 0.7).close_to(T0)
+
+
+def test_body_twist_arc():
+    v, w = body_twist(arc_pose(1.0), 1.0, arc_pose(1.1), 1.1)
+    assert v[0] == pytest.approx(0.03, rel=1e-2) and abs(v[2]) < 1e-12
+    assert w == pytest.approx((0.0, 0.0, 0.3))

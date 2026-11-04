@@ -1,9 +1,7 @@
-"""Kinematik und Odometrie des Differentialantriebs, ohne Hardware und ohne ROS."""
-import math
-
+"""Kinematik des Differentialantriebs, ohne Hardware und ohne ROS."""
 import pytest
 
-from slop_base.kinematics import Odometry2D, limit_wheel_speeds, wheel_speeds
+from slop_base.kinematics import limit_wheel_speeds, wheel_speeds
 
 TRACK = 0.24
 R = 0.035
@@ -29,26 +27,3 @@ def test_limit_keeps_curve():
 
 def test_limit_untouched_below_max():
     assert limit_wheel_speeds(0.5, -0.3, 1.0) == (0.5, -0.3, 1.0)
-
-
-def test_odometry_straight_then_turn():
-    odom = Odometry2D(TRACK)
-    for _ in range(100):
-        odom.update(0.01, 0.01)                 # 1 m geradeaus
-    assert odom.x == pytest.approx(1.0) and odom.y == pytest.approx(0.0)
-    quarter = math.pi / 2 * TRACK / 2           # 90° links auf der Stelle
-    for _ in range(100):
-        odom.update(-quarter / 100, quarter / 100)
-    assert odom.yaw == pytest.approx(math.pi / 2)
-    assert odom.x == pytest.approx(1.0) and odom.y == pytest.approx(0.0, abs=1e-12)
-
-
-def test_odometry_full_circle_returns_home():
-    odom = Odometry2D(TRACK)
-    radius = 0.5                                 # Kreis um einen Punkt links vom Roboter
-    n = 1000
-    arc = 2 * math.pi / n
-    for _ in range(n):
-        odom.update(arc * (radius - TRACK / 2), arc * (radius + TRACK / 2))
-    assert odom.x == pytest.approx(0.0, abs=1e-6) and odom.y == pytest.approx(0.0, abs=1e-6)
-    assert abs(odom.yaw) < 1e-9 or abs(abs(odom.yaw) - 2 * math.pi) < 1e-9
