@@ -22,7 +22,7 @@ Offene Aufgaben: [TODO.md](TODO.md)
 | [slop_safety](src/slop_safety) | `twist_mux`-Konfiguration und `remote_guard`: Fahrsperre, solange keine RustDesk-Sitzung besteht |
 | [slop_teleop](src/slop_teleop) | `keyboard_teleop`: Tastatursteuerung mit Totmann (Taste halten = fahren) |
 | [slop_description](src/slop_description) | URDF/xacro des Roboters (Räder, Schleppräder, Livox, RealSense) und `description.launch.py` mit `robot_state_publisher`. Radmaße, Spur und Gelenknamen liest es aus `diff_drive.yaml` |
-| [slop_sensors](src/slop_sensors) | Launch-Dateien und Configs für Livox Mid-360s und RealSense D435i, sonst nichts |
+| [slop_sensors](src/slop_sensors) | Launch-Dateien und Configs für Livox Mid-360s und RealSense D435i; `livox_to_cloud` (Livox → PointCloud2) und Einstellungen für den 2D-Scan `/scan` (`pointcloud_to_laserscan`) |
 | `src/third_party` (Git-Submodule) | `Livox-SDK2`, `livox_ros_driver2`, `realsense-ros` 4.58.4, `FAST_LIO` (Branch ROS2, mit `src/third_party/patches/fast_lio.patch`) |
 | [tools/diff_motor.py](tools/diff_motor.py) | Motortest ohne ROS (Parameter lesen, Achsen zuordnen, Getriebe prüfen), CSV-Logs in `tools/logs/` |
 
@@ -43,6 +43,8 @@ diff_drive_node ─/wheel/odom──────────────┐
 /livox/* ─► fast_lio ─► lio_bridge ─/lio/odom (nur Geschwindigkeit)─┘
                              └──► TF map → odom, TF static map → camera_init
 robot_state_publisher (URDF) ──► TF base_footprint → base_link → Räder, livox_frame, camera_link
+
+/livox/lidar ─► livox_to_cloud ─► /livox/points ─► pointcloud_to_laserscan ─► /scan   (für slam_toolbox / Nav2)
 ```
 
 ## Sicherheit
@@ -74,9 +76,9 @@ robot_state_publisher (URDF) ──► TF base_footprint → base_link → Räde
 | Sensor | Position zu `base_footprint` | Neigung |
 |---|---|---|
 | Lidar `livox_frame` | x 0,03, y 0, z 0,315 m | roll −0,15°, pitch +1,27° (Schwerkraft), yaw nie bestimmt |
-| Kamera `camera_link` | x 0, y 0, z 0,425 m | roll −0,52°, pitch −2,98° (Schwerkraft), yaw nie bestimmt |
+| Kamera `camera_link` | x 0,08, y 0, z 0,15 m (vorn am Roboter, seit 2026-11-05) | **nach dem Umbau neu messen** (`calibrate mount`); in `mounts.yaml` steht noch die alte Lage |
 
-Auf `main` hatte ICP für die Kamera x −0,12, y +0,06 m und pitch −8,6° ergeben. Die Werte passen nicht zusammen, nachmessen.
+Die Kamera soll Hindernisse und Abgründe vor dem Roboter erkennen; das Lidar sieht den Boden erst ab ca. 2,6 m.
 
 ## Bauen
 

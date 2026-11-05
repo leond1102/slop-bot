@@ -42,7 +42,8 @@ def generate_launch_description():
         DeclareLaunchArgument('rviz_config', default_value='description',
                               description='RViz-Konfiguration aus rviz/: description = nur Modell, '
                                           'all = Modell, Odometrie, Lidar und Kamera (Fixed Frame odom), '
-                                          'lio = LIO-Wolke, Pose, Ausschnitt-Quader (Fixed Frame map)'),
+                                          'lio = LIO-Wolke, Pose, Ausschnitt-Quader (Fixed Frame map), '
+                                          'scan = Laserscan über Lidar-Wolke (Fixed Frame base_footprint)'),
         DeclareLaunchArgument('gui', default_value='false',
                               description='joint_state_publisher_gui (nur ohne Antrieb)'),
         Node(package='robot_state_publisher', executable='robot_state_publisher', output='screen',

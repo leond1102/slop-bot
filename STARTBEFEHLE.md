@@ -73,7 +73,7 @@ ros2 run slop_calibration calibrate all
 ## Nur Gyro-Bias (Livox- und Kamera-IMU; der EKF braucht dann beim Start keine 5 s Wartezeit mehr)
 ros2 run slop_calibration calibrate gyro
 
-## Nur Sensorneigung Roll/Pitch aus der Schwerkraft (danach bringup bzw. description neu starten, das URDF liest sie beim Start)
+## Nur Sensorneigung Roll/Pitch aus der Schwerkraft (danach bringup bzw. description neu starten, das URDF liest sie beim Start; nach jedem Umbau eines Sensors, z. B. Kamera vorn seit 2026-11-05)
 ros2 run slop_calibration calibrate mount
 
 ## Längeres Messfenster (Standard 10 s)
@@ -112,6 +112,27 @@ ros2 launch slop_lio lio.launch.py lidar:=false
 
 ## LIO ohne Ausschneiden von Körper und Mast (Vergleich)
 ros2 launch slop_lio lio.launch.py crop:=false
+
+## LIO ohne 2D-Scan (/livox/points und /scan laufen sonst mit)
+ros2 launch slop_lio lio.launch.py scan:=false
+
+## 2D-Scan prüfen (ca. 10 Hz, Frame base_footprint)
+ros2 topic hz /scan
+ros2 topic echo /scan --field header --once
+
+## Laserscan und Lidar-Wolke überlagert in RViz (3 Terminals: Antrieb + Modell + EKF, LIO mit Scan, RViz; Fixed Frame base_footprint, Scan rot, Wolke nach Höhe gefärbt)
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
+
+ros2 launch slop_lio lio.launch.py
+
+ros2 launch slop_description rviz.launch.py rviz_config:=scan
+
+## Dasselbe ohne Antrieb (Modell statt Bringup)
+ros2 launch slop_description description.launch.py
+
+ros2 launch slop_lio lio.launch.py
+
+ros2 launch slop_description rviz.launch.py rviz_config:=scan
 
 ## LIO prüfen (eigenes Terminal): Nodes, Rate (ca. 10 Hz), Verzögerung (ca. 0,03 s), Pose in map, TF-Kette
 ## Im LIO-Terminal steht beim Start "map festgelegt: ... gekippt um roll …, pitch …" (Neigung des Lidars, ca. 1–2°)

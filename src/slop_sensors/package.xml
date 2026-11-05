@@ -3,13 +3,17 @@
 <package format="3">
   <name>slop_sensors</name>
   <version>0.1.0</version>
-  <description>Slop-Bot Sensoren: Launch-Dateien und Configs für Livox Mid-360s (livox_ros_driver2) und RealSense D435i (realsense2_camera)</description>
+  <description>Slop-Bot Sensoren: Launch-Dateien und Configs für Livox Mid-360s (livox_ros_driver2) und RealSense D435i (realsense2_camera), Umwandlung Livox → PointCloud2 und 2D-Scan (pointcloud_to_laserscan)</description>
   <maintainer email="leodresel11@gmail.com">Leon</maintainer>
   <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>livox_ros_driver2</exec_depend>
+  <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>livox_ros_driver2</depend>
+
+  <exec_depend>pointcloud_to_laserscan</exec_depend>
   <exec_depend>realsense2_camera</exec_depend>
   <exec_depend>ament_index_python</exec_depend>
   <exec_depend>launch</exec_depend>

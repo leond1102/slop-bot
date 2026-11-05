@@ -6,7 +6,12 @@ LiDAR-Inertial-Odometrie mit FAST-LIO2 (Livox Mid-360s) und eine Brücke zu TF u
 ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py   # Antrieb, Modell, EKF
 ros2 launch slop_lio lio.launch.py                                           # Lidar + FAST-LIO + Brücke
 ros2 launch slop_lio lio.launch.py lidar:=false clouds:=true                 # Lidar läuft schon; Wolke für RViz
+ros2 launch slop_lio lio.launch.py scan:=false                               # ohne /livox/points und /scan
 ```
+
+`lio.launch.py` startet außerdem den 2D-Scan für slam_toolbox und Nav2 (`livox_to_cloud` → `/livox/points` →
+`pointcloud_to_laserscan` → `/scan`, mit denselben ausgeschnittenen Quadern wie FAST-LIO). Details in
+[slop_sensors/README.md](../slop_sensors/README.md).
 
 Beim Start den Roboter 2–3 s stillstehen lassen (IMU-Initialisierung von FAST-LIO). Läuft der Lidar-Treiber schon
 (`sensors.launch.py`), `lidar:=false` setzen, und der Treiber muss dann im Livox-Format laufen (`xfer_format:=1`, Standard).
@@ -71,8 +76,8 @@ und bis 0,4 m über dem Lidar, kommen aber noch ca. 60–200 Punkte je Scan bei 
 Gegenstände hinter dem Roboter, ist offen. Wandern sie in RViz (`rviz_config:=lio`) mit dem Roboter mit, die Tiefe in
 `rear_box` auf ca. 0,8 m erhöhen.
 
-In RViz erscheinen die Quader als durchsichtige Würfel (`/lio/crop_boxes`, orange = Körper, rot = hinter dem Lidar) in der
-Ansicht `rviz_config:=lio` (Fixed Frame `map`, dazu LIO-Wolke, LIO-Pose grün und EKF-Pose gelb im Vergleich).
+In RViz erscheinen die Quader als durchsichtige Würfel (`/lio/crop_boxes`, orange = Körper, rot = hinter dem Lidar,
+`frame_locked`, fahren also mit dem Lidar mit) in der Ansicht `rviz_config:=lio` (Fixed Frame `map`, dazu LIO-Wolke, LIO-Pose grün und EKF-Pose gelb im Vergleich).
 
 Eine Neigung des Lidars (wenige Grad) bleibt unberücksichtigt.
 

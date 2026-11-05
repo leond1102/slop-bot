@@ -1,10 +1,10 @@
 camera:
   frame: camera_link
-  roll: -0.00916
-  pitch: -0.05199
-  stamp: '2026-11-04T15:58:17'
+  roll: -0.00861
+  pitch: 0.01305
+  stamp: '2026-11-05T11:03:08'
 livox:
   frame: livox_frame
-  roll: -0.0027
-  pitch: 0.02214
-  stamp: '2026-11-04T15:58:17'
+  roll: -0.00082
+  pitch: 0.02578
+  stamp: '2026-11-05T11:03:08'

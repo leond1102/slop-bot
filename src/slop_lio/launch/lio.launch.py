@@ -4,6 +4,7 @@
     ros2 launch slop_lio lio.launch.py lidar:=false     # Lidar läuft schon (sensors.launch.py)
     ros2 launch slop_lio lio.launch.py clouds:=true     # /cloud_registered für RViz
     ros2 launch slop_lio lio.launch.py crop:=false      # ohne Ausschneiden von Körper und Mast
+    ros2 launch slop_lio lio.launch.py scan:=false      # ohne /livox/points und /scan (2D-Scan für slam_toolbox/Nav2)
 
 Beim Start den Roboter 2–3 s stillstehen lassen (IMU-Initialisierung von FAST-LIO). Läuft schon ein Livox-Treiber
 (sensors.launch.py), lidar:=false setzen, sonst stören sich zwei Treiber. Die Brücke braucht das Modell und den EKF
@@ -52,11 +53,23 @@ def lio_nodes(context, config, extrinsic):
     share = get_package_share_directory('slop_lio')
     params = {'publish.scan_publish_en': ParameterValue(LaunchConfiguration('clouds'), value_type=bool)}
     bridge = {'imu_to_lidar_xyz': extrinsic['extrinsic_T'], 'imu_to_lidar_rot': extrinsic['extrinsic_R']}
+    to_cloud = {}
     if context.launch_configurations['crop'].lower() == 'true':
         boxes = [float(v) for v in exclude_boxes(share)]
         params['preprocess.exclude_boxes'] = boxes
         bridge['crop_boxes'] = boxes
-    return [Node(package='fast_lio', executable='fastlio_mapping', name='fast_lio', output='screen',
+        to_cloud['exclude_boxes'] = boxes
+    nodes = []
+    if context.launch_configurations['scan'].lower() == 'true':
+        # /livox/points (PointCloud2 ohne Roboter) und /scan (2D) aus demselben Livox-Strom; Einstellungen in
+        # slop_sensors/config/scan.yaml
+        scan_cfg = os.path.join(get_package_share_directory('slop_sensors'), 'config', 'scan.yaml')
+        nodes += [Node(package='slop_sensors', executable='livox_to_cloud', name='livox_to_cloud', output='screen',
+                       parameters=[scan_cfg, to_cloud]),
+                  Node(package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
+                       name='pointcloud_to_laserscan', output='screen', parameters=[scan_cfg],
+                       remappings=[('cloud_in', '/livox/points'), ('scan', '/scan')])]
+    return nodes + [Node(package='fast_lio', executable='fastlio_mapping', name='fast_lio', output='screen',
                  additional_env={'LD_LIBRARY_PATH': ld_path_without_mvs()},
                  prefix=['taskset -c ', LaunchConfiguration('cpus'), ' '],
                  parameters=[config, params]),
@@ -77,6 +90,8 @@ def generate_launch_description():
         DeclareLaunchArgument('crop', default_value='true',
                               description='Körper und Mast aus den Scans schneiden (config/crop.yaml)'),
         DeclareLaunchArgument('cpus', default_value='2-6', description='Kerne für FAST-LIO (taskset)'),
+        DeclareLaunchArgument('scan', default_value='true',
+                              description='/livox/points (PointCloud2) und /scan (2D) für slam_toolbox und Nav2'),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(sensors, 'lidar.launch.py')),
             launch_arguments={'xfer_format': '1'}.items(),        # FAST-LIO braucht das Livox-CustomMsg
