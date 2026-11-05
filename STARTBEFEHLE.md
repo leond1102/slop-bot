@@ -186,7 +186,7 @@ ros2 run slop_teleop keyboard_teleop
 
 ## Karte speichern (eigenes Terminal, solange mapping.launch.py läuft; Name frei wählbar)
 mkdir -p ~/slop-bot_ws/maps
-ros2 run nav2_map_server map_saver_cli -f ~/slop-bot_ws/maps/wohnung
+ros2 run nav2_map_server map_saver_cli -f ~/slop-bot_ws/maps/wohnung --free 0.196
 ros2 service call /slam_toolbox/serialize_map slam_toolbox/srv/SerializePoseGraph "{filename: '/home/jetson/slop-bot_ws/maps/wohnung'}"
 
 ## Kartieren ohne RViz / wenn lio.launch.py schon läuft (dann muss es mit map_tf:=false gestartet sein)
@@ -221,6 +221,25 @@ ros2 service call /request_nomotion_update std_srvs/srv/Empty
 ## Lokalisierung prüfen: Pose und Unsicherheit, TF
 ros2 topic echo /amcl_pose --once
 ros2 run tf2_ros tf2_echo map base_footprint
+
+# 7. Navigation (Nav2)
+
+## Navigieren (3 Terminals: Antrieb + Modell + EKF, Kamera mit Hinderniserkennung, Lokalisierung + Nav2 + RViz; Ziel in RViz mit "Nav2 Goal", Tastatur in einem 4. Terminal hat Vorrang)
+## Details, Costmaps und Sicherheit: src/slop_navigation/README.md
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
+
+ros2 launch slop_sensors camera.launch.py
+
+ros2 launch slop_navigation navigation.launch.py
+
+## Ziel abbrechen (oder im Nav2-Panel in RViz "Cancel"); Hand-Stopp stoppt auch Nav2
+ros2 service call /navigate_to_pose/_action/cancel_goal action_msgs/srv/CancelGoal "{}"
+ros2 topic pub --once /safety/stop std_msgs/msg/Bool "data: true"
+
+## Nav2 prüfen: alle Knoten aktiv, Befehle am Ausgang, Zonen
+ros2 lifecycle get /controller_server
+ros2 topic echo /navigation/cmd_vel
+ros2 topic echo /polygon_stop --once
 
 # A. Bauen, Tests und einzelne Befehle
 

@@ -6,7 +6,9 @@ crop:
   body_margin_side: 0.10        # 0,10 = 10 %
   body_margin_up: 0.03          # m, Zuschlag oben: Rauschen der Körperoberseite; schließt an rear_box (ab z = 0) an
   # Quader hinter dem Lidar: beginnt in der Mitte des Lidars. [Tiefe nach hinten, halbe Breite nach links/rechts, Höhe nach oben]
-  # Soll Mast und Fahne abdecken. Der Mast steht 0,37 m hinter dem Lidar, die Fahne reicht bis 0,57 m nach hinten und
-  # liegt 0,22-0,34 m über dem Lidar; für die ganze Fahne also Tiefe >= 0,6.
+  # Deckt Mast und Fahne ab. Der Mast steht 0,37 m hinter dem Lidar, die Fahne reicht bis 0,57 m nach hinten und
+  # liegt 0,22-0,34 m über dem Lidar. 2026-11-05 gemessen: Fahnenpunkte ab 0,40 m hinter dem Lidar (vorher Tiefe 0,40):
+  # Sie lagen im Nav2-Footprint und ließen den Collision Monitor (FootprintApproach) immer wieder auf 0 schalten.
+  # Höhe 0,45 statt 1,0: Menschen/Möbel hinter dem Roboter oberhalb davon (ab ca. 0,77 m über dem Boden) bleiben sichtbar.
   # Achtung "halbe Breite": 15.0 würde einen 30 m breiten Streifen der Wände neben dem Roboter wegschneiden.
-  rear_box: [0.40, 0.15, 1.0]   # m
+  rear_box: [0.60, 0.15, 0.45]  # m

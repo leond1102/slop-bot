@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Fast DDS nur über UDP auf 127.0.0.1, ohne Shared Memory (SHM).
+
+  Anlass: Im controller_server kamen mitten in der Fahrt keine Nachrichten mehr an (TF eingefroren, Empfangs-Threads
+  ohne Rechenzeit), während alle anderen Prozesse normal weiterliefen. Ohne SHM teilen sich die Prozesse keinen Zustand
+  mehr; ein hängender oder getöteter Prozess kann andere nicht stören.
+
+  Benutzen (in JEDEM Terminal, z. B. in ~/.bashrc):
+      export ROS_LOCALHOST_ONLY=0        # bei 1 schaltet rmw_fastrtps SHM immer dazu, diese Datei wirkt dann nicht
+      export FASTRTPS_DEFAULT_PROFILES_FILE=$HOME/slop-bot_ws/config/fastdds_udp_localhost.xml
+  Die Beschränkung auf den eigenen Rechner (was ROS_LOCALHOST_ONLY=1 machte) steht unten in interfaceWhiteList.
+  Danach einmal: ros2 daemon stop
+
+  Zurück: beide Zeilen entfernen bzw. ROS_LOCALHOST_ONLY=1.
+-->
+<profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+  <transport_descriptors>
+    <transport_descriptor>
+      <transport_id>udp_localhost</transport_id>
+      <type>UDPv4</type>
+      <interfaceWhiteList>
+        <address>127.0.0.1</address>
+      </interfaceWhiteList>
+      <!-- Punktwolken (~250 KB je Nachricht, 10 Hz) brauchen mehr als die 208 KB Standardpuffer; Kernel erlaubt 10 MB -->
+      <sendBufferSize>4194304</sendBufferSize>
+      <receiveBufferSize>4194304</receiveBufferSize>
+    </transport_descriptor>
+  </transport_descriptors>
+
+  <participant profile_name="udp_localhost_participant" is_default_profile="true">
+    <rtps>
+      <userTransports>
+        <transport_id>udp_localhost</transport_id>
+      </userTransports>
+      <useBuiltinTransports>false</useBuiltinTransports>
+    </rtps>
+  </participant>
+</profiles>

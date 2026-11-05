@@ -25,6 +25,7 @@ import rclpy
 import yaml
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from nav_msgs.msg import OccupancyGrid
+from action_msgs.srv import CancelGoal
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy, qos_profile_sensor_data
@@ -77,6 +78,10 @@ class Relocalize(Node):
         self.pose_pub = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 10)
         self.score_pub = self.create_publisher(Float32, '/relocalize/score', 10)
         self.create_service(Trigger, 'relocalize', self.on_service)
+        # Setzt die Node im Betrieb eine neue Pose, war die bisherige falsch: laufende Nav2-Fahrten abbrechen
+        # (leere CancelGoal-Anfrage = alle Ziele der Aktion)
+        self.cancel_clients = [self.create_client(CancelGoal, f'/{a}/_action/cancel_goal')
+                               for a in ('navigate_to_pose', 'navigate_through_poses')]
         self.create_timer(self._p('check_period'), self.check)
         self.get_logger().info(f'Relokalisierung bereit (Pose passt ab {self._p("min_score"):.0%} Scanpunkte auf Wänden; '
                                f'unter {self._p("bad_score"):.0%} für {self._p("bad_duration"):g} s wird gesucht)')
@@ -172,13 +177,23 @@ class Relocalize(Node):
                                        '(Umgebung verändert? Menschen, Möbel)')
                 return True, 'aktuelle Pose ist die beste'
         self.set_pose(best, f'{why}, Suche {took:.1f} s', stamp)
+        if current is not None:
+            self.cancel_navigation()
         return True, f'Pose gesetzt: x {best.x:.2f}, y {best.y:.2f}, Gier {math.degrees(best.yaw):.0f}° ({why})'
 
     def set_pose(self, cand, why, stamp=None):
         msg = PoseWithCovarianceStamped()
         msg.header.frame_id = self._p('map_frame')
-        # Stempel des Scans: AMCL rechnet die Bewegung seitdem über die Odometrie nach
-        msg.header.stamp = stamp if stamp is not None else self.scan.header.stamp
+        # Stempel des Scans: AMCL rechnet die Bewegung seitdem über die Odometrie nach. Höchstens so neu wie die letzte
+        # Odometrie (odom → base_footprint vom EKF), sonst meldet AMCL "extrapolation into the future".
+        stamp = stamp if stamp is not None else self.scan.header.stamp
+        try:
+            odom = self.tf_buffer.lookup_transform('odom', self._p('base_frame'), Time()).header.stamp
+            if Time.from_msg(odom) < Time.from_msg(stamp):
+                stamp = odom
+        except Exception:
+            pass
+        msg.header.stamp = stamp
         msg.pose.pose.position.x, msg.pose.pose.position.y = cand.x, cand.y
         msg.pose.pose.orientation.z, msg.pose.pose.orientation.w = math.sin(cand.yaw / 2), math.cos(cand.yaw / 2)
         msg.pose.covariance[0] = msg.pose.covariance[7] = 0.1 ** 2
@@ -187,6 +202,19 @@ class Relocalize(Node):
         self.last_reloc = time.monotonic()      # AMCL braucht einen Moment; so lange nicht erneut suchen
         self.bad_since = None
         self.get_logger().info(f'Pose gesetzt: x {cand.x:.2f} m, y {cand.y:.2f} m, Gier {math.degrees(cand.yaw):.0f}° ({why})')
+
+    def cancel_navigation(self):
+        """Alle laufenden Nav2-Ziele abbrechen (Pose war falsch, der Pfad also auch)."""
+        for client in self.cancel_clients:
+            if client.service_is_ready():
+                future = client.call_async(CancelGoal.Request())
+                future.add_done_callback(lambda f, name=client.srv_name: self._cancelled(f, name))
+
+    def _cancelled(self, future, name):
+        result = future.result()
+        if result is not None and result.goals_canceling:
+            self.get_logger().warn(f'Navigation abgebrochen ({len(result.goals_canceling)} Ziel(e), {name}): '
+                                   'Pose wurde neu gesetzt, neues Ziel nötig')
 
     def on_service(self, request, response):
         if self.model is None or self.scan is None:

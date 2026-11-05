@@ -1,6 +1,7 @@
 # slop_navigation
 
-Karte aufnehmen mit `slam_toolbox`, in der gespeicherten Karte lokalisieren mit `map_server` + AMCL (später Nav2).
+Karte aufnehmen mit `slam_toolbox`, in der gespeicherten Karte lokalisieren mit `map_server` + AMCL + `relocalize`,
+navigieren mit Nav2 (Costmaps aus Lidar und Kamera, NavFn, Regulated Pure Pursuit, Collision Monitor).
 
 ## Karte aufnehmen
 
@@ -34,11 +35,12 @@ So wird die Karte gut:
 
 ```bash
 mkdir -p ~/slop-bot_ws/maps
-ros2 run nav2_map_server map_saver_cli -f ~/slop-bot_ws/maps/wohnung
+ros2 run nav2_map_server map_saver_cli -f ~/slop-bot_ws/maps/wohnung --free 0.196
 ros2 service call /slam_toolbox/serialize_map slam_toolbox/srv/SerializePoseGraph "{filename: '/home/jetson/slop-bot_ws/maps/wohnung'}"
 ```
 
-- `wohnung.pgm` + `wohnung.yaml`: Bild der Karte für Nav2 (map_server, AMCL).
+- `wohnung.pgm` + `wohnung.yaml`: Bild der Karte für Nav2 (map_server, AMCL). `--free 0.196` ist wichtig: Ohne schreibt
+  map_saver_cli `free_thresh: 0.25`, und beim Laden zählen die unbekannten Zellen (Grauwert 205 = 0,196) als frei.
 - `wohnung.posegraph` + `wohnung.data`: Posegraph für slam_toolbox (Lokalisieren oder Weiterkartieren).
 
 Getestet am 2026-11-05 im Stand ohne Motoren: `/scan` mit 721 Strahlen wird angenommen, `/map` erscheint, `map → odom`
@@ -104,3 +106,86 @@ Die Suche dauert auf dem Jetson 2–6 s (mit laufendem LIO eher 5 s) und blockie
 Getestet am 2026-11-05 im Stand ohne Motoren, Roboter am Startpunkt der Karte: 90 % der Scanpunkte auf einer Wand der
 Karte (±10 cm). Startpose absichtlich 30 cm und 10° daneben gesetzt: nach 25 Nachrechnungen im Stand bei
 (−0,07 m, 0,02 m, 2°), 96 % auf der Wand, Unsicherheit 7 cm / 3°. Last: AMCL 4,5 %, map_server 2 % eines Kerns.
+
+## Navigation (Nav2)
+
+```bash
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py   # Antrieb, Modell, EKF
+ros2 launch slop_sensors camera.launch.py                                    # Kamera + Hinderniserkennung
+ros2 launch slop_navigation navigation.launch.py                             # Lokalisierung + Nav2 + RViz
+```
+
+Ziel in RViz mit **Nav2 Goal** setzen (Pfeil an die Stelle und in Zielrichtung ziehen). Die Tastatur hat immer Vorrang
+(twist_mux: Tastatur 50, Nav2 20), Hand-Stopp und RustDesk-Sperre (100) sperren auch Nav2.
+Einstellungen: `config/nav2.yaml`, Verhaltensbäume: `behavior_trees/`, RViz: `slop_description/rviz/navigation.rviz`.
+
+### Footprint
+
+Körper 50 × 32 cm, symmetrisch, beginnt 10 cm vor der Antriebsachse (= Drehpunkt = `base_footprint`):
+`[[0.10, 0.16], [0.10, -0.16], [-0.40, -0.16], [-0.40, 0.16]]`, dazu 2 cm Zuschlag. Innenkreis 0,16 m, die hinteren Ecken
+liegen 0,43 m vom Drehpunkt: Beim Drehen auf der Stelle schwenkt das Heck weit aus. Dieselben Maße stehen im URDF
+(`slop_bot.urdf.xacro`: `body_front`, `body_length`, `body_width`) und bestimmen den Quader, der den Roboter aus
+Lidar-Wolke und `/scan` schneidet.
+
+### Wie die Costmaps funktionieren
+
+Eine Costmap ist ein Raster (5 cm) mit Kosten 0–254 je Zelle: 254 = Hindernis, 253 = der Roboter-Mittelpunkt hier hieße
+Berührung (Innenkreis), darunter abnehmende Kosten nach außen, 0 = frei, 255 = unbekannt. Sie entsteht aus Schichten:
+
+| Schicht | Inhalt | Wo |
+|---|---|---|
+| `static_layer` | die gespeicherte Karte (`/map`) | nur global |
+| `obstacle_layer` | Sensoren: **markieren** setzt Zellen mit Messpunkten auf Hindernis, **freiräumen** (Raytracing) setzt alle Zellen zwischen Sensor und Messpunkt auf frei | global und lokal |
+| `inflation_layer` | Sicherheitsabstand: um jedes Hindernis fallen die Kosten bis 0,45 m ab (`cost_scaling_factor` 4) | global und lokal |
+
+- **Global** (`map`, ganze Karte, 1 Hz): Grundlage für den **Planer** (NavFn/A*), der den Weg mit den geringsten Kosten
+  sucht. Er plant nicht durch unbekannte Bereiche (`allow_unknown: false`).
+- **Lokal** (`odom`, 4 × 4 m mitfahrend, 5 Hz, nur Sensoren): Grundlage für den **Controller**. Er prüft jeden Befehl mit dem
+  Footprint gegen diese Karte. `odom` springt nicht, wenn AMCL korrigiert.
+- Sensoren: `/scan` (Lidar, markiert und räumt frei, `inf` = bis zur Reichweite frei), `/camera/obstacles` (markiert),
+  `/camera/floor` (räumt frei, Raytracing von `camera_link` aus). Ein Hindernis, das weggeht, verschwindet erst, wenn ein
+  Sensor durch seine Zelle hindurchsieht. Vor dem Roboter erledigt das die Kamera mit dem freien Boden; niedrige Dinge
+  sieht das Lidar erst ab ca. 2,6 m.
+- Worauf es ankommt: Footprint richtig; der Roboter darf sich selbst nicht als Hindernis sehen (Ausschnitt-Quader);
+  `inflation_radius` größer als der Außenkreis, sonst fährt der Planer zu dicht an Wände; Freiräumen muss möglich sein, sonst
+  bleiben „Geister“ (z. B. vorbeigelaufene Menschen) liegen.
+
+### Sicherheit
+
+```
+controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cmd_vel_smoothed─► collision_monitor
+    ─/navigation/cmd_vel─► twist_mux (Prio 20) ─/cmd_vel─► diff_drive_node ─► ethercat_bus (Watchdog 0,3 s)
+```
+
+- **Nie rückwärts:** RPP `allow_reversing: false`, `velocity_smoother` `min_velocity` x = 0 (ein Rückwärtsbefehl wird 0),
+  Verhaltensbäume ohne `BackUp`. Hinten gibt es keine Kamera und unter 0,15 m kein Lidar.
+- **Kein Drehen als Recovery** (`Spin` aus den Bäumen entfernt): Das Heck schwenkt bis 0,43 m aus. Recovery = Costmaps
+  leeren und 5 s warten.
+- **Tempo:** höchstens 0,18 m/s (Ziel 0,15) und 0,6 rad/s; Beschleunigung 0,2 m/s².
+- **Collision Monitor** (letzte Bremse, nur aktuelle Sensordaten, unabhängig von Karte und Costmaps; Zonen in RViz rot/gelb):
+  - Stopp: Streifen 15 cm vor der Front (x 0,10–0,25 m, ±0,20 m)
+  - Langsam auf 40 %: bis 60 cm vor der Front (x 0,10–0,60 m, ±0,25 m)
+  - Vorausschau mit dem Footprint: bremst so, dass bis zur Berührung ≥ 1,5 s bleiben. **Unter Humble nur für
+    Geradeausfahrt, nicht für Drehungen** (getestet). Gegen Anstoßen beim Drehen schützt der Controller: RPP prüft jeden
+    Befehl, auch Drehen auf der Stelle, mit dem Footprint gegen die lokale Costmap (mit Gedächtnis).
+- **Pose neu gesetzt** (`relocalize` im Betrieb): laufende Nav2-Ziele werden abgebrochen, ein neues Ziel ist nötig.
+- Darunter wie immer: twist_mux-Sperren, Totmann der Tastatur, Fahrsperre ohne RustDesk, Watchdog im Busprozess.
+
+### Getestet (2026-11-05, Domäne 77, ohne Antrieb)
+
+- Alle Nav2-Knoten aktiv; globale und lokale Costmap, Footprint und Zonen werden veröffentlicht. Lokale Costmap: keine
+  Hinderniszelle im eigenen Footprint.
+- Planer: Wege zu Zielen 2–4 m entfernt in 2–18 ms.
+- Sicherheitskette mit Befehlen: vorwärts 0,05–0,18 m/s geht durch, rückwärts wird 0, 0,30 m/s wird auf 0,18 begrenzt,
+  0,6 rad/s geht durch.
+- Collision Monitor mit künstlichen Hindernissen: 10 cm vor der Front → Stopp, 35 cm → 40 %, außerhalb → unverändert.
+- Dabei gefunden und behoben: Die Fahne (bis 0,57 m hinter dem Lidar) lag im Footprint und ließ die Vorausschau immer
+  wieder auf 0 springen → hinterer Ausschnitt-Quader 0,60 m tief, 0,45 m hoch (`slop_lio/config/crop.yaml`). Mit
+  `footprint_topic` hing unter Humble der Zeitstempel → Footprint dort als feste Punkte.
+
+### Offen
+
+- **Karte neu aufnehmen:** `maps/office` wurde mit dem alten, zu kurzen Ausschnitt-Quader aufgenommen. Wo der Roboter
+  länger stand (Startpunkt), stehen Teile seiner eigenen Rückseite als „Wand“ in der Karte (48 Zellen im Footprint am
+  Startpunkt). Beim Speichern `--free 0.196` angeben (siehe oben), sonst gilt Unbekanntes als frei.
+- Noch nicht gefahren: Ziele anfahren, Controller abstimmen (Tempo, Lookahead, Toleranzen).

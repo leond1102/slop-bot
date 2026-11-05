@@ -67,8 +67,8 @@ beides sind spätere Optimierungen.
 aus mit `crop:=false`). Beide im Lidar-Frame (Ursprung = Mitte des Lidars):
 - **Roboterkörper** mit 10 % Zuschlag auf die halbe Breite links und rechts (+ 3 cm oben). Maße und Lage kommen aus dem URDF
   (`chassis`, `chassis_joint`, `livox_joint`), stehen also nur dort.
-- **Quader hinter dem Lidar** ab dessen Mitte: 0,40 m nach hinten, 0,15 m nach links und rechts, 1 m nach oben (Mast und Fahne;
-  Werte in `config/crop.yaml`).
+- **Quader hinter dem Lidar** ab dessen Mitte: 0,60 m nach hinten, 0,15 m nach links und rechts, 0,45 m nach oben (Mast und
+  Fahne; Werte in `config/crop.yaml`). Bis 2026-11-05 nur 0,40 m tief: Die Fahne lag dann im Nav2-Footprint.
 
 `preprocess.blind` (0,5 m) verwirft ohnehin alles näher als 0,5 m. Beide Quader wirken deshalb nur auf Punkte, die weiter weg
 liegen. Laut Messung im Stand (2026-11-05) liegen alle Körperpunkte innerhalb von 0,5 m. Hinter dem Quader, bei x = −0,4 bis −0,75 m

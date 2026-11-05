@@ -39,7 +39,7 @@ def generate_launch_description():
     params = os.path.join(share, 'config', 'localization.yaml')
     lio = os.path.join(get_package_share_directory('slop_lio'), 'launch', 'lio.launch.py')
     rviz_cfg = os.path.join(get_package_share_directory('slop_description'), 'rviz', 'localization.rviz')
-    default_map = os.path.join(os.path.expanduser('~'), 'slop-bot_ws', 'maps', 'office.yaml')
+    default_map = os.path.join(os.path.expanduser('~'), 'slop-bot_ws', 'maps', 'office-3.yaml')
 
     def num(name):
         return ParameterValue(LaunchConfiguration(name), value_type=float)

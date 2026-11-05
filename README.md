@@ -19,7 +19,7 @@ Offene Aufgaben: [TODO.md](TODO.md)
 | [slop_bringup](src/slop_bringup) | `bringup.launch.py`: Antrieb + Sicherheit + Robotermodell + EKF in einem Start (`ekf:=false` ohne EKF) |
 | [slop_calibration](src/slop_calibration) | `calibrate`-Befehl (Gyro-Bias, Sensorneigung) und Speicher für die Ergebnisse im Ordner `calib/` (siehe [calib/README.md](calib/README.md)) |
 | [slop_lio](src/slop_lio) | FAST-LIO2 (Livox Mid-360s) und Brücke `lio_bridge`: `/lio/odom`, TF `map → odom`; die LIO-Geschwindigkeit geht als `odom1` in den EKF. Siehe [src/slop_lio/README.md](src/slop_lio/README.md) |
-| [slop_navigation](src/slop_navigation) | Karte aufnehmen mit `slam_toolbox` (`mapping.launch.py`), lokalisieren mit `map_server` + AMCL (`localization.launch.py`) und `relocalize` (findet den Roboter nach dem Versetzen selbst wieder); Anleitung im README; später Nav2 |
+| [slop_navigation](src/slop_navigation) | Karte aufnehmen mit `slam_toolbox` (`mapping.launch.py`), lokalisieren mit `map_server` + AMCL (`localization.launch.py`) und `relocalize` (findet den Roboter nach dem Versetzen selbst wieder), navigieren mit Nav2 (`navigation.launch.py`: Costmaps aus Lidar und Kamera, Collision Monitor, nie rückwärts); Anleitung im README |
 | [slop_safety](src/slop_safety) | `twist_mux`-Konfiguration und `remote_guard`: Fahrsperre, solange keine RustDesk-Sitzung besteht |
 | [slop_teleop](src/slop_teleop) | `keyboard_teleop`: Tastatursteuerung mit Totmann (Taste halten = fahren) |
 | [slop_description](src/slop_description) | URDF/xacro des Roboters (Räder, Schleppräder, Livox, RealSense) und `description.launch.py` mit `robot_state_publisher`. Radmaße, Spur und Gelenknamen liest es aus `diff_drive.yaml` |

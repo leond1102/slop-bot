@@ -31,8 +31,14 @@
   <xacro:property name="camera_y" value="0.0"/>
   <xacro:property name="camera_z" value="${0.15 - wheel_radius}"/>
 
-  <!-- Körper: Quader, dessen untere Ecken über den Radmitten (Antriebsräder und Schleppräder) liegen und der unter dem
-       Lidar endet. Fahnenmast hinten in der Mitte. Maße der Fahne und des Mastdurchmessers geschätzt. -->
+  <!-- Körper: Quader von der Achshöhe bis unter das Lidar, gemessen (2026-11-05): 32 cm breit, 50 cm lang, beginnt
+       10 cm vor der Antriebsachse (Drehpunkt), symmetrisch. Dieselben Maße sind der Footprint in Nav2
+       (slop_navigation/config/nav2.yaml) und bestimmen den Quader, der den Roboter aus Lidar-Wolke und /scan schneidet.
+       Fahnenmast hinten in der Mitte (34 cm hinter der Achse). Maße der Fahne und des Mastdurchmessers geschätzt. -->
+  <xacro:property name="body_front" value="0.10"/>        <!-- Vorderkante vor der Achse -->
+  <xacro:property name="body_length" value="0.50"/>
+  <xacro:property name="body_width" value="0.32"/>
+  <xacro:property name="mast_x" value="-0.34"/>           <!-- Mast hinter der Achse -->
   <xacro:property name="lidar_height" value="0.06"/>
   <xacro:property name="body_bottom" value="0.0"/>                          <!-- Achshöhe -->
   <xacro:property name="body_top" value="${lidar_z - lidar_height / 2.0}"/> <!-- Unterseite des Lidars -->
@@ -93,14 +99,14 @@
   <link name="chassis">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry><box size="${-caster_x} ${track} ${body_top - body_bottom}"/></geometry>
+      <geometry><box size="${body_length} ${body_width} ${body_top - body_bottom}"/></geometry>
       <material name="chassis"><color rgba="0.75 0.75 0.78 1"/></material>
     </visual>
   </link>
   <joint name="chassis_joint" type="fixed">
     <parent link="base_link"/>
     <child link="chassis"/>
-    <origin xyz="${caster_x / 2.0} 0 ${(body_top + body_bottom) / 2.0}" rpy="0 0 0"/>
+    <origin xyz="${body_front - body_length / 2.0} 0 ${(body_top + body_bottom) / 2.0}" rpy="0 0 0"/>
   </joint>
 
   <!-- Fahnenmast: steht hinten in der Mitte auf dem Körper -->
@@ -113,7 +119,7 @@
   <joint name="flag_pole_joint" type="fixed">
     <parent link="chassis"/>
     <child link="flag_pole"/>
-    <origin xyz="${caster_x / 2.0} 0 ${(body_top - body_bottom) / 2.0 + mast_length / 2.0}" rpy="0 0 0"/>
+    <origin xyz="${mast_x - (body_front - body_length / 2.0)} 0 ${(body_top - body_bottom) / 2.0 + mast_length / 2.0}" rpy="0 0 0"/>
   </joint>
 
   <!-- Rote dreieckige Fahne am oberen Mastende, Spitze zeigt nach hinten (-x). Netz: meshes/flag.stl,

@@ -8,7 +8,7 @@ find_package(ament_cmake_python REQUIRED)
 ament_python_install_package(${PROJECT_NAME})
 
 # Launch-Dateien und Parameter (slam_toolbox, AMCL, später Nav2)
-install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY config launch behavior_trees DESTINATION share/${PROJECT_NAME})
 
 # Startskripte (ros2 run slop_navigation <name>)
 install(PROGRAMS scripts/relocalize DESTINATION lib/${PROJECT_NAME})

@@ -1,16 +1,16 @@
 camera:
   frame: camera_imu_optical_frame
   bias:
-  - 0.000296
-  - 0.000358
-  - -0.002854
-  samples: 1997
-  stamp: '2026-11-04T17:08:55'
+  - 3.4e-05
+  - -0.00034
+  - -0.002974
+  samples: 1996
+  stamp: '2026-11-05T14:11:54'
 livox:
   frame: livox_frame
   bias:
-  - -0.014994
-  - -0.000204
-  - 0.00938
-  samples: 2001
-  stamp: '2026-11-04T17:08:55'
+  - -0.014349
+  - -0.000358
+  - 0.00888
+  samples: 1999
+  stamp: '2026-11-05T14:11:54'
