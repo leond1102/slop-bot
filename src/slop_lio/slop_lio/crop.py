@@ -30,7 +30,7 @@ def rear_box(depth, half_width, height):
     return (-depth, 0.0, -half_width, half_width, 0.0, height)
 
 
-def boxes_from_urdf(urdf_xml, body_margin_side=0.10, body_margin_up=0.0, rear=(0.40, 15.0, 1.0)):
+def boxes_from_urdf(urdf_xml, body_margin_side=0.10, body_margin_up=0.0, rear=(0.40, 0.15, 1.0)):
     """Liste der Quader (flach, je 6 Werte) aus dem URDF-Text: Körper (Link `chassis`, Gelenke `chassis_joint` und
     `livox_joint`) und der Quader hinter dem Lidar. rear = (Tiefe, halbe Breite, Höhe)."""
     root = ET.fromstring(urdf_xml)

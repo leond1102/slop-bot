@@ -46,12 +46,12 @@ def exclude_boxes(share):
                            tuple(crop['rear_box']))
 
 
-def lio_nodes(context, config, extrinsic_t):
+def lio_nodes(context, config, extrinsic):
     """FAST-LIO und Brücke; crop:=true gibt die Quader zum Ausschneiden an FAST-LIO (Parameter) und zur Anzeige an die
     Brücke (leere Listen wären nicht typisierbar, deshalb dann ganz weglassen)."""
     share = get_package_share_directory('slop_lio')
     params = {'publish.scan_publish_en': ParameterValue(LaunchConfiguration('clouds'), value_type=bool)}
-    bridge = {'imu_to_lidar_xyz': extrinsic_t}
+    bridge = {'imu_to_lidar_xyz': extrinsic['extrinsic_T'], 'imu_to_lidar_rot': extrinsic['extrinsic_R']}
     if context.launch_configurations['crop'].lower() == 'true':
         boxes = [float(v) for v in exclude_boxes(share)]
         params['preprocess.exclude_boxes'] = boxes
@@ -67,7 +67,8 @@ def generate_launch_description():
     share = get_package_share_directory('slop_lio')
     config = os.path.join(share, 'config', 'fast_lio_mid360s.yaml')
     with open(config, encoding='utf-8') as f:
-        extrinsic_t = yaml.safe_load(f)['/**']['ros__parameters']['mapping']['extrinsic_T']
+        mapping = yaml.safe_load(f)['/**']['ros__parameters']['mapping']
+    extrinsic = {k: [float(v) for v in mapping[k]] for k in ('extrinsic_T', 'extrinsic_R')}   # Lidar im IMU-Frame
     sensors = os.path.join(get_package_share_directory('slop_sensors'), 'launch')
     return LaunchDescription([
         DeclareLaunchArgument('lidar', default_value='true', description='Livox-Treiber mitstarten'),
@@ -80,5 +81,5 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(os.path.join(sensors, 'lidar.launch.py')),
             launch_arguments={'xfer_format': '1'}.items(),        # FAST-LIO braucht das Livox-CustomMsg
             condition=IfCondition(LaunchConfiguration('lidar'))),
-        OpaqueFunction(function=lio_nodes, args=[config, extrinsic_t]),
+        OpaqueFunction(function=lio_nodes, args=[config, extrinsic]),
     ])

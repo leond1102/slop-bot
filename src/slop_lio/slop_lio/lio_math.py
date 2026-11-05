@@ -50,16 +50,13 @@ def yaw_of(t):
     return math.atan2(t[1, 0], t[0, 0])
 
 
-def planar_inverse(t):
-    """Inverse nur von Position (x, y, z) und Gier der Pose; Roll/Pitch bleiben unberücksichtigt.
-
-    Damit wird die Anfangslage des Roboters zum Ursprung der Karte (map), ohne die Schwerkraftausrichtung der
-    LIO-Welt zu verdrehen."""
-    c, s = math.cos(yaw_of(t)), math.sin(yaw_of(t))
-    p = np.eye(4)
-    p[:2, :2] = [[c, -s], [s, c]]
-    p[:3, 3] = t[:3, 3]
-    return inverse(p)
+def from_extrinsic(xyz, rot=None):
+    """Pose aus Verschiebung und Drehmatrix (9 Werte, zeilenweise, wie extrinsic_R von FAST-LIO; None = keine Drehung)."""
+    t = np.eye(4)
+    if rot is not None:
+        t[:3, :3] = np.asarray(rot, dtype=float).reshape(3, 3)
+    t[:3, 3] = xyz
+    return t
 
 
 def body_twist(t0, t1, dt):

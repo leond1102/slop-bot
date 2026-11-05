@@ -107,18 +107,23 @@ ros2 launch slop_description rviz.launch.py rviz_config:=lio
 
 ros2 run slop_teleop keyboard_teleop
 
-## LIO, wenn der Lidar-Treiber schon läuft (sensors.launch.py)
+## LIO, wenn der Lidar-Treiber schon läuft (sensors.launch.py, nur im Livox-Format: ohne xfer_format:=0)
 ros2 launch slop_lio lio.launch.py lidar:=false
 
 ## LIO ohne Ausschneiden von Körper und Mast (Vergleich)
 ros2 launch slop_lio lio.launch.py crop:=false
 
-## LIO prüfen (eigenes Terminal): Nodes, Rate, Pose in map, TF-Kette
+## LIO prüfen (eigenes Terminal): Nodes, Rate (ca. 10 Hz), Verzögerung (ca. 0,03 s), Pose in map, TF-Kette
+## Im LIO-Terminal steht beim Start "map festgelegt: ... gekippt um roll …, pitch …" (Neigung des Lidars, ca. 1–2°)
 ros2 node list | grep -E "ekf_filter_node|imu_adapter|fast_lio|lio_bridge|diff_drive_node"
 ros2 topic hz /lio/odom
+ros2 topic delay /lio/odom
 ros2 run tf2_ros tf2_echo map base_footprint
 ros2 run tf2_ros tf2_echo map odom
 ros2 run tf2_ros tf2_echo odom base_footprint
+
+## LIO-Geschwindigkeit ansehen (geht in den EKF; im Stand Streuung ca. 0,01 m/s)
+ros2 topic echo /lio/odom --field twist.twist
 
 ## Fahrt prüfen: 1 m geradeaus und 90° Drehung gegen das Maßband (Pose von Rädern, LIO und EKF vergleichen)
 ros2 topic echo /wheel/odom --field pose.pose.position
@@ -136,7 +141,7 @@ cd ~/slop-bot_ws && ./colcon_build.sh && source install/setup.bash
 ## Einzelne Pakete bauen
 ./colcon_build.sh --packages-select slop_base slop_safety slop_teleop slop_sensors slop_description slop_localization slop_bringup slop_calibration slop_lio fast_lio
 
-## Tests (ohne Hardware)
+## Tests (ohne Hardware, 86 Stück)
 colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio && colcon test-result --verbose
 
 ## Nur Antrieb
@@ -175,6 +180,9 @@ ping -c 3 192.168.1.162
 
 ## Fremdpakete (Git-Submodule) nach dem Klonen holen (FAST_LIO braucht --recursive; colcon_build.sh wendet den Patch an)
 git submodule update --init --recursive
+
+## FAST-LIO-Patch neu erzeugen, nachdem im Submodule etwas geändert wurde
+git -C src/third_party/FAST_LIO diff > src/third_party/patches/fast_lio.patch
 
 ## ALLE hängengebliebenen Slop-Bot-Prozesse beenden (Lidar-Treiber, Kamera, FAST-LIO, RViz, Antrieb, Reste von ros2 launch; zeigt erst die Liste und fragt nach; beendet nur Prozesse aus diesem Workspace und den Roboter-ROS-Paketen)
 ./stop_all.sh

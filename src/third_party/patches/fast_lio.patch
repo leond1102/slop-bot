@@ -57,7 +57,7 @@ index 8c39e18..729bde8 100644
    <depend>livox_ros_driver2</depend>
  
 diff --git a/src/laserMapping.cpp b/src/laserMapping.cpp
-index e5d9950..466f503 100644
+index e5d9950..8fb6041 100644
 --- a/src/laserMapping.cpp
 +++ b/src/laserMapping.cpp
 @@ -821,6 +821,7 @@ public:
@@ -87,6 +87,25 @@ index e5d9950..466f503 100644
          this->get_parameter_or<int>("preprocess.lidar_type", p_pre->lidar_type, AVIA);
          this->get_parameter_or<int>("preprocess.scan_line", p_pre->N_SCANS, 16);
          this->get_parameter_or<int>("preprocess.timestamp_unit", p_pre->time_unit, US);
+@@ -920,13 +933,16 @@ public:
+         /*** ROS subscribe initialization ***/
+         if (p_pre->lidar_type == AVIA)
+         {
+-            sub_pcl_livox_ = this->create_subscription<livox_ros_driver2::msg::CustomMsg>(lid_topic, 20, livox_pcl_cbk);
++            // best effort statt reliable: Ein verlorenes Fragment der ~400-KB-Scans hielt bei "reliable" alle folgenden Scans
++            // bis zur Nachlieferung auf (gemessen 1,1-1,9 s Verzögerung der Odometrie). Lieber einen Scan verlieren.
++            sub_pcl_livox_ = this->create_subscription<livox_ros_driver2::msg::CustomMsg>(lid_topic, rclcpp::SensorDataQoS(), livox_pcl_cbk);
+         }
+         else
+         {
+             sub_pcl_pc_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(lid_topic, rclcpp::SensorDataQoS(), standard_pcl_cbk);
+         }
+-        sub_imu_ = this->create_subscription<sensor_msgs::msg::Imu>(imu_topic, 10, imu_cbk);
++        // Tiefe 1000 statt 10 (= 50 ms bei 200 Hz): Hängt die Verarbeitung kurz, gingen sonst IMU-Werte verloren
++        sub_imu_ = this->create_subscription<sensor_msgs::msg::Imu>(imu_topic, rclcpp::SensorDataQoS().keep_last(1000), imu_cbk);
+         pubLaserCloudFull_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/cloud_registered", 20);
+         pubLaserCloudFull_body_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/cloud_registered_body", 20);
+         pubLaserCloudEffect_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/cloud_effected", 20);
 diff --git a/src/preprocess.cpp b/src/preprocess.cpp
 index 5f171a3..f9083ab 100644
 --- a/src/preprocess.cpp

@@ -2,11 +2,13 @@
 
 Differentialantrieb mit zwei Schrittmotoren am EtherCAT-Treiber CL57E-4A, Livox Mid-360s und RealSense D435i.
 
-**Stand (Branch `slam-neu`):** Grundgerüst ohne SLAM. Enthalten sind nur Antrieb, Sicherheit, Tastatursteuerung und
-die Sensortreiber. Die Antriebsnode sendet Rohodometrie der Räder (`/wheel/odom`), der EKF daraus `/odom` und das TF `odom → base_footprint`; TFs zwischen
-Roboter und Sensoren gibt es **nicht** – das ist die Aufgabe des SLAM, der hier neu aufgebaut wird. (Der alte FAST-LIO-Stack liegt auf `main`.)
+**Stand (Branch `slam-neu`):** Antrieb, Sicherheit, Tastatursteuerung, Sensortreiber, Robotermodell (URDF), EKF und
+LIO-Odometrie. Die Antriebsnode sendet Rohodometrie der Räder (`/wheel/odom`), der EKF daraus `/odom` und das TF
+`odom → base_footprint` (Räder, Livox-Gyro, LIO-Geschwindigkeit). Das URDF liefert `base_footprint → Sensoren`, FAST-LIO über
+`lio_bridge` das TF `map → odom`. Eine gespeicherte Karte und Navigation gibt es noch nicht. (Der alte FAST-LIO-Stack liegt auf `main`.)
 
 Alle Startbefehle: [STARTBEFEHLE.md](STARTBEFEHLE.md)
+Offene Aufgaben: [TODO.md](TODO.md)
 
 ## Pakete
 
@@ -35,6 +37,12 @@ Hand-Stopp   ──safety/stop (Sperre)─────────┘           
 
 livox_lidar_publisher ─► /livox/lidar, /livox/imu        (Frame livox_frame)
 camera (RealSense)    ─► /camera/color, /camera/depth, /camera/imu   (Frames unter camera_link)
+
+diff_drive_node ─/wheel/odom──────────────┐
+/livox/imu ─► imu_adapter ─/imu/livox─────┼─► EKF ──► /odom, TF odom → base_footprint
+/livox/* ─► fast_lio ─► lio_bridge ─/lio/odom (nur Geschwindigkeit)─┘
+                             └──► TF map → odom, TF static map → camera_init
+robot_state_publisher (URDF) ──► TF base_footprint → base_link → Räder, livox_frame, camera_link
 ```
 
 ## Sicherheit
@@ -56,16 +64,19 @@ camera (RealSense)    ─► /camera/color, /camera/depth, /camera/imu   (Frames
 | Rechner | Jetson Orin, 8 Kerne. EtherCAT-Zyklus auf Kern 7 (SCHED_FIFO 80), USB-Interrupts auf CPU1 |
 | Antrieb | CL57E-4A an `enP8p1s0`, Achse 3 = links (Getriebe 1:7,5), Achse 4 = rechts (1:14, gespiegelt). Schrittmotoren ohne Encoder (Open Loop) |
 | Räder | Ø 7 cm, Spur 24 cm, angetrieben vorn. Schleppräder 34 cm dahinter. Höchstens 10 U/min am Rad → 0,037 m/s, 0,31 rad/s |
-| `base_footprint` | Boden, Mitte zwischen den angetriebenen Rädern; x vorn, y links, z oben (wird noch von keiner Node gesendet) |
+| `base_footprint` | Boden, Mitte zwischen den angetriebenen Rädern; x vorn, y links, z oben (TF `odom → base_footprint` vom EKF) |
 | Lidar | Livox **Mid-360s** (SDK-Typ 35, eigene Config `MID360s_config.json`), IP `192.168.1.162`; Jetson `192.168.1.50/24` am USB-LAN-Adapter (NetworkManager `livox-mid360`). 4 Scanlinien, ~20 000 Punkte je Scan bei 10 Hz, davon ~18 % Nullpunkte (kein Echo) |
 | Kamera | RealSense D435i, SN 262722070636, USB 3.2. Farbe + Tiefe 640×480 @ 30 Hz, IMU 200 Hz (über den RSUSB-Build, siehe unten) |
 
-**Montage der Sensoren – nur grobe Werte, nachmessen!** (aus dem alten LIO-Stack, 2026-11-03/04)
+**Montage der Sensoren** (Position im [URDF](src/slop_description/urdf/slop_bot.urdf.xacro), Neigung aus
+[calib/mounts.yaml](calib/mounts.yaml), `ros2 run slop_calibration calibrate mount`):
 
 | Sensor | Position zu `base_footprint` | Neigung |
 |---|---|---|
-| Lidar `livox_frame` | x/y ≈ 0 (ungemessen), z ≈ 0,30 m (Platzhalter) | roll −0,4°, pitch +1,3° (Schwerkraft), yaw nie bestimmt |
-| Kamera `camera_link` | x −0,12, y +0,06, z 0,40 m (ICP, ±5–10 cm) | pitch −8,6° = **schaut nach oben** (Schwerkraft und ICP einig), yaw ≈ −4° |
+| Lidar `livox_frame` | x 0,03, y 0, z 0,315 m | roll −0,15°, pitch +1,27° (Schwerkraft), yaw nie bestimmt |
+| Kamera `camera_link` | x 0, y 0, z 0,425 m | roll −0,52°, pitch −2,98° (Schwerkraft), yaw nie bestimmt |
+
+Auf `main` hatte ICP für die Kamera x −0,12, y +0,06 m und pitch −8,6° ergeben. Die Werte passen nicht zusammen, nachmessen.
 
 ## Bauen
 
@@ -84,16 +95,16 @@ baut in einer leeren Umgebung, nur mit `/opt/ros/humble`, und umgeht so drei Fal
 - `/opt/MVS/lib/aarch64` (Hikrobot-SDK, aus `~/.bashrc` und `~/.profile`) bringt eine alte libusb mit.
   `camera.launch.py` nimmt den Pfad zur Laufzeit aus `LD_LIBRARY_PATH`.
 
-Tests (40, ohne Hardware):
+Tests (86, ohne Hardware):
 
 ```bash
-source install/setup.bash && colcon test --packages-select slop_base slop_safety slop_teleop slop_localization && colcon test-result --verbose
+source install/setup.bash && colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio && colcon test-result --verbose
 ```
 
 ## Neu aufsetzen
 
 1. Klonen samt Fremdpaketen: `git clone --recurse-submodules <repo> ~/slop-bot_ws`
-   (oder im bestehenden Klon `git submodule update --init`).
+   (oder im bestehenden Klon `git submodule update --init --recursive`; FAST_LIO braucht sein eigenes Submodule `ikd-Tree`).
 2. **librealsense mit RSUSB-Backend** unter `~/librealsense-rsusb/install` (statisch, wird nur zum Bauen gebraucht).
    Grund: Der Jetson-Kernel hat kein HID-Sensor-Hub, mit der apt-librealsense (V4L) gibt es keine Kamera-IMU.
    Anleitung in `dbr_gesture/README.md` (alt_ros2_ws), danach `make -j6 all && cmake --install .` im Build-Ordner und
@@ -101,7 +112,7 @@ source install/setup.bash && colcon test --packages-select slop_base slop_safety
    (`cmake --install` bricht vorher ab, weil es das Python-Modul ohne sudo nicht installieren kann).
 3. **pysoem** in einer venv unter `~/ethercat_venv` (z. B. `python3 -m venv ~/ethercat_venv && ~/ethercat_venv/bin/pip install pysoem`).
    `with_netcaps` hängt deren `site-packages` an den `PYTHONPATH`; die Node selbst läuft mit dem System-Python.
-4. ROS-Pakete aus apt, u. a. `ros-humble-twist-mux`.
+4. ROS-Pakete aus apt, u. a. `ros-humble-twist-mux` und `ros-humble-robot-localization`.
 5. Netzwerk für den Lidar: NetworkManager-Verbindung `livox-mid360`, statisch `192.168.1.50/24`, keine Standardroute.
 6. `./colcon_build.sh`
 
@@ -111,6 +122,7 @@ Lokale Anpassungen der Fremdpakete legt `colcon_build.sh` selbst an, falls sie f
   per `.gitignore` ausgeschlossen). Das `build.sh` des Treibers **nicht** benutzen – es löscht `build/` und `install/`
   des ganzen Workspace.
 - `realsense-ros/realsense2_description` und `realsense2_rgbd_plugin`: `COLCON_IGNORE` (werden nicht gebraucht).
+- `FAST_LIO`: wendet `src/third_party/patches/fast_lio.patch` an (Details in [src/slop_lio/README.md](src/slop_lio/README.md)).
 
 Weitere Build-Optionen in `colcon.meta`: Livox-SDK2 braucht `-DCMAKE_POLICY_VERSION_MINIMUM=3.5` (System-CMake 4.x),
 `livox_ros_driver2` bekommt die SDK-Pfade, `realsense2_camera` den Pfad zu librealsense-rsusb und `-lyaml-cpp`
@@ -121,8 +133,9 @@ Weitere Build-Optionen in `colcon.meta`: Livox-SDK2 braucht `-DCMAKE_POLICY_VERS
 - `motor_current_ma` in [diff_drive.yaml](src/slop_base/config/diff_drive.yaml) ist noch nicht eingetragen (Typenschild).
 - **Radodometrie ist Open Loop:** Sie zählt die ausgegebenen Schritte (Getriebe 1:5,18 links, 1:13,73 rechts, nachgezählt
   mit `tools/diff_motor.py jog --revs 10`) und driftet bei Schlupf oder Schrittverlust. Sie geht als `/wheel/odom` (ohne TF)
-  in den EKF. Weitere Quellen (LIO, Kamera-IMU) kommen als Block in [ekf.yaml](src/slop_localization/config/ekf.yaml). Der EKF ist die
-  einzige Quelle für `odom → base_footprint`.
+  in den EKF, zusammen mit dem Livox-Gyro und der LIO-Geschwindigkeit. Weitere Quellen (z. B. Kamera-IMU) kommen als Block in
+  [ekf.yaml](src/slop_localization/config/ekf.yaml). Der EKF ist die einzige Quelle für `odom → base_footprint`.
+- **LIO:** Stand, Messwerte und offene Punkte in [src/slop_lio/README.md](src/slop_lio/README.md). Unter Fahrt noch nicht vermessen.
 - **Livox ohne Zeitsynchronisation (kein PTP):** Der Treiber stempelt mit der Empfangszeit des Jetson.
 - Der Livox-Treiber stürzt beim Beenden manchmal ab (exit −11) und ignoriert SIGINT. Harmlos, Reste beendet
   `pkill -9 -x livox_ros_drive`.
@@ -140,7 +153,9 @@ slop-bot_ws/
 ├── stop_all.sh          hängengebliebene Roboter-Prozesse beenden
 ├── colcon.meta          CMake-Optionen je Paket
 ├── STARTBEFEHLE.md      alle Startbefehle
+├── TODO.md              offene Aufgaben (u. a. EtherCAT-Zyklus als eigener Prozess)
 ├── calib/               Kalibrierergebnisse (gyro.yaml, mounts.yaml), siehe calib/README.md
+├── bags/                Aufzeichnungen (nicht in Git)
 ├── src/
 │   ├── slop_base/       Antrieb (EtherCAT)
 │   ├── slop_bringup/    bringup.launch.py (alles zusammen)
@@ -151,7 +166,7 @@ slop-bot_ws/
 │   ├── slop_safety/     twist_mux + RustDesk-Fahrsperre
 │   ├── slop_sensors/    Sensortreiber-Launch + Configs
 │   ├── slop_teleop/     Tastatursteuerung
-│   └── third_party/     Livox-SDK2, livox_ros_driver2, realsense-ros (Submodule)
+│   └── third_party/     Livox-SDK2, livox_ros_driver2, realsense-ros, FAST_LIO (Submodule), patches/
 └── tools/
     ├── diff_motor.py    Motortest ohne ROS
     └── logs/            CSV-Logs der Motortests

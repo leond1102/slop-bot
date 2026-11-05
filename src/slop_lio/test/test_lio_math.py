@@ -4,7 +4,7 @@ import math
 import numpy as np
 import pytest
 
-from slop_lio.lio_math import (body_twist, inverse, planar_inverse, planar_map_to_odom, to_matrix, to_pose,
+from slop_lio.lio_math import (body_twist, from_extrinsic, inverse, planar_map_to_odom, to_matrix, to_pose,
                                with_translation, yaw_of)
 
 
@@ -35,15 +35,24 @@ def test_yaw_of():
     assert yaw_of(_rot(-3.0)) == pytest.approx(-3.0)
 
 
-def test_planar_inverse_makes_start_the_origin():
-    start = _rot(1.2, 0.02, -0.03, (4.0, -1.0, 0.3))        # Roboter startet schief in der LIO-Welt
-    align = planar_inverse(start)
-    at_start = align @ start
-    assert at_start[:3, 3] == pytest.approx((0.0, 0.0, 0.0), abs=1e-9)
-    assert yaw_of(at_start) == pytest.approx(0.0, abs=1e-9)
-    # Fährt der Roboter danach 1 m geradeaus, ist er in map bei x = 1
+def test_start_pose_becomes_map_origin():
+    """map = Lage von base_footprint beim Start. Die LIO-Welt (camera_init) ist der IMU-Frame beim Start und damit um die
+    Lidar-Neigung gekippt; map darf diese Neigung nicht erben."""
+    start = _rot(1.2, 0.02, -0.03, (4.0, -1.0, 0.3))        # Roboter in camera_init: gedreht und gekippt
+    align = inverse(start)
+    assert np.allclose(align @ start, np.eye(4), atol=1e-12)
+    # 1 m geradeaus auf ebenem Boden: in map genau x = 1, z bleibt 0 (ein gekipptes map gäbe z = 1 m · sin(Neigung))
     moved = start @ with_translation((1.0, 0.0, 0.0))
-    assert (align @ moved)[:2, 3] == pytest.approx((1.0, 0.0), abs=2e-2)
+    assert (align @ moved)[:3, 3] == pytest.approx((1.0, 0.0, 0.0), abs=1e-9)
+
+
+def test_from_extrinsic():
+    rot = [0., -1., 0., 1., 0., 0., 0., 0., 1.]                # 90° um z
+    t = from_extrinsic([0.1, 0.2, 0.3], rot)
+    assert np.allclose(t[:3, :3], np.array(rot).reshape(3, 3)) and np.allclose(t[:3, 3], (0.1, 0.2, 0.3))
+    assert np.allclose(from_extrinsic([1, 2, 3]), with_translation([1, 2, 3]))
+    # Punkt im Lidar-Frame → IMU-Frame: p_imu = R · p_lidar + T (Konvention von FAST-LIO)
+    assert (t @ [1.0, 0.0, 0.0, 1.0])[:3] == pytest.approx((0.1, 1.2, 0.3))
 
 
 def test_twist_straight_and_turn():

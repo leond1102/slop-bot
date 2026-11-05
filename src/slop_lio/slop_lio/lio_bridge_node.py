@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Brücke FAST-LIO → TF-Baum und EKF.
 
-  /Odometry   nav_msgs/Odometry  Sub  FAST-LIO: Pose des IMU-Frames in camera_init (Welt beim Start, schwerkraftausgerichtet)
+  /Odometry   nav_msgs/Odometry  Sub  FAST-LIO: Pose des IMU-Frames in camera_init (= IMU-Frame beim Start; NICHT nach der
+                                       Schwerkraft ausgerichtet, sondern um die Neigung des Lidars gekippt)
   /lio/odom   nav_msgs/Odometry  Pub  Pose von base_footprint in map, Geschwindigkeit im Roboterframe (aus den Posen
                                        gerechnet, FAST-LIO liefert keine). Eingang odom1 des EKF (nur die Geschwindigkeit).
   TF          map → odom         Pose aus LIO relativ zur stetigen EKF-Odometrie: map_T_odom = map_T_base · odom_T_base⁻¹
-  TF          map → camera_init  Welt von FAST-LIO in map (damit /cloud_registered mit clouds:=true in RViz erscheint)
+  TF static   map → camera_init  Welt von FAST-LIO in map, einmal beim Start (damit /cloud_registered in RViz erscheint)
   /lio/crop_boxes  MarkerArray   Pub  die aus den Scans geschnittenen Quader (Parameter crop_boxes, im Lidar-Frame) für RViz
 
-map = Lage von base_footprint beim ersten LIO-Wert (Position und Gier, Roll/Pitch bleiben schwerkraftausgerichtet).
+map = Lage von base_footprint beim ersten LIO-Wert (Position und Drehung). Auf ebenem Boden ist map damit waagrecht, auch
+wenn das Lidar schräg sitzt.
 Warum map → odom und nicht odom → base_footprint: Die EKF-Odometrie (Rad + Gyro + LIO-Geschwindigkeit) bleibt stetig, Sprünge
 oder Drift der LIO-Pose landen in map → odom. In den EKF geht deshalb nur die LIO-Geschwindigkeit (Roboterframe), nie die
 Pose in map: eine Pose in map bräuchte map → odom, und das wird aus dem EKF-Ergebnis gebildet (Zirkelbezug).
@@ -17,6 +19,7 @@ Braucht das TF base_footprint → livox_frame (robot_state_publisher, URDF) und 
 Ohne den EKF läuft /lio/odom trotzdem, nur map → odom fehlt dann.
 """
 import math
+from collections import deque
 
 import rclpy
 from geometry_msgs.msg import TransformStamped
@@ -27,12 +30,11 @@ from rclpy.node import Node
 from rclpy.parameter import Parameter
 from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 from rclpy.time import Time
-from tf2_ros import Buffer, TransformBroadcaster, TransformListener
+from tf2_ros import Buffer, StaticTransformBroadcaster, TransformBroadcaster, TransformListener
 from visualization_msgs.msg import Marker, MarkerArray
 
 from slop_lio.crop import center_and_size
-from slop_lio.lio_math import (body_twist, inverse, planar_inverse, planar_map_to_odom, to_matrix, to_pose,
-                               with_translation)
+from slop_lio.lio_math import body_twist, from_extrinsic, inverse, planar_map_to_odom, to_matrix, to_pose
 
 
 def tf_to_matrix(tf):
@@ -51,24 +53,30 @@ class LioBridge(Node):
             ('base_frame', 'base_footprint'),
             ('sensor_frame', 'livox_frame'),          # Lidar-Frame im URDF
             ('imu_to_lidar_xyz', [-0.011, -0.02329, 0.04412]),   # Lidar im IMU-Frame (extrinsic_T von FAST-LIO)
+            ('imu_to_lidar_rot', [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]),   # extrinsic_R, zeilenweise
             ('crop_boxes', Parameter.Type.DOUBLE_ARRAY),   # xmin,xmax,ymin,ymax,zmin,zmax je Quader (von lio.launch.py)
             ('publish_map_odom', True),
             ('camera_init_frame', 'camera_init'),     # Welt-Frame von FAST-LIO ('' = nicht senden)
-            ('tf_future_s', 0.1),                     # s: map → odom in die Zukunft datieren (Pose ist ~0,1 s alt)
-            ('twist_stddev', 0.04),                   # m/s, Geschwindigkeit aus Posendifferenzen (10 Hz)
-            ('yaw_rate_stddev', 0.02),                # rad/s
+            ('tf_future_s', 0.1),                     # s: map → odom in die Zukunft datieren (kommt nur mit 10 Hz)
+            ('lookup_timeout_s', 0.0),                # s Warten auf odom → base_footprint zum LIO-Stempel (0 = nicht
+                                                      # warten: blockiert sonst den einzigen Executor-Thread samt TF-Empfang)
+            ('twist_window', 3),                      # Scans: Geschwindigkeit aus der Pose von vor n Scans (3 = 0,3 s).
+                                                      # 1 rauschte im Stand mit 0,05 m/s (Median), 3 mit 0,02 m/s
+            ('twist_stddev', 0.02),                   # m/s, gemessen im Stand bei twist_window 3: 0,013
+            ('yaw_rate_stddev', 0.01),                # rad/s, gemessen: 0,006
             ('max_speed', 0.6),                       # m/s: schneller als der Roboter kann → Geschwindigkeit verwerfen
             ('max_yaw_rate', 2.0),                    # rad/s
         ]:
             self.declare_parameter(name, default)
-        self.imu_to_lidar = with_translation(self._p('imu_to_lidar_xyz'))
-        self.align = None                  # map_T_camera_init
+        self.imu_to_lidar = from_extrinsic(self._p('imu_to_lidar_xyz'), self._p('imu_to_lidar_rot'))
+        self.align = None                  # map_T_camera_init (fest, aus dem ersten LIO-Wert)
         self.sensor_to_base = None         # livox_frame ← base_footprint (statisch)
-        self.prev = None                   # (Stempel [s], map_T_base) der letzten Pose
+        self.history = deque(maxlen=max(1, int(self._p('twist_window'))) + 1)   # (Stempel [s], map_T_base)
         self.warned = set()
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
         self.tf_broadcaster = TransformBroadcaster(self)
+        self.static_broadcaster = StaticTransformBroadcaster(self)
         self.pub = self.create_publisher(Odometry, self._p('out_topic'), 10)
         self.create_subscription(Odometry, self._p('lio_topic'), self.callback, 10)
         self.marker_pub = self.create_publisher(
@@ -94,6 +102,7 @@ class LioBridge(Node):
             m = Marker()
             m.header.frame_id = self._p('sensor_frame')
             m.ns, m.id, m.type, m.action = 'crop', i, Marker.CUBE, Marker.ADD
+            m.frame_locked = True          # RViz zieht den Marker mit dem Lidar-Frame mit (sonst nur beim Empfang umgerechnet)
             m.pose.position.x, m.pose.position.y, m.pose.position.z = center
             m.pose.orientation.w = 1.0
             m.scale.x, m.scale.y, m.scale.z = size
@@ -125,23 +134,31 @@ class LioBridge(Node):
         p, q = msg.pose.pose.position, msg.pose.pose.orientation
         camera_init_to_base = to_matrix(p.x, p.y, p.z, q.x, q.y, q.z, q.w) @ self.imu_to_lidar @ sensor_to_base
         if self.align is None:
-            self.align = planar_inverse(camera_init_to_base)
-            self.get_logger().info('map festgelegt: Startlage von base_footprint in der LIO-Welt')
+            self.align = inverse(camera_init_to_base)
+            if self._p('camera_init_frame'):
+                self._send_tf(self.align, self._p('map_frame'), self._p('camera_init_frame'), static=True)
+            r, pch = math.atan2(camera_init_to_base[2, 1], camera_init_to_base[2, 2]), -math.asin(
+                max(-1.0, min(1.0, camera_init_to_base[2, 0])))
+            self.get_logger().info(f'map festgelegt: Startlage von base_footprint (in der LIO-Welt gekippt um roll '
+                                   f'{math.degrees(r):+.2f}°, pitch {math.degrees(pch):+.2f}°)')
         map_to_base = self.align @ camera_init_to_base
         stamp = Time.from_msg(msg.header.stamp)
         t = stamp.nanoseconds * 1e-9
 
         vx = vy = wz = 0.0
         twist_ok = False
-        if self.prev is not None:
-            dt = t - self.prev[0]
-            if 0.02 < dt < 0.5:
-                vx, vy, wz = body_twist(self.prev[1], map_to_base, dt)
+        if self.history and not 0.0 < t - self.history[-1][0] < 0.5:
+            self.history.clear()           # Lücke oder Zeitsprung: Fenster neu beginnen
+        if self.history:
+            t0, pose0 = self.history[0]
+            dt = t - t0
+            if dt > 0.02:
+                vx, vy, wz = body_twist(pose0, map_to_base, dt)
                 twist_ok = math.hypot(vx, vy) <= self._p('max_speed') and abs(wz) <= self._p('max_yaw_rate')
                 if not twist_ok:
                     self.get_logger().warn(f'LIO-Geschwindigkeit unplausibel (v {math.hypot(vx, vy):.2f} m/s, '
                                            f'w {wz:.2f} rad/s) – nicht in den EKF übernommen', throttle_duration_sec=2.0)
-        self.prev = (t, map_to_base)
+        self.history.append((t, map_to_base))
 
         out = Odometry()
         out.header.stamp = msg.header.stamp
@@ -161,15 +178,13 @@ class LioBridge(Node):
             out.twist.covariance[i] = v
         self.pub.publish(out)
 
-        if self._p('camera_init_frame'):
-            self._send_tf(self.align, self._p('map_frame'), self._p('camera_init_frame'))
         if self._p('publish_map_odom'):
             self._publish_map_to_odom(map_to_base, stamp)
 
     def _publish_map_to_odom(self, map_to_base, stamp):
         try:
             tf = self.tf_buffer.lookup_transform(self._p('odom_frame'), self._p('base_frame'), stamp,
-                                                 timeout=Duration(seconds=0.05))
+                                                 timeout=Duration(seconds=self._p('lookup_timeout_s')))
         except Exception:
             try:
                 tf = self.tf_buffer.lookup_transform(self._p('odom_frame'), self._p('base_frame'), Time())
@@ -179,16 +194,19 @@ class LioBridge(Node):
                 return
         self._send_tf(planar_map_to_odom(map_to_base, tf_to_matrix(tf)), self._p('map_frame'), self._p('odom_frame'))
 
-    def _send_tf(self, matrix, parent, child):
+    def _send_tf(self, matrix, parent, child, static=False):
         x, y, z, qx, qy, qz, qw = to_pose(matrix)
         out = TransformStamped()
-        out.header.stamp = (self.get_clock().now() + Duration(seconds=self._p('tf_future_s'))).to_msg()
+        if static:
+            out.header.stamp = self.get_clock().now().to_msg()
+        else:
+            out.header.stamp = (self.get_clock().now() + Duration(seconds=self._p('tf_future_s'))).to_msg()
         out.header.frame_id = parent
         out.child_frame_id = child
         out.transform.translation.x, out.transform.translation.y, out.transform.translation.z = x, y, z
         out.transform.rotation.x, out.transform.rotation.y = qx, qy
         out.transform.rotation.z, out.transform.rotation.w = qz, qw
-        self.tf_broadcaster.sendTransform(out)
+        (self.static_broadcaster if static else self.tf_broadcaster).sendTransform(out)
 
 
 def main(args=None):
