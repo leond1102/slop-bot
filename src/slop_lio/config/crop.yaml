@@ -1,0 +1,12 @@
+# Was aus den Lidar-Scans geschnitten wird, bevor FAST-LIO sie sieht (Eigenreflexe von Körper, Mast und Fahne).
+# Nur von lio.launch.py gelesen. Alle Maße im Lidar-Frame (x vorne, y links, z oben, Ursprung = Mitte des Lidars).
+# Aus: ros2 launch slop_lio lio.launch.py crop:=false
+crop:
+  # Roboterkörper (Maße aus dem URDF, slop_description): Zuschlag auf die halbe Breite links und rechts
+  body_margin_side: 0.10        # 0,10 = 10 %
+  body_margin_up: 0.03          # m, Zuschlag oben: Rauschen der Körperoberseite; schließt an rear_box (ab z = 0) an
+  # Quader hinter dem Lidar: beginnt in der Mitte des Lidars. [Tiefe nach hinten, halbe Breite nach links/rechts, Höhe nach oben]
+  # Soll Mast und Fahne abdecken. Der Mast steht 0,37 m hinter dem Lidar, die Fahne reicht bis 0,57 m nach hinten und
+  # liegt 0,22-0,34 m über dem Lidar; für die ganze Fahne also Tiefe >= 0,6.
+  # Achtung "halbe Breite": 15.0 würde einen 30 m breiten Streifen der Wände neben dem Roboter wegschneiden.
+  rear_box: [0.40, 0.15, 1.0]   # m

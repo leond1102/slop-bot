@@ -12,7 +12,8 @@
 # Deshalb läuft colcon hier in einer leeren Umgebung, nur mit /opt/ros/humble.
 #
 # Außerdem legt das Skript die lokalen Anpassungen der Fremdpakete an, falls sie fehlen (z. B. nach einem
-# frischen "git submodule update --init"): package.xml des Livox-Treibers und COLCON_IGNORE in realsense-ros.
+# frischen "git submodule update --init --recursive"): package.xml des Livox-Treibers, der FAST-LIO-Patch und
+# COLCON_IGNORE in realsense-ros.
 set -e
 WS="$(cd "$(dirname "$0")" && pwd)"
 cd "$WS"
@@ -24,6 +25,15 @@ if [ -f "$LIVOX/package_ROS2.xml" ] && [ ! -f "$LIVOX/package.xml" ]; then
     sed 's|\(.*<depend>libpcl-all-dev</depend>\)|\1\n  <depend>livox_sdk2</depend>|' \
         "$LIVOX/package_ROS2.xml" > "$LIVOX/package.xml"
     echo "colcon_build: $LIVOX/package.xml aus package_ROS2.xml angelegt (+ Abhängigkeit livox_sdk2)"
+fi
+
+# FAST-LIO: lokale Änderungen aus src/third_party/patches/fast_lio.patch (pcl_ros → tf2_ros, C++17) anwenden, falls
+# sie noch fehlen (frisch geklontes Submodule). Schon angewendet → nichts tun.
+FASTLIO="src/third_party/FAST_LIO"
+PATCH="$WS/src/third_party/patches/fast_lio.patch"
+if [ -f "$FASTLIO/package.xml" ] && [ -f "$PATCH" ] && git -C "$FASTLIO" apply --check "$PATCH" 2>/dev/null; then
+    git -C "$FASTLIO" apply "$PATCH"
+    echo "colcon_build: $PATCH auf $FASTLIO angewendet"
 fi
 
 # Nicht gebrauchte Teile von realsense-ros überspringen (Beschreibung/URDF und RGBD-Plugin)

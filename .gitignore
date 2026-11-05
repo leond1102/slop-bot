@@ -10,3 +10,6 @@ __pycache__/
 
 # lokale venv (VS Code-Interpreter), wird nicht versioniert
 .venv/
+
+# aufgezeichnete Rosbags (groß)
+bags/

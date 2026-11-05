@@ -7,7 +7,7 @@ source ~/slop-bot_ws/install/setup.bash
 
 # 1. Roboter steuern
 
-## Fahren per Tastatur (2 Terminals: Antrieb, Tastatur; bestromt Motoren, fragt nach sudo-Passwort, Fahren nur mit RustDesk-Sitzung)
+## Fahren per Tastatur (2 Terminals: Antrieb + Modell + EKF, Tastatur; bestromt Motoren, fragt nach sudo-Passwort, Fahren nur mit RustDesk-Sitzung)
 ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
 
 ros2 run slop_teleop keyboard_teleop
@@ -88,16 +88,56 @@ cat ~/slop-bot_ws/calib/gyro.yaml ~/slop-bot_ws/calib/mounts.yaml
 ## Gyro-Bias nur einmal neu messen, ohne zu speichern (Roboter stillhalten; läuft im imu_adapter)
 ros2 service call /imu_adapter/recalibrate std_srvs/srv/Trigger
 
+# 4. LIO (FAST-LIO2)
+
+## LIO starten (3 Terminals: Antrieb + Modell + EKF, LIO mit Lidar, Tastatur; Roboter beim Start 2-3 s stillstellen)
+## Körper und Mast werden aus den Scans geschnitten (src/slop_lio/config/crop.yaml)
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
+
+ros2 launch slop_lio lio.launch.py
+
+ros2 run slop_teleop keyboard_teleop
+
+## LIO in RViz ansehen (4 Terminals: Antrieb + Modell + EKF, LIO mit Wolke, RViz mit LIO-Ansicht (Fixed Frame map, Ausschnitt-Quader, LIO- und EKF-Pose), Tastatur)
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
+
+ros2 launch slop_lio lio.launch.py clouds:=true
+
+ros2 launch slop_description rviz.launch.py rviz_config:=lio
+
+ros2 run slop_teleop keyboard_teleop
+
+## LIO, wenn der Lidar-Treiber schon läuft (sensors.launch.py)
+ros2 launch slop_lio lio.launch.py lidar:=false
+
+## LIO ohne Ausschneiden von Körper und Mast (Vergleich)
+ros2 launch slop_lio lio.launch.py crop:=false
+
+## LIO prüfen (eigenes Terminal): Nodes, Rate, Pose in map, TF-Kette
+ros2 node list | grep -E "ekf_filter_node|imu_adapter|fast_lio|lio_bridge|diff_drive_node"
+ros2 topic hz /lio/odom
+ros2 run tf2_ros tf2_echo map base_footprint
+ros2 run tf2_ros tf2_echo map odom
+ros2 run tf2_ros tf2_echo odom base_footprint
+
+## Fahrt prüfen: 1 m geradeaus und 90° Drehung gegen das Maßband (Pose von Rädern, LIO und EKF vergleichen)
+ros2 topic echo /wheel/odom --field pose.pose.position
+ros2 topic echo /lio/odom --field pose.pose.position
+ros2 run tf2_ros tf2_echo odom base_footprint
+
+## Aufzeichnen für die Auswertung (Ordner bags/, nicht in Git)
+ros2 bag record -o ~/slop-bot_ws/bags/lio_test /livox/lidar /livox/imu /wheel/odom /odom /lio/odom /Odometry /tf /tf_static /joint_states
+
 # A. Bauen, Tests und einzelne Befehle
 
 ## Bauen – immer über das Skript (saubere Umgebung, ohne ~/ros2_ws und venv-Python)
 cd ~/slop-bot_ws && ./colcon_build.sh && source install/setup.bash
 
 ## Einzelne Pakete bauen
-./colcon_build.sh --packages-select slop_base slop_safety slop_teleop slop_sensors slop_description slop_localization slop_bringup slop_calibration
+./colcon_build.sh --packages-select slop_base slop_safety slop_teleop slop_sensors slop_description slop_localization slop_bringup slop_calibration slop_lio fast_lio
 
 ## Tests (ohne Hardware)
-colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration && colcon test-result --verbose
+colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio && colcon test-result --verbose
 
 ## Nur Antrieb
 ros2 run slop_base with_netcaps ros2 launch slop_base diff_drive.launch.py
@@ -133,8 +173,15 @@ sudo ~/ethercat_venv/bin/python3 diff_motor.py jog --only right --revs 10 --rpm 
 nmcli con up livox-mid360
 ping -c 3 192.168.1.162
 
-## Fremdpakete (Git-Submodule) nach dem Klonen holen
-git submodule update --init
+## Fremdpakete (Git-Submodule) nach dem Klonen holen (FAST_LIO braucht --recursive; colcon_build.sh wendet den Patch an)
+git submodule update --init --recursive
 
-## Hängende Prozesse beenden (beendet auch eigene RViz-Fenster)
+## ALLE hängengebliebenen Slop-Bot-Prozesse beenden (Lidar-Treiber, Kamera, FAST-LIO, RViz, Antrieb, Reste von ros2 launch; zeigt erst die Liste und fragt nach; beendet nur Prozesse aus diesem Workspace und den Roboter-ROS-Paketen)
+./stop_all.sh
+
+## Dasselbe nur anzeigen / ohne Rückfrage
+./stop_all.sh --list
+./stop_all.sh --yes
+
+## Einzeln nach Namen (beendet auch eigene RViz-Fenster; Notlösung, wenn stop_all.sh nicht reicht)
 pkill -9 -x livox_ros_drive; pkill -x realsense2_came; pkill -x rviz2

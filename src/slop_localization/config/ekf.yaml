@@ -1,5 +1,5 @@
 # EKF der Odometrie (robot_localization). Ausgang: /odom und TF odom → base_footprint (einzige Quelle dafür).
-# Neue Sensoren: unten einen weiteren Block (odom1, imu0, ...) einfügen, alles andere bleibt. Die Vorlagen sind auskommentiert.
+# Neue Sensoren: unten einen weiteren Block (odom2, imu1, ...) einfügen, alles andere bleibt.
 #
 # Eingänge: Wahl der Größen je Sensor über <name>_config, Reihenfolge der 15 Werte:
 #   x, y, z,  roll, pitch, yaw,  vx, vy, vz,  vroll, vpitch, vyaw,  ax, ay, az
@@ -47,15 +47,16 @@ ekf_filter_node:
     imu0_relative: false
     imu0_remove_gravitational_acceleration: false
 
-    # --- Vorlage: LIO/SLAM-Odometrie (z. B. /lio/odom, nav_msgs/Odometry) ---
-    # Mit Positionen fusionieren: differential: true macht daraus Änderungen zwischen zwei Nachrichten, damit Sprünge
-    # des SLAM (Schleifenschluss) nicht in odom landen. Dann Radodometrie ggf. schwächer gewichten oder entfernen.
-    # odom1: /lio/odom
-    # odom1_config: [true,  true,  false,
-    #                false, false, true,
-    #                false, false, false,
-    #                false, false, false,
-    #                false, false, false]
-    # odom1_queue_size: 10
-    # odom1_differential: true
-    # odom1_relative: false
+    # --- Quelle 3: LIO (FAST-LIO über slop_lio/lio_bridge) – nur die Geschwindigkeit ---
+    # Nicht die Pose in map: Die Pose in map bräuchte das TF map → odom, und das bildet die Brücke aus dem Ergebnis dieses
+    # Filters (Zirkelbezug). Die Geschwindigkeit im Roboterframe braucht kein TF. Läuft LIO nicht oder liefert es Unsinn,
+    # setzt die Brücke die Kovarianz auf 1e6 bzw. es kommt nichts; der Filter fährt dann auf Rädern und Gyro.
+    odom1: /lio/odom
+    odom1_config: [false, false, false,
+                   false, false, false,
+                   true,  false, false,
+                   false, false, true,
+                   false, false, false]
+    odom1_queue_size: 10
+    odom1_differential: false
+    odom1_relative: false

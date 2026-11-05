@@ -40,12 +40,35 @@
         "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,--no-as-needed -lyaml-cpp -Wl,--as-needed"
       ]
     },
+    "fast_lio": {
+      "cmake-args": [
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
+        "-DPython3_EXECUTABLE=/usr/bin/python3",
+        "-DPYTHON_EXECUTABLE=/usr/bin/python3"
+      ]
+    },
     "slop_base": {
       "cmake-args": [
         "-DPython3_EXECUTABLE=/usr/bin/python3"
       ]
     },
     "slop_safety": {
+      "cmake-args": [
+        "-DPython3_EXECUTABLE=/usr/bin/python3"
+      ]
+    },
+    "slop_description": {
+      "cmake-args": [
+        "-DPython3_EXECUTABLE=/usr/bin/python3"
+      ]
+    },
+    "slop_bringup": {
+      "cmake-args": [
+        "-DPython3_EXECUTABLE=/usr/bin/python3"
+      ]
+    },
+    "slop_lio": {
       "cmake-args": [
         "-DPython3_EXECUTABLE=/usr/bin/python3"
       ]

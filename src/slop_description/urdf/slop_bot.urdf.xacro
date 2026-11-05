@@ -88,16 +88,16 @@
   <xacro:caster name="caster_left" side_y="${caster_y}"/>
   <xacro:caster name="caster_right" side_y="${-caster_y}"/>
 
-  <link name="body">
+  <link name="chassis">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry><box size="${-caster_x} ${track} ${body_top - body_bottom}"/></geometry>
-      <material name="body"><color rgba="0.75 0.75 0.78 1"/></material>
+      <material name="chassis"><color rgba="0.75 0.75 0.78 1"/></material>
     </visual>
   </link>
-  <joint name="body_joint" type="fixed">
+  <joint name="chassis_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="body"/>
+    <child link="chassis"/>
     <origin xyz="${caster_x / 2.0} 0 ${(body_top + body_bottom) / 2.0}" rpy="0 0 0"/>
   </joint>
 
@@ -109,7 +109,7 @@
     </visual>
   </link>
   <joint name="flag_pole_joint" type="fixed">
-    <parent link="body"/>
+    <parent link="chassis"/>
     <child link="flag_pole"/>
     <origin xyz="${caster_x / 2.0} 0 ${(body_top - body_bottom) / 2.0 + mast_length / 2.0}" rpy="0 0 0"/>
   </joint>

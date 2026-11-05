@@ -1,0 +1,53 @@
+# FAST-LIO2 für den Livox Mid-360s am Slop-Bot. Grundlage: FAST_LIO/config/mid360.yaml (Upstream).
+# Geändert gegenüber Upstream: extrinsic_est_en aus (ein Bodenroboter regt die Schätzung kaum an), gröbere Filter für die
+# Orin (4 / 0,4 m statt 3 / 0,5 m), keine Karten-/Pfad-Ausgabe (Karte macht später ein eigener Knoten), Wolken nur auf Wunsch.
+/**:
+    ros__parameters:
+        feature_extract_enable: false
+        point_filter_num: 4          # nur jeden n-ten Lidar-Punkt verwenden
+        filter_size_surf: 0.4        # m, Voxelgröße des Scans für die Registrierung
+        filter_size_map: 0.4         # m, Voxelgröße der internen Karte
+        max_iteration: 3
+        cube_side_length: 1000.0
+        runtime_pos_log_enable: false
+        map_file_path: ""
+
+        common:
+            lid_topic:  "/livox/lidar"     # CustomMsg (xfer_format 1)
+            imu_topic:  "/livox/imu"       # Beschleunigung in g, FAST-LIO skaliert selbst auf m/s²
+            time_sync_en: false
+            time_offset_lidar_to_imu: 0.0
+
+        preprocess:
+            lidar_type: 1            # Livox CustomMsg
+            scan_line:  4
+            blind: 0.5               # m, Punkte näher als das werden verworfen (Eigenreflexe)
+            timestamp_unit: 3
+            scan_rate: 10            # = publish_freq des Livox-Treibers
+
+        mapping:
+            acc_cov: 0.1
+            gyr_cov: 0.1
+            b_acc_cov: 0.0001
+            b_gyr_cov: 0.0001
+            fov_degree:    360.0
+            det_range:     100.0
+            extrinsic_est_en: false
+            # Lidar im IMU-Frame (Mid-360; für das Mid-360s nicht verifiziert). Die Brücke slop_lio liest diese Werte
+            # von hier (lio.launch.py), sie stehen nur an dieser Stelle.
+            extrinsic_T: [ -0.011, -0.02329, 0.04412 ]
+            extrinsic_R: [ 1., 0., 0.,
+                           0., 1., 0.,
+                           0., 0., 1.]
+
+        publish:
+            path_en: false
+            effect_map_en: false
+            map_en: false
+            scan_publish_en: false   # true: /cloud_registered (lio.launch.py clouds:=true), 48 Byte je Punkt
+            dense_publish_en: false
+            scan_bodyframe_pub_en: false
+
+        pcd_save:
+            pcd_save_en: false
+            interval: -1

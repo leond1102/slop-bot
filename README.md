@@ -16,11 +16,12 @@ Alle Startbefehle: [STARTBEFEHLE.md](STARTBEFEHLE.md)
 | [slop_localization](src/slop_localization) | EKF (`robot_localization`): bildet `/odom` und das TF `odom → base_footprint` aus allen Odometrie-/IMU-Quellen. Quellen (Radodometrie, Livox-Gyro über `imu_adapter`) stehen in `config/ekf.yaml`, neue Sensoren werden dort als Block ergänzt. Braucht `sudo apt install ros-humble-robot-localization` |
 | [slop_bringup](src/slop_bringup) | `bringup.launch.py`: Antrieb + Sicherheit + Robotermodell + EKF in einem Start (`ekf:=false` ohne EKF) |
 | [slop_calibration](src/slop_calibration) | `calibrate`-Befehl (Gyro-Bias, Sensorneigung) und Speicher für die Ergebnisse im Ordner `calib/` (siehe [calib/README.md](calib/README.md)) |
+| [slop_lio](src/slop_lio) | FAST-LIO2 (Livox Mid-360s) und Brücke `lio_bridge`: `/lio/odom`, TF `map → odom`; die LIO-Geschwindigkeit geht als `odom1` in den EKF. Siehe [src/slop_lio/README.md](src/slop_lio/README.md) |
 | [slop_safety](src/slop_safety) | `twist_mux`-Konfiguration und `remote_guard`: Fahrsperre, solange keine RustDesk-Sitzung besteht |
 | [slop_teleop](src/slop_teleop) | `keyboard_teleop`: Tastatursteuerung mit Totmann (Taste halten = fahren) |
 | [slop_description](src/slop_description) | URDF/xacro des Roboters (Räder, Schleppräder, Livox, RealSense) und `description.launch.py` mit `robot_state_publisher`. Radmaße, Spur und Gelenknamen liest es aus `diff_drive.yaml` |
 | [slop_sensors](src/slop_sensors) | Launch-Dateien und Configs für Livox Mid-360s und RealSense D435i, sonst nichts |
-| `src/third_party` (Git-Submodule) | `Livox-SDK2`, `livox_ros_driver2`, `realsense-ros` 4.58.4 |
+| `src/third_party` (Git-Submodule) | `Livox-SDK2`, `livox_ros_driver2`, `realsense-ros` 4.58.4, `FAST_LIO` (Branch ROS2, mit `src/third_party/patches/fast_lio.patch`) |
 | [tools/diff_motor.py](tools/diff_motor.py) | Motortest ohne ROS (Parameter lesen, Achsen zuordnen, Getriebe prüfen), CSV-Logs in `tools/logs/` |
 
 ## Datenfluss
@@ -136,6 +137,7 @@ Weitere Build-Optionen in `colcon.meta`: Livox-SDK2 braucht `-DCMAKE_POLICY_VERS
 ```
 slop-bot_ws/
 ├── colcon_build.sh      Bauen (saubere Umgebung)
+├── stop_all.sh          hängengebliebene Roboter-Prozesse beenden
 ├── colcon.meta          CMake-Optionen je Paket
 ├── STARTBEFEHLE.md      alle Startbefehle
 ├── calib/               Kalibrierergebnisse (gyro.yaml, mounts.yaml), siehe calib/README.md
@@ -145,6 +147,7 @@ slop-bot_ws/
 │   ├── slop_calibration/ Kalibrierbefehl + Speicher
 │   ├── slop_description/ URDF + robot_state_publisher
 │   ├── slop_localization/ EKF (robot_localization)
+│   ├── slop_lio/        FAST-LIO2 + Brücke zu TF und EKF
 │   ├── slop_safety/     twist_mux + RustDesk-Fahrsperre
 │   ├── slop_sensors/    Sensortreiber-Launch + Configs
 │   ├── slop_teleop/     Tastatursteuerung

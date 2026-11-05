@@ -68,6 +68,24 @@ Visualization Manager:
       Use rainbow: true
       Invert Rainbow: false
       Autocompute Value Bounds: true
+    # Registrierte Wolke von FAST-LIO (Welt-Frame): nur mit lio.launch.py clouds:=true; dann den Lidar-Roh-Eintrag oben
+    # ausschalten (der braucht xfer_format 0, FAST-LIO xfer_format 1)
+    - Class: rviz_default_plugins/PointCloud2
+      Name: LIO-Wolke (/cloud_registered)
+      Enabled: true
+      Topic:
+        Value: /cloud_registered
+        Depth: 5
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Style: Flat Squares
+      Size (m): 0.02
+      Decay Time: 0
+      Position Transformer: XYZ
+      Color Transformer: AxisColor
+      Axis: Z
+      Use Fixed Frame: true
+      Use rainbow: true
     # Kamerabild
     - Class: rviz_default_plugins/Image
       Name: Kamera (Farbe)

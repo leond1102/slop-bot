@@ -9,3 +9,7 @@
 [submodule "src/third_party/realsense-ros"]
 	path = src/third_party/realsense-ros
 	url = https://github.com/IntelRealSense/realsense-ros.git
+[submodule "src/third_party/FAST_LIO"]
+	path = src/third_party/FAST_LIO
+	url = https://github.com/hku-mars/FAST_LIO.git
+	branch = ROS2

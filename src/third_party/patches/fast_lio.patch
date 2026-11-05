@@ -1,0 +1,125 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index be3040b..dc8570f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,17 +5,17 @@ if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE Release)
+ endif()
+ 
+-ADD_COMPILE_OPTIONS(-std=c++14)
+-ADD_COMPILE_OPTIONS(-std=c++14)
+-set(CMAKE_CXX_FLAGS "-std=c++14 -O3")
++ADD_COMPILE_OPTIONS(-std=c++17)
++ADD_COMPILE_OPTIONS(-std=c++17)
++set(CMAKE_CXX_FLAGS "-std=c++17 -O3")
+ 
+ add_definitions(-DROOT_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/\")
+ 
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fexceptions")
+-set(CMAKE_CXX_STANDARD 14)
++set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ set(CMAKE_CXX_EXTENSIONS OFF)
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread -std=c++0x -std=c++14 -fexceptions")
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pthread -std=c++0x -std=c++17 -fexceptions")
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+ message("Current CPU archtecture: ${CMAKE_SYSTEM_PROCESSOR}")
+@@ -57,7 +57,7 @@ find_package(sensor_msgs REQUIRED)
+ find_package(std_msgs REQUIRED)
+ find_package(std_srvs REQUIRED)
+ find_package(visualization_msgs REQUIRED)
+-find_package(pcl_ros REQUIRED)
++find_package(tf2_ros REQUIRED)
+ find_package(pcl_conversions REQUIRED)
+ find_package(livox_ros_driver2 REQUIRED)
+ find_package(rosidl_default_generators REQUIRED)
+@@ -71,7 +71,7 @@ set(dependencies
+   std_msgs
+   std_srvs
+   visualization_msgs
+-  pcl_ros
++  tf2_ros
+   pcl_conversions
+   livox_ros_driver2
+ )
+diff --git a/package.xml b/package.xml
+index 8c39e18..729bde8 100644
+--- a/package.xml
++++ b/package.xml
+@@ -25,7 +25,7 @@
+   <depend>sensor_msgs</depend>
+   <depend>common_interfaces</depend>
+   <depend>tf2</depend>
+-  <depend>pcl_ros</depend>
++  <depend>tf2_ros</depend>
+   <depend>pcl_conversions</depend>
+   <depend>livox_ros_driver2</depend>
+ 
+diff --git a/src/laserMapping.cpp b/src/laserMapping.cpp
+index e5d9950..466f503 100644
+--- a/src/laserMapping.cpp
++++ b/src/laserMapping.cpp
+@@ -821,6 +821,7 @@ public:
+         this->declare_parameter<double>("mapping.b_gyr_cov", 0.0001);
+         this->declare_parameter<double>("mapping.b_acc_cov", 0.0001);
+         this->declare_parameter<double>("preprocess.blind", 0.01);
++        this->declare_parameter<std::vector<double>>("preprocess.exclude_boxes", std::vector<double>());
+         this->declare_parameter<int>("preprocess.lidar_type", AVIA);
+         this->declare_parameter<int>("preprocess.scan_line", 16);
+         this->declare_parameter<int>("preprocess.timestamp_unit", US);
+@@ -857,6 +858,18 @@ public:
+         this->get_parameter_or<double>("mapping.b_gyr_cov",b_gyr_cov,0.0001);
+         this->get_parameter_or<double>("mapping.b_acc_cov",b_acc_cov,0.0001);
+         this->get_parameter_or<double>("preprocess.blind", p_pre->blind, 0.01);
++        this->get_parameter_or<std::vector<double>>("preprocess.exclude_boxes", p_pre->exclude_boxes, std::vector<double>());
++        if (p_pre->exclude_boxes.size() % 6 != 0)
++        {
++          RCLCPP_ERROR(this->get_logger(), "preprocess.exclude_boxes: Länge %zu ist kein Vielfaches von 6 – ignoriert",
++                       p_pre->exclude_boxes.size());
++          p_pre->exclude_boxes.clear();
++        }
++        else if (!p_pre->exclude_boxes.empty())
++        {
++          RCLCPP_INFO(this->get_logger(), "preprocess.exclude_boxes: %zu Quader werden aus den Scans geschnitten",
++                      p_pre->exclude_boxes.size() / 6);
++        }
+         this->get_parameter_or<int>("preprocess.lidar_type", p_pre->lidar_type, AVIA);
+         this->get_parameter_or<int>("preprocess.scan_line", p_pre->N_SCANS, 16);
+         this->get_parameter_or<int>("preprocess.timestamp_unit", p_pre->time_unit, US);
+diff --git a/src/preprocess.cpp b/src/preprocess.cpp
+index 5f171a3..f9083ab 100644
+--- a/src/preprocess.cpp
++++ b/src/preprocess.cpp
+@@ -185,7 +185,8 @@ void Preprocess::avia_handler(const livox_ros_driver2::msg::CustomMsg::UniquePtr
+           if (((abs(pl_full[i].x - pl_full[i - 1].x) > 1e-7)
+               || (abs(pl_full[i].y - pl_full[i - 1].y) > 1e-7)
+               || (abs(pl_full[i].z - pl_full[i - 1].z) > 1e-7))
+-              && (pl_full[i].x * pl_full[i].x + pl_full[i].y * pl_full[i].y + pl_full[i].z * pl_full[i].z > (blind * blind)))
++              && (pl_full[i].x * pl_full[i].x + pl_full[i].y * pl_full[i].y + pl_full[i].z * pl_full[i].z > (blind * blind))
++              && !excluded(pl_full[i].x, pl_full[i].y, pl_full[i].z))
+           {
+             pl_surf.push_back(pl_full[i]);
+           }
+diff --git a/src/preprocess.h b/src/preprocess.h
+index d4d6ddc..a762fd4 100644
+--- a/src/preprocess.h
++++ b/src/preprocess.h
+@@ -151,6 +151,17 @@ class Preprocess
+   float time_unit_scale;
+   int lidar_type, point_filter_num, N_SCANS, SCAN_RATE, time_unit;
+   double blind;
++  // Quader im Lidar-Frame, deren Punkte verworfen werden (Roboterkörper, Mast): je Quader
++  // xmin, xmax, ymin, ymax, zmin, zmax [m], hintereinander (Länge ein Vielfaches von 6)
++  std::vector<double> exclude_boxes;
++  bool excluded(float x, float y, float z) const
++  {
++    for (size_t k = 0; k + 5 < exclude_boxes.size(); k += 6)
++      if (x >= exclude_boxes[k] && x <= exclude_boxes[k + 1] && y >= exclude_boxes[k + 2] &&
++          y <= exclude_boxes[k + 3] && z >= exclude_boxes[k + 4] && z <= exclude_boxes[k + 5])
++        return true;
++    return false;
++  }
+   bool feature_enabled, given_offset_time;
+   // ros::Publisher pub_full, pub_surf, pub_corn;
+ 

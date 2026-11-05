@@ -1,0 +1,4 @@
+#!/usr/bin/python3
+from slop_lio.lio_bridge_node import main
+
+main()
