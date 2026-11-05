@@ -193,6 +193,26 @@ ros2 service call /slam_toolbox/serialize_map slam_toolbox/srv/SerializePoseGrap
 ros2 launch slop_navigation mapping.launch.py rviz:=false
 ros2 launch slop_navigation mapping.launch.py lio:=false
 
+# 6. Lokalisierung in der Karte (map_server + AMCL)
+
+## Lokalisieren (3 Terminals: Antrieb + Modell + EKF, LIO + AMCL + RViz, Tastatur; Startpose (0,0,0) = Start beim Kartieren)
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
+
+ros2 launch slop_navigation localization.launch.py
+
+ros2 run slop_teleop keyboard_teleop
+
+## Andere Startpose / andere Karte (sonst in RViz "2D Pose Estimate")
+ros2 launch slop_navigation localization.launch.py x:=2.0 y:=-1.0 yaw:=1.57
+ros2 launch slop_navigation localization.launch.py map:=$HOME/slop-bot_ws/maps/office.yaml
+
+## Im Stand nachschärfen (mehrmals aufrufen; AMCL rechnet sonst erst nach 10 cm Fahrt weiter)
+ros2 service call /request_nomotion_update std_srvs/srv/Empty
+
+## Lokalisierung prüfen: Pose und Unsicherheit, TF
+ros2 topic echo /amcl_pose --once
+ros2 run tf2_ros tf2_echo map base_footprint
+
 # A. Bauen, Tests und einzelne Befehle
 
 ## Bauen – immer über das Skript (saubere Umgebung, ohne ~/ros2_ws und venv-Python)
