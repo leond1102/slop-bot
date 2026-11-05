@@ -1,8 +1,16 @@
 # Slop-Bot – TODO
 
-## EtherCAT-Zyklus als eigener Prozess
+## EtherCAT-Zyklus als eigener Prozess – umgesetzt (2026-11-05), Abnahme am Roboter offen
 
-**Problem:** Der 2-ms-EtherCAT-Zyklus läuft als Python-Thread (`_cyclic` in
+**Stand:** Variante A ist gebaut: Prozess `ethercat_bus` ([bus_process.py](src/slop_base/slop_base/bus_process.py), nutzt
+`Cl57eBus` unverändert, ohne rclpy) und `diff_drive_node` als Client über
+[bus_link.py](src/slop_base/slop_base/bus_link.py) (Unix-Datagramm-Socket, JSON, Status 100 Hz, Sollwerte 50 Hz).
+`diff_drive.launch.py` startet beide, der Startbefehl bleibt gleich. Getestet ohne Hardware: 8 Tests für bus_link und
+ein Durchlauf echte Node ↔ nachgebauter Bus (Drehzahlen, Odometrie 50 Hz, Ende des Busprozesses). **Noch nicht mit dem
+echten Treiber gelaufen.** Offen: Abnahme unten; Rechte nur noch für den Busprozess (heute bekommt der ganze Launch sie
+über `with_netcaps`).
+
+**Problem (vorher):** Der 2-ms-EtherCAT-Zyklus lief als Python-Thread (`_cyclic` in
 [cl57e_bus.py](src/slop_base/slop_base/cl57e_bus.py)) im selben Prozess wie die ROS-Node `diff_drive_node`. Beide teilen sich
 das Python-Lock (GIL). Blockiert der ROS-Teil, bleiben auch die EtherCAT-Frames aus, trotz SCHED_FIFO 80 auf Kern 7.
 

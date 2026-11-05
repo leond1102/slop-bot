@@ -4,18 +4,22 @@
 # base_footprint = Mitte zwischen den angetriebenen Rädern am Boden.
 diff_drive_node:
   ros__parameters:
+    # Diese Datei lesen zwei Prozesse: diff_drive_node (ROS) und der EtherCAT-Busprozess ethercat_bus (ohne ROS, liest
+    # ifname bis node_timeout, die Achsen/Getriebe, units_per_rev, wheel_acc, loop, max_ferr_rev, motor_current_ma,
+    # cmd_vel_timeout und bus_socket). Beide startet diff_drive.launch.py.
     ifname: enP8p1s0          # Ethernet-Port des EtherCAT-Busses
     cycle_ms: 2.0
     dc: false
 
-    # Echtzeit für den Zyklus-Thread (braucht den Start über with_netcaps, sonst nur Warnung im Log).
+    # Echtzeit für den Zyklus-Thread im Busprozess (braucht den Start über with_netcaps, sonst nur Warnung im Log).
     # rt_cpu: eigener Kern. Der Interrupt der EtherCAT-Karte bleibt auf dem Orin fest auf CPU0 (PCIe-MSI);
     # with_netcaps legt dafür die USB-Interrupts von CPU0 auf CPU1.
     rt_priority: 80           # SCHED_FIFO, 0 = aus
     rt_cpu: 7                 # -1 = beliebiger Kern
-    main_nice: -10            # ROS-Thread der Node bevorzugen (teilt sich das GIL mit dem Zyklus)
-    gil_switch_ms: 0.5
-    stats_period: 10.0        # s, Zyklusstatistik im Log (verspätete Zyklen, max. Periode), 0 = aus
+    gil_switch_ms: 0.5        # Busprozess: Zyklus-Thread und Socket-Thread teilen sich das GIL (ohne rclpy)
+    stats_period: 10.0        # s, Zyklusstatistik im Log von ethercat_bus (verspätete Zyklen, max. Periode), 0 = aus
+    node_timeout: 2.0         # s: so lange still → Busprozess schaltet die Endstufen aus
+    bus_timeout: 1.0          # s: so lange kein Status vom Busprozess → diff_drive_node meldet Fehler und endet
     slow_update_ms: 50.0      # ms, Warnung im Log, wenn der ROS-Thread so lange blockiert (zeigt wo), 0 = aus
 
     # Planetengetriebe NEMA 17, am Motor: Achse 3 = 1:5,18, Achse 4 = 1:13,73 (Nennwerte, mit tools/diff_motor.py

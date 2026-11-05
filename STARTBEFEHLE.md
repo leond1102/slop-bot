@@ -162,11 +162,14 @@ cd ~/slop-bot_ws && ./colcon_build.sh && source install/setup.bash
 ## Einzelne Pakete bauen
 ./colcon_build.sh --packages-select slop_base slop_safety slop_teleop slop_sensors slop_description slop_localization slop_bringup slop_calibration slop_lio fast_lio
 
-## Tests (ohne Hardware, 86 Stück)
+## Tests (ohne Hardware, 95 Stück)
 colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio && colcon test-result --verbose
 
-## Nur Antrieb
+## Nur Antrieb (Busprozess ethercat_bus + diff_drive_node; Zyklusstatistik steht im Log von ethercat_bus)
 ros2 run slop_base with_netcaps ros2 launch slop_base diff_drive.launch.py
+
+## EtherCAT-Statistik des letzten Laufs nachlesen (Busprozess ethercat_bus: Zyklen, verspätet, WKC-Fehler, max. Periode)
+grep -h "ethercat_bus" $(ls -td ~/.ros/log/*/ | head -20 | sed 's|$|launch.log|') 2>/dev/null | grep -E "EtherCAT letzte|Beendet|verloren|still" | tail -20
 
 ## Nur EKF (/odom und TF odom → base_footprint aus /wheel/odom und weiteren Quellen; braucht: sudo apt install ros-humble-robot-localization)
 ros2 launch slop_localization localization.launch.py

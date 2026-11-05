@@ -14,7 +14,7 @@ Offene Aufgaben: [TODO.md](TODO.md)
 
 | Paket | Inhalt |
 |---|---|
-| [slop_base](src/slop_base) | `diff_drive_node`: `/cmd_vel` → Räder über EtherCAT (pysoem, CSP, 2-ms-Zyklus als Echtzeit-Thread), `/joint_states` zurück. `with_netcaps` startet mit den nötigen Rechten. |
+| [slop_base](src/slop_base) | Antrieb in zwei Prozessen: `ethercat_bus` (EtherCAT mit pysoem, CSP, 2-ms-Zyklus als Echtzeit-Thread, **ohne ROS**) und `diff_drive_node` (`/cmd_vel` → Drehzahlen, `/wheel/odom`, `/joint_states`), verbunden über einen lokalen Unix-Socket (`bus_link.py`). `with_netcaps` startet mit den nötigen Rechten. |
 | [slop_localization](src/slop_localization) | EKF (`robot_localization`): bildet `/odom` und das TF `odom → base_footprint` aus allen Odometrie-/IMU-Quellen. Quellen (Radodometrie, Livox-Gyro über `imu_adapter`) stehen in `config/ekf.yaml`, neue Sensoren werden dort als Block ergänzt. Braucht `sudo apt install ros-humble-robot-localization` |
 | [slop_bringup](src/slop_bringup) | `bringup.launch.py`: Antrieb + Sicherheit + Robotermodell + EKF in einem Start (`ekf:=false` ohne EKF) |
 | [slop_calibration](src/slop_calibration) | `calibrate`-Befehl (Gyro-Bias, Sensorneigung) und Speicher für die Ergebnisse im Ordner `calib/` (siehe [calib/README.md](calib/README.md)) |
@@ -54,8 +54,9 @@ robot_state_publisher (URDF) ──► TF base_footprint → base_link → Räde
 - **Hand-Stopp:** `ros2 topic pub --once /safety/stop std_msgs/msg/Bool "data: true"` (aufheben mit `false`).
 - **Nur `twist_mux` darf auf `/cmd_vel` senden.** Sendet jemand anders, steht der Roboter.
 - **Totmann und Timeouts:** Teleop sendet nur bei gehaltener Taste. Ohne `/cmd_vel` für 0,5 s bremst `diff_drive_node`.
-  Hängt die Node, bremst der Bus-Watchdog im EtherCAT-Thread nach 0,3 s. Stirbt der Prozess, hält der Treiber die
-  letzte Sollposition und meldet einen Alarm.
+  Hängt die Node, bremst der Bus-Watchdog im Busprozess `ethercat_bus` nach 0,3 s; ist sie 2 s still, schaltet er die
+  Endstufen aus. Stirbt der Busprozess, hält der Treiber die letzte Sollposition und meldet einen Alarm; die Node
+  beendet sich dann ebenfalls.
 - **Anlaufsperre:** Nach Freigabe oder aufgehobener Sperre zählen Fahrbefehle erst nach 1 s Ruhe oder einem Stopp-Befehl.
 - **Fehler an einem Rad schaltet beide ab.** Neu freigeben: `ros2 service call /diff_drive/enable std_srvs/srv/SetBool "data: true"`.
 
@@ -63,7 +64,7 @@ robot_state_publisher (URDF) ──► TF base_footprint → base_link → Räde
 
 | | |
 |---|---|
-| Rechner | Jetson Orin, 8 Kerne. EtherCAT-Zyklus auf Kern 7 (SCHED_FIFO 80), USB-Interrupts auf CPU1 |
+| Rechner | Jetson Orin, 8 Kerne. EtherCAT-Zyklus (Prozess `ethercat_bus`) auf Kern 7 (SCHED_FIFO 80), USB-Interrupts auf CPU1 |
 | Antrieb | CL57E-4A an `enP8p1s0`, Achse 3 = links (Getriebe 1:7,5), Achse 4 = rechts (1:14, gespiegelt). Schrittmotoren ohne Encoder (Open Loop) |
 | Räder | Ø 7 cm, Spur 24 cm, angetrieben vorn. Schleppräder 34 cm dahinter. Höchstens 10 U/min am Rad → 0,037 m/s, 0,31 rad/s |
 | `base_footprint` | Boden, Mitte zwischen den angetriebenen Rädern; x vorn, y links, z oben (TF `odom → base_footprint` vom EKF) |
@@ -97,7 +98,7 @@ baut in einer leeren Umgebung, nur mit `/opt/ros/humble`, und umgeht so drei Fal
 - `/opt/MVS/lib/aarch64` (Hikrobot-SDK, aus `~/.bashrc` und `~/.profile`) bringt eine alte libusb mit.
   `camera.launch.py` nimmt den Pfad zur Laufzeit aus `LD_LIBRARY_PATH`.
 
-Tests (86, ohne Hardware):
+Tests (95, ohne Hardware):
 
 ```bash
 source install/setup.bash && colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio && colcon test-result --verbose

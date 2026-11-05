@@ -10,6 +10,7 @@ ament_python_install_package(${PROJECT_NAME})
 # Startskripte (ros2 run slop_base <name>)
 install(PROGRAMS
   scripts/diff_drive
+  scripts/ethercat_bus
   scripts/with_netcaps
   DESTINATION lib/${PROJECT_NAME})
 
@@ -20,6 +21,7 @@ if(BUILD_TESTING)
   ament_add_pytest_test(test_kinematics test/test_kinematics.py)
   ament_add_pytest_test(test_senders test/test_senders.py)
   ament_add_pytest_test(test_cl57e_bus test/test_cl57e_bus.py)
+  ament_add_pytest_test(test_bus_link test/test_bus_link.py)
 endif()
 
 ament_package()

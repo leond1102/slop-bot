@@ -15,14 +15,15 @@ Sicherheit:
     oder ein Stopp-Befehl (alles 0) kam. Ein Sender, der schon läuft, fährt den Roboter nicht sofort los.
   - Raddrehzahl auf max_wheel_rpm begrenzt. Ist ein Befehl zu schnell, werden beide Räder gleich stark
     skaliert, damit der Roboter dieselbe Kurve fährt, nur langsamer.
-  - Fehler an einem Rad schaltet beide ab (Cl57eBus).
+  - Fehler an einem Rad schaltet beide ab (Cl57eBus im Busprozess).
   - Fahrsperre lock_topic (slop_safety/remote_guard, z. B. keine RustDesk-Sitzung): gesperrt bei data: true
     oder wenn länger als lock_timeout nichts kommt. Zusätzlich zu twist_mux, damit die Sperre auch greift,
     wenn twist_mux fehlt oder umgangen wird. Nach dem Aufheben gilt wieder die Anlaufsperre.
   - Auf /cmd_vel darf nur twist_mux senden (allowed_cmd_vel_nodes). Sendet noch jemand anders, steht der Roboter.
   - Absturz: Im CSP-Modus geht jeden Zyklus eine absolute Sollposition an den Treiber. Kommen keine Frames
-    mehr (Jetson/Prozess abgestürzt), bleibt die Sollposition stehen und der Motor hält an. Der Treiber
-    meldet danach einen Alarm (SyncCnt). Hängt nur die ROS-Node, bremst der Bus-Watchdog nach 0,3 s.
+    mehr (Jetson/Busprozess abgestürzt), bleibt die Sollposition stehen und der Motor hält an. Der Treiber
+    meldet danach einen Alarm (SyncCnt). Hängt nur diese Node, bremst der Bus-Watchdog nach 0,3 s; ist sie 2 s
+    still, schaltet der Busprozess die Endstufen aus.
 
 Radodometrie: Open Loop, die Odometrie zählt die ausgegebenen Schritte (Sollposition des Treibers). Verlorene
 Schritte oder durchrutschende Räder merkt sie nicht, sie ist also nur so genau wie Getriebe, Raddurchmesser und
@@ -30,18 +31,14 @@ Spurweite in der Config. Sie ist ein Eingang für den EKF (slop_localization), d
 aus allen Sensoren bildet; deshalb Topic /wheel/odom und publish_tf: false. Ohne EKF kann publish_tf: true gesetzt werden
 (nur eine Quelle für diese Transformation).
 
-Braucht CAP_NET_RAW + CAP_NET_ADMIN für den Raw-Socket und CAP_SYS_NICE für die Echtzeit-Priorität:
+EtherCAT: Den Bus bedient der eigene Prozess ethercat_bus (slop_base/bus_process.py, ohne rclpy). Diese Node spricht mit
+ihm über bus_link (Unix-Socket): Drehzahlen je Achse hin (50 Hz), Status zurück. So kann ein hängendes publish oder
+die DDS-Verbindungsaufnahme neuer Nodes den 2-ms-Zyklus nicht mehr anhalten. Die Zyklusstatistik steht im Log von
+ethercat_bus. Start beider (der Busprozess braucht CAP_NET_RAW, CAP_NET_ADMIN, CAP_SYS_NICE):
   ros2 run slop_base with_netcaps ros2 launch slop_base diff_drive.launch.py
-
-Echtzeit (rt_priority, rt_cpu, main_nice): Der EtherCAT-Zyklus läuft als SCHED_FIFO-Thread auf einem eigenen
-Kern, damit andere Prozesse (SLAM, RViz usw.) ihn nicht verdrängen. Er teilt sich aber das GIL mit dem ROS-Teil dieser Node.
-Deshalb kurzes GIL-Umschaltintervall und der ROS-Thread mit höherer Priorität (nice). Alle stats_period s steht
-die Zyklusstatistik im Log.
 """
 import gc
 import math
-import os
-import sys
 import time
 
 import rclpy
@@ -54,8 +51,8 @@ from std_msgs.msg import Bool
 from std_srvs.srv import SetBool
 from tf2_ros import TransformBroadcaster
 
-from slop_base.cl57e_bus import (PARAM_DIV, PARAM_MAX_CURRENT, PARAM_RUN_MODE, PARAM_SENSOR_ERR,
-                                 Cl57eBus, Cl57eError)
+from slop_base.bus_link import DEFAULT_NAME, BusClient
+from slop_base.cl57e_bus import Cl57eError
 from slop_base.kinematics import Odometry2D, limit_wheel_speeds, wheel_speeds
 from slop_base.senders import SenderCheck
 
@@ -79,11 +76,12 @@ class Wheel:
 
 
 class DiffDriveNode(Node):
-    """Dünne ROS-Hülle um Cl57eBus: /cmd_vel → Räder, Gelenkzustände zurück."""
+    """ROS-Seite des Antriebs: /cmd_vel → Drehzahlen an den Busprozess, Gelenkzustände und Odometrie zurück."""
 
     def __init__(self):
         super().__init__('diff_drive_node')
         for name, default in [
+            # Nur im Busprozess genutzt (er liest dieselbe Datei); hier deklariert, damit ros2 param sie zeigt
             ('ifname', 'enP8p1s0'),        # Ethernet-Port des EtherCAT-Busses
             ('cycle_ms', 2.0),             # EtherCAT-Zyklus
             ('dc', False),                 # Distributed Clocks (Sync0)
@@ -111,15 +109,17 @@ class DiffDriveNode(Node):
             ('publish_tf', False),         # true nur ohne EKF: sonst zwei Quellen für odom → base_frame
             ('left_joint', 'left_wheel_joint'),
             ('right_joint', 'right_wheel_joint'),
-            ('rt_priority', 80),           # SCHED_FIFO des Zyklus-Threads, 0 = aus
-            ('rt_cpu', 7),                 # Kern des Zyklus-Threads, -1 = beliebig
-            ('main_nice', -10),            # nice des ROS-Threads (hält das GIL kürzer), 0 = unverändert
-            ('gil_switch_ms', 0.5),        # GIL-Umschaltintervall (Python-Standard 5 ms)
-            ('stats_period', 10.0),        # s zwischen zwei Zyklusstatistiken im Log, 0 = aus
+            ('rt_priority', 80),           # Busprozess: SCHED_FIFO des Zyklus-Threads, 0 = aus
+            ('rt_cpu', 7),                 # Busprozess: Kern des Zyklus-Threads, -1 = beliebig
+            ('gil_switch_ms', 0.5),        # Busprozess: GIL-Umschaltintervall (Python-Standard 5 ms)
+            ('stats_period', 10.0),        # Busprozess: s zwischen zwei Zyklusstatistiken im Log, 0 = aus
+            ('node_timeout', 2.0),         # Busprozess: s ohne Nachricht dieser Node → Endstufen aus
+            ('bus_socket', DEFAULT_NAME),  # Name der Verbindung zum Busprozess (bus_link)
+            ('bus_timeout', 1.0),          # s ohne Status vom Busprozess → Fehler, Node beendet sich
+            ('connect_timeout', 20.0),     # s Warten auf den Busprozess beim Start
             ('slow_update_ms', 50.0),      # ms: dauert update() oder liegt zwischen zwei Aufrufen mehr, steht eine Warnung im Log
         ]:
             self.declare_parameter(name, default)
-        self._setup_process()
 
         self.radius = self._p('wheel_diameter') / 2.0
         self.track = self._p('track_width')
@@ -136,29 +136,24 @@ class DiffDriveNode(Node):
         if self._p('loop') not in ('open', 'closed'):
             raise Cl57eError("loop muss 'open' oder 'closed' sein")
 
-        self.bus = Cl57eBus(self._p('ifname'), [wh.axis for wh in self.wheels], self._p('cycle_ms') / 1000.0,
-                            self._p('dc'), cmd_timeout_s=min(0.3, self._p('cmd_vel_timeout')),
-                            rt_priority=self._p('rt_priority'), rt_cpu=self._p('rt_cpu'))
-        try:
-            name = self.bus.open()
-            self._check_drive_params()
-            self.bus.configure()
-            self.bus.start()
-        except Exception:
-            self.bus.close()
-            raise
+        self.bus = BusClient(self._p('bus_socket'))
+        self.get_logger().info('Verbinde mit dem Busprozess ethercat_bus …')
+        info = self.bus.connect(self._p('connect_timeout'))
         for wh in self.wheels:
-            self.bus.set_limits(wh.axis, amax=self._p('wheel_acc') / TWO_PI * wh.gear * wh.upr,
-                                ferr_limit=self._p('max_ferr_rev') * wh.upr)
+            upr = info.get('upr', {}).get(str(wh.axis))
+            if not upr:
+                raise Cl57eError(f'Busprozess bedient Achse {wh.axis} nicht (Achsen in diff_drive.yaml prüfen)')
+            wh.upr = int(upr)
+        name = info.get('name', 'EtherCAT-Treiber')
 
         v_max = self.w_max * self.radius
         self.get_logger().info(
-            f'{name} an {self._p("ifname")} in OP (CSP, {self._p("loop")} loop). '
+            f'{name} an {info.get("ifname", "?")} in OP (CSP, {self._p("loop")} loop). '
             + ', '.join(f'{wh.name}: Achse {wh.axis}, 1:{wh.gear:g}, {wh.upr} Einh./U' for wh in self.wheels)
             + f'. Rad Ø {self._p("wheel_diameter") * 100:g} cm, Spur {self.track * 100:g} cm, '
             f'max {self._p("max_wheel_rpm"):g} U/min am Rad = {v_max:.3f} m/s, {2 * v_max / self.track:.2f} rad/s')
-        self.get_logger().info(f'EtherCAT-Zyklus {self._p("cycle_ms"):g} ms: {self.bus.rt_status}; ROS-Thread: '
-                               f'{self.proc_status}')
+        self.get_logger().info(f'EtherCAT-Zyklus {info.get("cycle_ms", "?")} ms im Busprozess ethercat_bus: '
+                               f'{info.get("rt_status", "?")}')
 
         self.odom = Odometry2D(self.track)
         self.last_update_t = None
@@ -189,8 +184,6 @@ class DiffDriveNode(Node):
             self.create_subscription(Bool, self._p('lock_topic'), self.lock_callback, 10)
         self.create_service(SetBool, 'diff_drive/enable', self.enable_callback)
         self.create_timer(1.0 / self._p('rate'), self.update)
-        if self._p('stats_period') > 0:
-            self.create_timer(self._p('stats_period'), self.log_cycle_stats)
 
         if self._p('enable_on_start'):
             self._enable()
@@ -200,60 +193,6 @@ class DiffDriveNode(Node):
 
     def _p(self, name):
         return self.get_parameter(name).value
-
-    def _setup_process(self):
-        """ROS-Thread vom Echtzeit-Kern fernhalten, Priorität anheben, GIL schneller abgeben.
-        Läuft vor dem Start des Zyklus-Threads; Fehler sind nicht fatal, nur im Log."""
-        msgs = []
-        sys.setswitchinterval(max(1e-4, self._p('gil_switch_ms') / 1000.0))
-        msgs.append(f'GIL-Intervall {sys.getswitchinterval() * 1000:g} ms')
-        cpu = self._p('rt_cpu')
-        if cpu >= 0:
-            others = os.sched_getaffinity(0) - {cpu}
-            if others:
-                os.sched_setaffinity(0, others)
-                msgs.append(f'Kerne ohne {cpu}')
-        nice = self._p('main_nice')
-        if nice:
-            try:
-                os.setpriority(os.PRIO_PROCESS, 0, nice)   # Linux: gilt für den aufrufenden Thread
-                msgs.append(f'nice {nice}')
-            except OSError as e:
-                msgs.append(f'nice {nice} NICHT gesetzt ({e.strerror})')
-        self.proc_status = ', '.join(msgs)
-
-    def log_cycle_stats(self):
-        w = self.bus.window_stats()
-        if not w['cycles']:
-            return
-        msg = (f'EtherCAT letzte {self._p("stats_period"):g} s: {w["cycles"]} Zyklen, '
-               f'{w["late"]} verspätet (> {1.5 * self._p("cycle_ms"):g} ms), {w["overruns"]} Überläufe, '
-               f'{w["wkc_errors"]} WKC-Fehler, max. Periode {w["max_period"] * 1000:.1f} ms')
-        if w['late'] or w['wkc_errors']:
-            self.get_logger().warn(msg)
-        else:
-            self.get_logger().info(msg)
-
-    def _check_drive_params(self):
-        """Gefährliche Treibereinstellungen ablehnen, Einheiten pro Umdrehung bestimmen."""
-        problems = []
-        closed = self._p('loop') == 'closed'
-        for wh in self.wheels:
-            run_mode = self.bus.read_param(wh.axis, PARAM_RUN_MODE)
-            if run_mode != (2 if closed else 1):
-                problems.append(f'Achse {wh.axis}: RunModeSet = {run_mode}, erwartet {2 if closed else 1} '
-                                f'({self._p("loop")} loop)')
-            if closed and self.bus.read_param(wh.axis, PARAM_SENSOR_ERR) != 1:
-                problems.append(f'Achse {wh.axis}: SensorErr = 0 (Encoderfehler würden ignoriert)')
-            current = self.bus.read_param(wh.axis, PARAM_MAX_CURRENT)
-            if self._p('motor_current_ma') and current > self._p('motor_current_ma'):
-                problems.append(f'Achse {wh.axis}: MaxCurrent = {current} mA > motor_current_ma')
-            upr = self._p('units_per_rev') or self.bus.read_param(wh.axis, PARAM_DIV)
-            if not 200 <= upr <= 1_000_000:
-                problems.append(f'Achse {wh.axis}: unplausible Einheiten pro Umdrehung {upr}')
-            wh.upr = upr
-        if problems:
-            raise Cl57eError('Treiberparameter: ' + '; '.join(problems))
 
     def _enable(self):
         try:
@@ -371,7 +310,14 @@ class DiffDriveNode(Node):
                     + (f' ({parts})' if parts else ''), throttle_duration_sec=1.0)
 
     def _update(self):
+        self.bus.poll()
+        if self.bus.exit_reason:
+            raise Cl57eError(f'Busprozess ethercat_bus beendet: {self.bus.exit_reason}')
+        if self.bus.status_age() > self._p('bus_timeout'):
+            raise Cl57eError(f'Busprozess ethercat_bus antwortet seit {self.bus.status_age():.1f} s nicht')
         st = self.bus.status()
+        if st is None:
+            return                      # erster Status noch unterwegs
         if st['comm_lost']:
             raise Cl57eError(f'EtherCAT-Kommunikation verloren ({st["thread_error"] or "keine Antwort"})')
         if st['error'] and st['error'] != self.last_error:
@@ -476,10 +422,10 @@ class DiffDriveNode(Node):
         self.joint_pub.publish(js)
 
     def shutdown(self):
-        s = self.bus.stats
+        """Busprozess bremst und schaltet die Endstufen aus; er selbst läuft weiter (Strg+C beendet ihn mit)."""
+        self.bus.bye()
         self.bus.close()
-        self.get_logger().info(f'Beendet. Zyklen {s["cycles"]}, Überläufe {s["overruns"]}, '
-                               f'WKC-Fehler {s["wkc_errors"]}, max. Periode {s["max_period"] * 1000:.1f} ms')
+        self.get_logger().info('Beendet (Busprozess: gebremst, Endstufen aus)')
 
 
 def main(args=None):

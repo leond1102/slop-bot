@@ -151,7 +151,11 @@ class Cl57eBus:
     # ---------------------------------------------------------------- Verbindung / SDO
     def open(self):
         """Interface öffnen und den CL57E-4A suchen. Gibt den Slave-Namen zurück."""
-        import pysoem   # erst hier, damit die Tests ohne pysoem laufen
+        try:
+            import pysoem   # erst hier, damit die Tests ohne pysoem laufen
+        except ImportError:
+            raise Cl57eError('pysoem fehlt. Start über "ros2 run slop_base with_netcaps ..." '
+                             '(bindet ~/ethercat_venv ein)') from None
         self._pysoem = pysoem
         master = pysoem.Master()
         try:
