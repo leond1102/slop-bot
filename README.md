@@ -22,7 +22,7 @@ Offene Aufgaben: [TODO.md](TODO.md)
 | [slop_safety](src/slop_safety) | `twist_mux`-Konfiguration und `remote_guard`: Fahrsperre, solange keine RustDesk-Sitzung besteht |
 | [slop_teleop](src/slop_teleop) | `keyboard_teleop`: Tastatursteuerung mit Totmann (Taste halten = fahren) |
 | [slop_description](src/slop_description) | URDF/xacro des Roboters (Räder, Schleppräder, Livox, RealSense) und `description.launch.py` mit `robot_state_publisher`. Radmaße, Spur und Gelenknamen liest es aus `diff_drive.yaml` |
-| [slop_sensors](src/slop_sensors) | Launch-Dateien und Configs für Livox Mid-360s und RealSense D435i; `livox_to_cloud` (Livox → PointCloud2) und Einstellungen für den 2D-Scan `/scan` (`pointcloud_to_laserscan`) |
+| [slop_sensors](src/slop_sensors) | Launch-Dateien und Configs für Livox Mid-360s und RealSense D435i; `livox_to_cloud` (Livox → PointCloud2) und Einstellungen für den 2D-Scan `/scan` (`pointcloud_to_laserscan`); `depth_obstacles` (Hindernisse aus dem Tiefenbild der RealSense) |
 | `src/third_party` (Git-Submodule) | `Livox-SDK2`, `livox_ros_driver2`, `realsense-ros` 4.58.4, `FAST_LIO` (Branch ROS2, mit `src/third_party/patches/fast_lio.patch`) |
 | [tools/diff_motor.py](tools/diff_motor.py) | Motortest ohne ROS (Parameter lesen, Achsen zuordnen, Getriebe prüfen), CSV-Logs in `tools/logs/` |
 
@@ -45,6 +45,7 @@ diff_drive_node ─/wheel/odom──────────────┐
 robot_state_publisher (URDF) ──► TF base_footprint → base_link → Räder, livox_frame, camera_link
 
 /livox/lidar ─► livox_to_cloud ─► /livox/points ─► pointcloud_to_laserscan ─► /scan   (für slam_toolbox / Nav2)
+/camera/depth/image_rect_raw ─► depth_obstacles ─► /camera/obstacles, /camera/floor  (Hindernisse vor dem Roboter)
 ```
 
 ## Sicherheit

@@ -58,6 +58,23 @@ ros2 launch slop_description rviz.launch.py
 
 ros2 run slop_teleop keyboard_teleop
 
+## Hinderniserkennung der Kamera ansehen (3 Terminals: Antrieb + Modell + EKF, Kamera mit Erkennung, RViz; rote Würfel = Hindernis, grün = freier Boden, dazu Farb- und Tiefenbild)
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
+
+ros2 launch slop_sensors camera.launch.py
+
+ros2 launch slop_description rviz.launch.py rviz_config:=obstacles
+
+## Dasselbe ohne Antrieb (Modell statt Bringup)
+ros2 launch slop_description description.launch.py
+
+ros2 launch slop_sensors camera.launch.py
+
+ros2 launch slop_description rviz.launch.py rviz_config:=obstacles
+
+## Hinderniserkennung prüfen (ca. 13 Hz; im Kamera-Terminal alle 10 s "Boden gesehen bei z = …", soll nahe 0 cm sein)
+ros2 topic hz /camera/obstacles
+
 ## IMUs plotten (2 Terminals: Sensoren, Plot)
 ros2 launch slop_sensors sensors.launch.py
 

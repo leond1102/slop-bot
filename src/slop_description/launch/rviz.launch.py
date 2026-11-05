@@ -18,7 +18,7 @@ def generate_launch_description():
     share = get_package_share_directory('slop_description')
     return LaunchDescription([
         DeclareLaunchArgument('rviz_config', default_value='all',
-                              description='Name der Konfiguration in rviz/ ohne .rviz (description, all, sensors, lio, scan)'),
+                              description='Name der Konfiguration in rviz/ ohne .rviz (description, all, sensors, lio, scan, obstacles)'),
         Node(package='rviz2', executable='rviz2', output='log',
              arguments=['-d', PathJoinSubstitution([share, 'rviz', [LaunchConfiguration('rviz_config'), '.rviz']])]),
     ])

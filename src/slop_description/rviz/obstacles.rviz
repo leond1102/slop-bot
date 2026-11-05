@@ -1,0 +1,120 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Tree Height: 500
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid (1 m)
+      Enabled: true
+      Cell Size: 1
+      Plane Cell Count: 10
+    - Class: rviz_default_plugins/Grid
+      Name: Grid (10 cm)
+      Enabled: true
+      Cell Size: 0.1
+      Plane Cell Count: 40
+      Color: 100; 100; 100
+      Alpha: 0.3
+    - Class: rviz_default_plugins/RobotModel
+      Name: Roboter
+      Enabled: true
+      Description Topic:
+        Value: /robot_description
+    # Kamera-Frames (camera_link und die optischen Frames des Treibers): zeigen, wohin die Kamera schaut
+    - Class: rviz_default_plugins/TF
+      Name: TF (Kamera)
+      Enabled: false
+      Show Names: true
+      Marker Scale: 0.15
+    # Hindernisse (depth_obstacles): je 5-cm-Zelle ein roter Würfel, 5 cm bis 0,9 m über dem Boden
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Hindernisse (/camera/obstacles)
+      Enabled: true
+      Topic:
+        Value: /camera/obstacles
+        Depth: 5
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Style: Boxes
+      Size (m): 0.05
+      Alpha: 0.9
+      Decay Time: 0
+      Position Transformer: XYZ
+      Color Transformer: FlatColor
+      Color: 230; 30; 30
+      Use Fixed Frame: true
+    # Freier Boden (depth_obstacles): grüne Flecken, daraus räumt die Costmap Zellen frei
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Freier Boden (/camera/floor)
+      Enabled: true
+      Topic:
+        Value: /camera/floor
+        Depth: 5
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Style: Flat Squares
+      Size (m): 0.08
+      Alpha: 0.35
+      Decay Time: 0
+      Position Transformer: XYZ
+      Color Transformer: FlatColor
+      Color: 40; 200; 40
+      Use Fixed Frame: true
+    # Lidar-Scan zum Vergleich (lio.launch.py): grau
+    - Class: rviz_default_plugins/LaserScan
+      Name: Laserscan (/scan)
+      Enabled: false
+      Topic:
+        Value: /scan
+        Depth: 5
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Style: Flat Squares
+      Size (m): 0.04
+      Alpha: 0.6
+      Decay Time: 0
+      Position Transformer: XYZ
+      Color Transformer: FlatColor
+      Color: 150; 150; 150
+      Use Fixed Frame: true
+    # Kamerabilder: Farbe und Tiefe (hell = weit, schwarz = keine Tiefe)
+    - Class: rviz_default_plugins/Image
+      Name: Farbbild
+      Enabled: true
+      Topic:
+        Value: /camera/color/image_raw
+        Depth: 2
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Normalize Range: true
+    - Class: rviz_default_plugins/Image
+      Name: Tiefenbild
+      Enabled: true
+      Topic:
+        Value: /camera/depth/image_rect_raw
+        Depth: 2
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Normalize Range: false
+      Min Value: 0
+      Max Value: 3000
+  Global Options:
+    # Roboterfest: braucht nur das Modell (Bringup oder description.launch.py)
+    Fixed Frame: base_footprint
+    Frame Rate: 15
+  Tools:
+    - Class: rviz_default_plugins/MoveCamera
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 3.5
+      Focal Point:
+        X: 1.0
+        Y: 0
+        Z: 0
+      Pitch: 0.75
+      Yaw: 3.6

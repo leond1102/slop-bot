@@ -1,0 +1,19 @@
+# Hinderniserkennung aus dem Tiefenbild der RealSense (depth_obstacles). Gestartet von camera.launch.py (obstacles:=true,
+# Standard). Ausgänge in base_footprint (z = 0 = Boden): /camera/obstacles (Hindernisse), /camera/floor (freier Boden,
+# zum Freiräumen der Costmap). Abgründe werden noch nicht erkannt.
+depth_obstacles:
+  ros__parameters:
+    depth_topic: /camera/depth/image_rect_raw
+    info_topic: /camera/depth/camera_info
+    target_frame: base_footprint
+    stride: 4                    # jeden n-ten Pixel je Achse (640×480 → 160×120 Punkte)
+    min_range: 0.25              # m Tiefe; die D435i misst näher nicht zuverlässig
+    max_range: 2.5               # m; weiter wird das Tiefenrauschen größer als min_obstacle_height
+    min_obstacle_height: 0.05    # m über dem Boden, ab hier Hindernis
+    max_obstacle_height: 0.9     # m, darüber kann der Roboter durch (Mast ca. 0,7 m)
+    floor_band: 0.03             # m: |z| darunter gilt als freier Boden
+    voxel: 0.05                  # m Rasterweite der Hindernisse
+    min_points: 3                # Punkte je Zelle, damit sie zählt (gegen Rauschen)
+    floor_voxel: 0.10            # m Rasterweite des freien Bodens
+    max_rate: 15.0               # Hz höchstens (Kamera liefert 30)
+    stats_period: 10.0           # s; Log mit Bodenhöhe (Prüfung der Kameraneigung), 0 = aus
