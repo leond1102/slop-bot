@@ -12,6 +12,9 @@ Startpose: AMCL startet bei x/y/yaw (Standard 0/0/0 = Start beim Kartieren). Dan
 zur Karte passt; sonst nimmt es die zuletzt gespeicherte Pose (<karte>.last_pose.yaml neben der Karte) oder durchsucht die
 ganze Karte. Im Betrieb sucht es neu, wenn der Scan länger nicht mehr passt (Roboter versetzt). Von Hand: RViz
 "2D Pose Estimate" oder ros2 service call /relocalize std_srvs/srv/Trigger. Ohne: relocalize:=false.
+Erfahrungskarte (experience): lernt bei sicherer Lokalisierung, was fest, vielleicht belegt oder frei ist
+(<karte>.experience.npz neben der Karte). experience_costs:=true gibt „vielleicht“ als weiche Kosten an den Planer.
+Ohne: experience:=false.
 AMCL sendet map → odom; lio.launch.py läuft deshalb mit map_tf:=false.
 """
 import os
@@ -34,6 +37,15 @@ def relocalize_node(context):
                  parameters=[{'pose_file': pose_file}], condition=IfCondition(LaunchConfiguration('relocalize')))]
 
 
+def experience_node(context):
+    """Erfahrungskarte mit Zählerdatei neben der Karte: maps/office.yaml → maps/office.experience.npz."""
+    map_yaml = context.launch_configurations['map']
+    return [Node(package='slop_navigation', executable='experience', name='experience', output='screen',
+                 parameters=[{'file': os.path.splitext(map_yaml)[0] + '.experience.npz',
+                              'soft_costs': ParameterValue(LaunchConfiguration('experience_costs'), value_type=bool)}],
+                 condition=IfCondition(LaunchConfiguration('experience')))]
+
+
 def generate_launch_description():
     share = get_package_share_directory('slop_navigation')
     params = os.path.join(share, 'config', 'localization.yaml')
@@ -53,6 +65,10 @@ def generate_launch_description():
         DeclareLaunchArgument('rviz', default_value='true', description='RViz mit Lokalisierungsansicht'),
         DeclareLaunchArgument('relocalize', default_value='true',
                               description='Pose prüfen und bei Bedarf in der ganzen Karte suchen (relocalize)'),
+        DeclareLaunchArgument('experience', default_value='true',
+                              description='Erfahrungskarte lernen und anzeigen (<karte>.experience.npz)'),
+        DeclareLaunchArgument('experience_costs', default_value='false',
+                              description='„vielleicht belegt“ als weiche Kosten an den Planer (Keepout-Filter)'),
         IncludeLaunchDescription(PythonLaunchDescriptionSource(lio),
                                  launch_arguments={'map_tf': 'false', 'scan': 'true'}.items(),
                                  condition=IfCondition(LaunchConfiguration('lio'))),
@@ -64,6 +80,7 @@ def generate_launch_description():
         Node(package='nav2_lifecycle_manager', executable='lifecycle_manager', name='lifecycle_manager_localization',
              output='screen', parameters=[params]),
         OpaqueFunction(function=relocalize_node),
+        OpaqueFunction(function=experience_node),
         Node(package='rviz2', executable='rviz2', output='log', arguments=['-d', rviz_cfg],
              condition=IfCondition(LaunchConfiguration('rviz'))),
     ])

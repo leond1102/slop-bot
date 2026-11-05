@@ -8,6 +8,7 @@ Verhaltensbaum, Geschwindigkeitsglättung und Collision Monitor + RViz.
 
     ros2 launch slop_navigation navigation.launch.py map:=$HOME/slop-bot_ws/maps/office.yaml
     ros2 launch slop_navigation navigation.launch.py localization:=false    # localization.launch.py läuft schon
+    ros2 launch slop_navigation navigation.launch.py experience_costs:=true # Erfahrungskarte beeinflusst den Planer
 
 Befehlskette: controller_server/behavior_server → cmd_vel_nav → velocity_smoother → cmd_vel_smoothed → collision_monitor
 → /navigation/cmd_vel → twist_mux (Priorität 20, Tastatur 50, Sperren 100) → /cmd_vel → diff_drive_node.
@@ -39,10 +40,13 @@ def generate_launch_description():
         DeclareLaunchArgument('localization', default_value='true',
                               description='localization.launch.py mitstarten (LIO, map_server, AMCL, relocalize)'),
         DeclareLaunchArgument('rviz', default_value='true', description='RViz mit Navigationsansicht'),
+        DeclareLaunchArgument('experience_costs', default_value='false',
+                              description='Erfahrungskarte: „vielleicht belegt“ als weiche Kosten an den Planer'),
         # In einer Gruppe: Sonst gälte das rviz:=false der Lokalisierung auch hier, und RViz für Nav2 startete nicht
         GroupAction([IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(share, 'launch', 'localization.launch.py')),
-            launch_arguments={'map': LaunchConfiguration('map'), 'rviz': 'false'}.items())],
+            launch_arguments={'map': LaunchConfiguration('map'), 'rviz': 'false',
+                              'experience_costs': LaunchConfiguration('experience_costs')}.items())],
             scoped=True, condition=IfCondition(LaunchConfiguration('localization'))),
         Node(package='nav2_controller', executable='controller_server', output='screen',
              parameters=[params], remappings=nav_cmd),

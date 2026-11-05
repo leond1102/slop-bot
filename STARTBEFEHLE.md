@@ -241,6 +241,26 @@ ros2 lifecycle get /controller_server
 ros2 topic echo /navigation/cmd_vel
 ros2 topic echo /polygon_stop --once
 
+## Nicht den "Reset"-Knopf im Nav2-Panel benutzen: Abbrechen mit "Cancel", Neustart mit Ctrl-C und neu starten
+
+## Erfahrungskarte: lernt bei jeder Fahrt mit (Lokalisierung muss passen), Zähler in maps/<karte>.experience.npz
+## In RViz "Erfahrung (Beständigkeit)" einschalten: weiß = immer frei, grau = mal belegt (Stuhl), schwarz = fest
+## Im Navigations-Terminal jede Minute: "Scans letzte 60 s: gezählt …, gesperrt: … | Zellen: fest …, vielleicht …, frei …"
+
+## Navigieren mit weichen Kosten aus der Erfahrung (Stellen, wo oft ein Stuhl steht, werden gemieden, aber nie gesperrt)
+ros2 launch slop_navigation navigation.launch.py experience_costs:=true
+
+## Erfahrung sofort speichern (passiert sonst jede Minute und beim Beenden)
+ros2 service call /experience/save std_srvs/srv/Trigger
+
+## Karte mit der Erfahrung aktualisieren: erst nur zählen, dann neue Karte schreiben (Original bleibt, neue heißt office-3-neu)
+ros2 run slop_navigation experience_export ~/slop-bot_ws/maps/office-3.yaml --nur-zeigen
+ros2 run slop_navigation experience_export ~/slop-bot_ws/maps/office-3.yaml
+ros2 launch slop_navigation navigation.launch.py map:=$HOME/slop-bot_ws/maps/office-3-neu.yaml
+
+## Ohne Erfahrungskarte
+ros2 launch slop_navigation navigation.launch.py experience:=false
+
 # A. Bauen, Tests und einzelne Befehle
 
 ## Bauen – immer über das Skript (saubere Umgebung, ohne ~/ros2_ws und venv-Python)

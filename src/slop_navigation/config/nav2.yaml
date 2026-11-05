@@ -200,6 +200,10 @@ global_costmap:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
         footprint_clearing_enabled: true
+        # 0 = Overwrite: Was die Sensoren gerade sehen, ersetzt die Karte – auch frei. Ein Stuhl, der beim Kartieren im
+        # Weg stand, verschwindet, sobald das Lidar durch seine Zelle sieht. Nicht gesehene Zellen behalten die Karte
+        # (geht nur mit track_unknown_space: true, sonst löschte die Schicht die Karte großflächig).
+        combination_method: 0
         observation_sources: scan camera_obstacles camera_floor
         scan:
           topic: /scan
@@ -234,6 +238,14 @@ global_costmap:
         inflation_radius: 0.45
         cost_scaling_factor: 4.0
       always_send_full_costmap: True
+      # Erfahrungskarte (slop_navigation/experience): Stellen, an denen oft etwas steht (Stühle), werden teurer, aber
+      # nie verboten (Kosten ≤ 150 von 254). Wirkt erst, wenn der Knoten mit soft_costs läuft und die Filter-Info sendet
+      # (navigation.launch.py experience_costs:=true); vorher wartet der Filter nur.
+      filters: ["experience_filter"]
+      experience_filter:
+        plugin: "nav2_costmap_2d::KeepoutFilter"
+        enabled: True
+        filter_info_topic: "/experience/filter_info"
 
 # ---------------------------------------------------------------------------------------------------- Planer
 planner_server:
@@ -314,8 +326,9 @@ collision_monitor:
       polygon_pub_topic: "polygon_slowdown"
       enabled: True
     # Vorausschau mit dem ganzen Footprint (auch Drehungen, das Heck schwenkt aus): bremst so, dass bis zur Berührung
-    # mindestens time_before_collision s bleiben. Footprint als feste Punkte (+2 cm wie footprint_padding): mit
-    # footprint_topic (Costmap) blieb unter Humble der Zeitstempel hängen, der Ausgang sprang zwischen 0 und Sollwert.
+    # mindestens time_before_collision s bleiben. ACHTUNG Humble (1.1.20): Bei action_type "approach" werden `points`
+    # ignoriert, das Polygon kommt immer von footprint_topic (Standard local_costmap/published_footprint). Der früher
+    # beobachtete „hängende Zeitstempel“ dort war der tf2-Deadlock (behoben mit ros-humble-tf2 ≥ 0.25.24).
     FootprintApproach:
       type: "polygon"
       action_type: "approach"

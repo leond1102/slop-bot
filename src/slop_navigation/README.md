@@ -150,6 +150,36 @@ Berührung (Innenkreis), darunter abnehmende Kosten nach außen, 0 = frei, 255 =
   `inflation_radius` größer als der Außenkreis, sonst fährt der Planer zu dicht an Wände; Freiräumen muss möglich sein, sonst
   bleiben „Geister“ (z. B. vorbeigelaufene Menschen) liegen.
 
+### Erfahrungskarte (`experience`)
+
+Lernt bei jeder Fahrt, was in der Karte **fest** (Wand, Tisch), **vielleicht belegt** (Stuhl, Mülleimer) oder **frei**
+ist, und gibt „vielleicht“ als weiche Kosten an den Planer. Startet mit `localization.launch.py` (also auch mit
+`navigation.launch.py`); ohne: `experience:=false`.
+
+- **Zählen:** je Zelle *gesehen* (Strahl ging hindurch oder traf) und *belegt* (Strahl traf). Beständigkeit
+  p = belegt / gesehen. Ab 5 Beobachtungen: p ≥ 0,80 fest, 0,15–0,80 vielleicht, darunter frei.
+- **Vergessen:** Halbwertszeit 7 Tage (`half_life_days`; Baustelle eher 1–2). p bleibt dabei gleich, aber neue
+  Beobachtungen wiegen mehr: Ein weggeräumter Schrank wird nach einigen Fahrten zu „vielleicht“, dann „frei“.
+- **Lernsperre** (sonst schriebe eine falsche Pose Wände an falsche Stellen): nur bei relocalize-Score ≥ 75 %,
+  AMCL-Unsicherheit ≤ 0,2 m / 6°, Drehrate ≤ 0,3 rad/s (Scan sonst verzerrt). Langzeit-Zählung nur nach 0,2 m / 20°
+  Bewegung oder alle 60 s im Stand, damit ein Mensch neben dem stehenden Roboter nicht hundertfach zählt.
+- **Weiche Kosten** (`experience_costs:=true`): Nav2-Keepout-Filter in der globalen Costmap (`experience_filter`). Maske
+  1–60 → Kosten bis 150 von 254: teurer, **nie verboten**; der Planer nimmt lieber ~1 m Umweg als eine Stuhl-Stelle.
+  Zellen, die in dieser Sitzung zuletzt **frei gesehen** wurden, haben keine Kosten („erst mal schauen“); steht dort
+  wirklich etwas, trägt es die Sensorschicht ein.
+- **Overwrite** in der globalen Sensorschicht (`combination_method: 0`): Was die Sensoren sehen, ersetzt die Karte auch
+  als frei – ein Stuhl, der beim Kartieren im Weg stand, verschwindet für den Planer, sobald das Lidar durchsieht.
+- **Karte aktualisieren** (`experience_export`, schreibt neue Dateien, Original bleibt): fest → Wand, frei → frei,
+  vielleicht → frei (außer an Wandkanten: in der Karte belegt und eine feste Zelle ≤ 2 Zellen daneben). Nur Zellen mit
+  ≥ 10 Beobachtungen. Erfahrung und letzte Pose werden für die neue Karte mitkopiert.
+- Dateien: `maps/<karte>.experience.npz` (jede Minute und beim Beenden). Passt das Raster nicht mehr (neue Karte unter
+  altem Namen), wird die alte Datei als `.alt` beiseitegelegt und neu begonnen.
+- Anzeige: RViz „Erfahrung (Beständigkeit)“ (`/experience/persistence`, Standard aus).
+- Grenzen: nur das Höhenband des Lidars (0,15–1,8 m); Kamera noch nicht. Taugt erst nach einigen Fahrten.
+- Getestet (2026-11-05, Domäne 78, Aufnahme `~/nav_test`, ohne Antrieb): lernt aus echten Scans, Maske kommt im
+  Keepout-Filter des `planner_server` an; Maskenwert 40 auf freiem Gang → Costmap 40 (Kosten 102), nicht gesperrt.
+  16 Unit-Tests (`test/test_experience.py`, `test/test_relocalize.py`).
+
 ### Sicherheit
 
 ```
@@ -180,8 +210,13 @@ controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cm
   0,6 rad/s geht durch.
 - Collision Monitor mit künstlichen Hindernissen: 10 cm vor der Front → Stopp, 35 cm → 40 %, außerhalb → unverändert.
 - Dabei gefunden und behoben: Die Fahne (bis 0,57 m hinter dem Lidar) lag im Footprint und ließ die Vorausschau immer
-  wieder auf 0 springen → hinterer Ausschnitt-Quader 0,60 m tief, 0,45 m hoch (`slop_lio/config/crop.yaml`). Mit
-  `footprint_topic` hing unter Humble der Zeitstempel → Footprint dort als feste Punkte.
+  wieder auf 0 springen → hinterer Ausschnitt-Quader 0,60 m tief, 0,45 m hoch (`slop_lio/config/crop.yaml`).
+- **tf2-Deadlock (2026-11-05):** Mit ros-humble-tf2 0.25.23 blieb im `controller_server`/`planner_server` zufällig die
+  TF stehen (Footprint mit immer gleichem Zeitstempel, „Transform data too old map → odom“, Ziele sofort „erreicht“
+  oder „Resulting plan has 0 poses“, Hängen bei Ctrl-C/Reset). Ursache: Sperren-Kreuzung in tf2 zwischen TF-Empfang und
+  `waitForTransform` der Costmap-Sensoren. **Behoben ab ros-humble-tf2 0.25.24** (`dpkg -l | grep ros-humble-tf2`).
+- Approach-Polygon des Collision Monitors: unter Humble werden `points` ignoriert, es nimmt immer
+  `local_costmap/published_footprint`.
 
 ### Offen
 
