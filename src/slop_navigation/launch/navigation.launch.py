@@ -1,5 +1,5 @@
 """Nav2 für den Slop-Bot: Lokalisierung (map_server + AMCL + relocalize, LIO) + Planer, Controller, Costmaps,
-Verhaltensbaum, Geschwindigkeitsglättung und Collision Monitor + RViz.
+Verhaltensbaum, Geschwindigkeitsglättung, zwei Collision Monitore mit dynamischem Sicherheitsfeld + RViz.
 
     ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py    # Terminal 1: Antrieb, Modell, EKF (ZUERST)
     ros2 launch slop_sensors camera.launch.py                                     # Terminal 2: Kamera + Hinderniserkennung
@@ -10,8 +10,10 @@ Verhaltensbaum, Geschwindigkeitsglättung und Collision Monitor + RViz.
     ros2 launch slop_navigation navigation.launch.py localization:=false    # localization.launch.py läuft schon
     ros2 launch slop_navigation navigation.launch.py experience_costs:=true # Erfahrungskarte beeinflusst den Planer
 
-Befehlskette: controller_server/behavior_server → cmd_vel_nav → velocity_smoother → cmd_vel_smoothed → collision_monitor
-→ /navigation/cmd_vel → twist_mux (Priorität 20, Tastatur 50, Sperren 100) → /cmd_vel → diff_drive_node.
+Befehlskette: controller_server/behavior_server → cmd_vel_nav → velocity_smoother → cmd_vel_smoothed
+→ collision_monitor_dynamic (B: unbekannte Hindernisse, größere Zonen) → cmd_vel_dynamic
+→ collision_monitor (A: alles, sehr kleine Zonen) → /navigation/cmd_vel → twist_mux (Priorität 20, Tastatur 50, Sperren 100)
+→ /cmd_vel → diff_drive_node. B sieht nur /safety/unknown_points (unknown_obstacles) und die Kamera-Hindernisse.
 Einstellungen: config/nav2.yaml, Verhaltensbäume: behavior_trees/ (ohne Rückwärtsfahren).
 """
 import os
@@ -25,7 +27,7 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 NAV_NODES = ['controller_server', 'planner_server', 'behavior_server', 'bt_navigator', 'velocity_smoother',
-             'collision_monitor']
+             'collision_monitor_dynamic', 'collision_monitor']
 
 
 def generate_launch_description():
@@ -61,6 +63,10 @@ def generate_launch_description():
         Node(package='nav2_velocity_smoother', executable='velocity_smoother', name='velocity_smoother',
              output='screen', parameters=[params],
              remappings=nav_cmd + [('cmd_vel_smoothed', 'cmd_vel_smoothed')]),
+        # Dynamisches Sicherheitsfeld: Scanpunkte ohne bekannte Struktur → collision_monitor_dynamic (größere Zonen)
+        Node(package='slop_navigation', executable='unknown_obstacles', name='unknown_obstacles', output='screen'),
+        Node(package='nav2_collision_monitor', executable='collision_monitor', name='collision_monitor_dynamic',
+             output='screen', parameters=[params]),
         Node(package='nav2_collision_monitor', executable='collision_monitor', name='collision_monitor',
              output='screen', parameters=[params]),
         Node(package='nav2_lifecycle_manager', executable='lifecycle_manager', name='lifecycle_manager_navigation',

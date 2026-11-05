@@ -183,8 +183,9 @@ ist, und gibt „vielleicht“ als weiche Kosten an den Planer. Startet mit `loc
 ### Sicherheit
 
 ```
-controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cmd_vel_smoothed─► collision_monitor
-    ─/navigation/cmd_vel─► twist_mux (Prio 20) ─/cmd_vel─► diff_drive_node ─► ethercat_bus (Watchdog 0,3 s)
+controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cmd_vel_smoothed─► collision_monitor_dynamic (B)
+    ─cmd_vel_dynamic─► collision_monitor (A) ─/navigation/cmd_vel─► twist_mux (Prio 20) ─/cmd_vel─► diff_drive_node
+    ─► ethercat_bus (Watchdog 0,3 s)
 ```
 
 - **Nie rückwärts:** RPP `allow_reversing: false`, `velocity_smoother` `min_velocity` x = 0 (ein Rückwärtsbefehl wird 0),
@@ -192,12 +193,28 @@ controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cm
 - **Kein Drehen als Recovery** (`Spin` aus den Bäumen entfernt): Das Heck schwenkt bis 0,43 m aus. Recovery = Costmaps
   leeren und 5 s warten.
 - **Tempo:** höchstens 0,18 m/s (Ziel 0,15) und 0,6 rad/s; Beschleunigung 0,2 m/s².
-- **Collision Monitor** (letzte Bremse, nur aktuelle Sensordaten, unabhängig von Karte und Costmaps; Zonen in RViz rot/gelb):
-  - Stopp: Streifen 15 cm vor der Front (x 0,10–0,25 m, ±0,20 m)
-  - Langsam auf 40 %: bis 60 cm vor der Front (x 0,10–0,60 m, ±0,25 m)
-  - Vorausschau mit dem Footprint: bremst so, dass bis zur Berührung ≥ 1,5 s bleiben. **Unter Humble nur für
-    Geradeausfahrt, nicht für Drehungen** (getestet). Gegen Anstoßen beim Drehen schützt der Controller: RPP prüft jeden
-    Befehl, auch Drehen auf der Stelle, mit dem Footprint gegen die lokale Costmap (mit Gedächtnis).
+- **Dynamisches Sicherheitsfeld: zwei Collision Monitore hintereinander** (jeder kann nur bremsen). Bekannte Struktur
+  (Wände) passiert der Roboter eng, Unbekanntes (Mensch, Stuhl, Kiste) mit Abstand:
+
+  | | sieht | Stopp | Langsam (40 %) | Vorausschau |
+  |---|---|---|---|---|
+  | **B** `collision_monitor_dynamic` | nur unbekannte Lidar-Punkte (`/safety/unknown_points`) + Kamera | 10 cm vor der Front, ±0,22 m | 40 cm vor, 15 cm hinter und neben dem Körper | ≥ 1 s |
+  | **A** `collision_monitor` | alles (Lidar + Kamera), unabhängig von Karte und Lokalisierung | 2 cm um den Körper | 10 cm um den Körper | ≥ 0,6 s |
+
+  - `unknown_obstacles` trennt die Scanpunkte: bekannt = in der Erfahrungskarte fest, oder in der Karte belegt und die
+    Erfahrung widerspricht nicht; ± 10 cm Toleranz. **Im Zweifel unbekannt:** ohne Karte, ohne TF, bei unsicherer
+    Lokalisierung (relocalize < 60 %, AMCL > 0,3 m) oder außerhalb der Karte gehen alle Punkte an B – dann gelten die
+    größeren Zonen auch für Wände. Ein Mensch, der direkt an einer bekannten Wand steht, gilt als Wand: dafür bleibt A.
+  - Zonen in RViz: A rot/gelb, B dunkelrot/orange, unbekannte Punkte magenta.
+  - Bremsweg bei 0,18 m/s ≈ 10 cm, bei 40 % ≈ 2,4 cm: Die kleinen Zonen von A sind frontal nur mit der Vorausschau
+    sicher (bei 2 cm Abstand höchstens 0,03 m/s). B: Langsam-Zone 40 cm bremst von 0,18 auf 0,07 m/s (≈ 10 cm),
+    danach reichen 2,4 cm Bremsweg für die 10-cm-Stoppzone. Flache Dinge (< 0,15 m) sieht nur die Kamera, und erst ab
+    0,25 m: angehalten wird davor über die lokale Costmap (Gedächtnis) und die Kollisionsprüfung von RPP.
+  - Vorausschau: **unter Humble nur für Geradeausfahrt, nicht für Drehungen** (getestet), und sie nimmt immer den
+    Footprint der lokalen Costmap (`points` werden ignoriert). Gegen Anstoßen beim Drehen schützt der Controller: RPP
+    prüft jeden Befehl, auch Drehen auf der Stelle, mit dem Footprint gegen die lokale Costmap.
+  - **Humble ignoriert eine Quelle, die länger als 1 s nichts liefert (kein Stopp!).** Fällt `/scan` aus, fehlt der
+    Lidar-Schutz; fällt `unknown_obstacles` aus, sieht B nur noch die Kamera. → Wächter (folgt im Sicherheits-Update).
 - **Pose neu gesetzt** (`relocalize` im Betrieb): laufende Nav2-Ziele werden abgebrochen, ein neues Ziel ist nötig.
 - Darunter wie immer: twist_mux-Sperren, Totmann der Tastatur, Fahrsperre ohne RustDesk, Watchdog im Busprozess.
 
@@ -209,6 +226,12 @@ controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cm
 - Sicherheitskette mit Befehlen: vorwärts 0,05–0,18 m/s geht durch, rückwärts wird 0, 0,30 m/s wird auf 0,18 begrenzt,
   0,6 rad/s geht durch.
 - Collision Monitor mit künstlichen Hindernissen: 10 cm vor der Front → Stopp, 35 cm → 40 %, außerhalb → unverändert.
+- Dynamisches Sicherheitsfeld (Domäne 78/79, ohne Antrieb): mit `~/nav_test` gelten 95 % der Lidar-Punkte im Umkreis
+  von 3 m als bekannte Struktur, keine Zone greift. Künstliche Hindernisse bei 0,15 m/s: Wand 8 cm vorn → A 40 %, 1 cm →
+  A Stopp, 5 cm seitlich → A 40 %, B unbeteiligt; Mensch 70 cm vorn → B 40 %, 20 cm → B Stopp, 25 cm seitlich → B 40 %
+  (mit den damaligen größeren B-Zonen 25 cm / 1 m; danach auf 10 cm / 40 cm verkleinert, siehe unten).
+  Gefunden und behoben: `unknown_obstacles` stürzte beim ersten Wechsel „alles unbekannt“ → „Karte genutzt“ ab
+  (rclpy: info und warn an derselben Stelle); B ignorierte die Quelle danach still.
 - Dabei gefunden und behoben: Die Fahne (bis 0,57 m hinter dem Lidar) lag im Footprint und ließ die Vorausschau immer
   wieder auf 0 springen → hinterer Ausschnitt-Quader 0,60 m tief, 0,45 m hoch (`slop_lio/config/crop.yaml`).
 - **tf2-Deadlock (2026-11-05):** Mit ros-humble-tf2 0.25.23 blieb im `controller_server`/`planner_server` zufällig die

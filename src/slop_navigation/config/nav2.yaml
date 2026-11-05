@@ -5,7 +5,9 @@
 # nie rückwärts fahren (RPP allow_reversing false, velocity_smoother min_velocity x = 0, keine BackUp-Recovery).
 #
 # Befehlskette:  controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cmd_vel_smoothed─►
-#                collision_monitor ─/navigation/cmd_vel─► twist_mux (Priorität 20, Tastatur 50) ─/cmd_vel─► diff_drive_node
+#                collision_monitor_dynamic ─cmd_vel_dynamic─► collision_monitor ─/navigation/cmd_vel─►
+#                twist_mux (Priorität 20, Tastatur 50) ─/cmd_vel─► diff_drive_node
+#                (zwei Collision Monitore: unbekannte Hindernisse mit großen, alles mit sehr kleinen Zonen – siehe unten)
 #
 # Sensoren für die Costmaps:
 #   /scan              Lidar, 360°, Höhenband 0,15–1,8 m (sieht niedrige Dinge erst ab ca. 2,6 m)
@@ -292,48 +294,123 @@ velocity_smoother:
     deadband_velocity: [0.0, 0.0, 0.0]
     velocity_timeout: 1.0
 
-# Letzte Bremse vor dem Antrieb: wertet die aktuellen Sensordaten aus, unabhängig von Karte und Costmaps.
-# Zonen in base_footprint; ein Polygon greift, wenn MEHR als max_points Punkte darin liegen.
-# Bremsweg bei 0,18 m/s: ca. 8 cm (Rampe 6 rad/s² am Rad ≈ 0,2 m/s²) + Reaktion (Zyklus, Rampe) ≈ 10 cm.
-collision_monitor:
+# Zwei Collision Monitore hintereinander (jeder kann nur bremsen):
+#
+#   velocity_smoother ─cmd_vel_smoothed─► collision_monitor_dynamic ─cmd_vel_dynamic─► collision_monitor ─/navigation/cmd_vel─►
+#                                         B: nur UNBEKANNTE Hindernisse,               A: ALLE Punkte, kartenunabhängig,
+#                                            größere Zonen (Mensch, Stuhl, Kiste)         sehr kleine Zonen (letzte Bremse)
+#
+# Unbekannt = Lidar-Punkte, die nicht auf bekannter Struktur liegen (unknown_obstacles: Karte + Erfahrungskarte), plus
+# alle Kamera-Hindernisse (flache Dinge sind nie Wand). Im Zweifel (keine Karte, Lokalisierung unsicher) gilt alles als
+# unbekannt, dann gelten die größeren Zonen auch für Wände. Wände passiert der Roboter so eng, Menschen mit Abstand.
+#
+# Zonen in base_footprint (x vorn, y links); Footprint x -0,40…0,10, y ±0,16. Ein Polygon greift, wenn MEHR als
+# max_points Punkte darin liegen.
+# Bremsweg: 0,18 m/s → ca. 7 cm Rampe (≈ 0,2 m/s²) + 0,15 s Reaktion (Scan, Zyklus) ≈ 10 cm; mit 40 % (0,07 m/s) ≈ 2,4 cm.
+# Deshalb sind die 2-cm-Stoppzone und die 10-cm-Langsamzone von A nur zusammen mit dem Approach-Polygon sicher: Es bremst
+# frontal so früh, dass bis zur Berührung ≥ 0,6 s bleiben (bei 2 cm Abstand höchstens 0,03 m/s).
+# Flache Hindernisse (< 0,15 m) sieht nur die Kamera, und die erst ab 0,25 m vor der Kamera: B bremst sie in der
+# Langsam-Zone (bis 40 cm) ab, angehalten wird davor über die lokale Costmap (merkt sich Kamera-Hindernisse) und die
+# Kollisionsprüfung des Controllers (RPP), nicht über die Stoppzonen.
+#
+# Humble (1.1.20): eine Quelle, die länger als source_timeout nichts liefert, wird IGNORIERT (kein Stopp!). Fällt /scan
+# aus, fehlt der Lidar-Schutz – Wächter dafür folgt (Sicherheits-Update). Fällt unknown_obstacles aus, verhält sich B wie
+# „nur Kamera“, A bleibt.
+# Humble: Bei action_type "approach" werden `points` ignoriert, das Polygon kommt immer von footprint_topic (Standard
+# local_costmap/published_footprint, mit footprint_padding 2 cm).
+
+# ---- B: unbekannte Hindernisse, größere Zonen (Roboter ist langsam und leicht: bewusst knapp)
+collision_monitor_dynamic:
   ros__parameters:
     base_frame_id: "base_footprint"
     odom_frame_id: "odom"
     cmd_vel_in_topic: "cmd_vel_smoothed"
+    cmd_vel_out_topic: "cmd_vel_dynamic"
+    transform_tolerance: 0.3
+    source_timeout: 1.0
+    base_shift_correction: True
+    stop_pub_timeout: 2.0
+    polygons: ["DynStop", "DynSlow", "DynApproach"]
+    # Stopp: 10 cm vor der Front, 6 cm seitlich
+    DynStop:
+      type: "polygon"
+      points: [0.20, 0.22, 0.20, -0.22, 0.10, -0.22, 0.10, 0.22]
+      action_type: "stop"
+      max_points: 2
+      visualize: True
+      polygon_pub_topic: "polygon_dynamic_stop"
+      enabled: True
+    # Langsam auf 40 %: 40 cm vor, 15 cm hinter und neben dem Körper (auch beim Drehen, das Heck schwenkt aus)
+    DynSlow:
+      type: "polygon"
+      points: [0.50, 0.31, 0.50, -0.31, -0.55, -0.31, -0.55, 0.31]
+      action_type: "slowdown"
+      max_points: 3
+      slowdown_ratio: 0.4
+      visualize: True
+      polygon_pub_topic: "polygon_dynamic_slowdown"
+      enabled: True
+    # Vorausschau mit dem Footprint: bis zur Berührung ≥ 1 s
+    DynApproach:
+      type: "polygon"
+      action_type: "approach"
+      points: [0.12, 0.18, 0.12, -0.18, -0.42, -0.18, -0.42, 0.18]    # unter Humble ignoriert, siehe oben
+      time_before_collision: 1.0
+      simulation_time_step: 0.1
+      max_points: 3
+      visualize: False
+      enabled: True
+    observation_sources: ["unknown", "camera"]
+    unknown:
+      type: "pointcloud"
+      topic: "/safety/unknown_points"   # unknown_obstacles, Punkte auf z = 0,5
+      min_height: 0.0
+      max_height: 2.0
+      enabled: True
+    camera:
+      type: "pointcloud"
+      topic: "/camera/obstacles"
+      min_height: 0.04
+      max_height: 1.0
+      enabled: True
+
+# ---- A: alle Punkte, sehr kleine Zonen (letzte Bremse, unabhängig von Karte und Lokalisierung)
+collision_monitor:
+  ros__parameters:
+    base_frame_id: "base_footprint"
+    odom_frame_id: "odom"
+    cmd_vel_in_topic: "cmd_vel_dynamic"
     cmd_vel_out_topic: "/navigation/cmd_vel"
     transform_tolerance: 0.3
-    source_timeout: 1.0                  # s; sind die Daten älter, gilt die Quelle als ausgefallen → Stopp
+    source_timeout: 1.0                  # s; ältere Daten werden ignoriert (kein Stopp, siehe oben)
     base_shift_correction: True
     stop_pub_timeout: 2.0
     polygons: ["PolygonStop", "PolygonSlow", "FootprintApproach"]
-    # Stopp: Streifen 15 cm vor der Front, 4 cm breiter als der Körper
+    # Stopp: 2 cm um den Körper (vorn, seitlich, hinten)
     PolygonStop:
       type: "polygon"
-      points: [0.25, 0.20, 0.25, -0.20, 0.10, -0.20, 0.10, 0.20]
+      points: [0.12, 0.18, 0.12, -0.18, -0.42, -0.18, -0.42, 0.18]
       action_type: "stop"
       max_points: 2
       visualize: True
       polygon_pub_topic: "polygon_stop"
       enabled: True
-    # Langsam: bis 60 cm vor der Front und 9 cm seitlich, auf 40 % Tempo
+    # Langsam auf 40 %: 10 cm um den Körper
     PolygonSlow:
       type: "polygon"
-      points: [0.60, 0.25, 0.60, -0.25, 0.10, -0.25, 0.10, 0.25]
+      points: [0.20, 0.26, 0.20, -0.26, -0.50, -0.26, -0.50, 0.26]
       action_type: "slowdown"
       max_points: 3
       slowdown_ratio: 0.4
       visualize: True
       polygon_pub_topic: "polygon_slowdown"
       enabled: True
-    # Vorausschau mit dem ganzen Footprint (auch Drehungen, das Heck schwenkt aus): bremst so, dass bis zur Berührung
-    # mindestens time_before_collision s bleiben. ACHTUNG Humble (1.1.20): Bei action_type "approach" werden `points`
-    # ignoriert, das Polygon kommt immer von footprint_topic (Standard local_costmap/published_footprint). Der früher
-    # beobachtete „hängende Zeitstempel“ dort war der tf2-Deadlock (behoben mit ros-humble-tf2 ≥ 0.25.24).
+    # Vorausschau mit dem Footprint: bis zur Berührung ≥ 0,6 s (macht die kleinen Zonen frontal sicher)
     FootprintApproach:
       type: "polygon"
       action_type: "approach"
-      points: [0.12, 0.18, 0.12, -0.18, -0.42, -0.18, -0.42, 0.18]
-      time_before_collision: 1.5
+      points: [0.12, 0.18, 0.12, -0.18, -0.42, -0.18, -0.42, 0.18]    # unter Humble ignoriert, siehe oben
+      time_before_collision: 0.6
       simulation_time_step: 0.1
       max_points: 3
       visualize: False

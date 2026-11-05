@@ -83,7 +83,7 @@ Visualization Manager:
         Reliability Policy: Reliable
       Color: 0; 200; 0
       Alpha: 1
-    # Collision Monitor: Stopp-Zone (rot) und Langsam-Zone (gelb)
+    # Collision Monitor A (alles, sehr klein): Stopp-Zone (rot) und Langsam-Zone (gelb)
     - Class: rviz_default_plugins/Polygon
       Name: Stopp-Zone
       Enabled: true
@@ -101,6 +101,38 @@ Visualization Manager:
         Depth: 5
         Reliability Policy: Best Effort
       Color: 255; 200; 0
+      Alpha: 1
+    # Dynamisches Sicherheitsfeld (B, nur für unbekannte Hindernisse): Stopp dunkelrot, Langsam orange
+    - Class: rviz_default_plugins/Polygon
+      Name: Stopp-Zone unbekannt
+      Enabled: true
+      Topic:
+        Value: /polygon_dynamic_stop
+        Depth: 5
+        Reliability Policy: Best Effort
+      Color: 160; 0; 80
+      Alpha: 1
+    - Class: rviz_default_plugins/Polygon
+      Name: Langsam-Zone unbekannt
+      Enabled: true
+      Topic:
+        Value: /polygon_dynamic_slowdown
+        Depth: 5
+        Reliability Policy: Best Effort
+      Color: 255; 120; 0
+      Alpha: 0.6
+    # Unbekannte Hindernisse (nur diese sieht Zone B)
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Unbekannte Hindernisse
+      Enabled: true
+      Topic:
+        Value: /safety/unknown_points
+        Depth: 5
+        Reliability Policy: Best Effort
+      Style: Boxes
+      Size (m): 0.05
+      Color Transformer: FlatColor
+      Color: 255; 0; 255
       Alpha: 1
     # Geplanter Weg (blau) und Ausschnitt des Controllers
     - Class: rviz_default_plugins/Path

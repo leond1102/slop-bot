@@ -1,0 +1,4 @@
+#!/usr/bin/python3
+from slop_navigation.unknown_obstacles_node import main
+
+main()

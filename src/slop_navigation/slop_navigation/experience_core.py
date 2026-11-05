@@ -146,6 +146,14 @@ class ExperienceGrid:
             m[self.session_free > self.session_hit] = UNKNOWN
         return m
 
+    def known_grid(self, min_seen, p_free, p_fixed):
+        """Für das Sicherheitsfeld: 100 = fest, 0 = oft gesehen und nicht fest (frei/vielleicht), -1 = keine Meinung."""
+        c = self.classes(min_seen, p_free, p_fixed)
+        g = np.full(c.shape, UNKNOWN, dtype=np.int8)
+        g[c == 3] = 100
+        g[(c == 1) | (c == 2)] = 0
+        return g
+
     def persistence_grid(self, min_seen):
         """Anzeige: p in Prozent (0 weiß … 100 schwarz), -1 ohne Meinung."""
         p = self.persistence()

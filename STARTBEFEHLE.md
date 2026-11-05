@@ -241,6 +241,12 @@ ros2 lifecycle get /controller_server
 ros2 topic echo /navigation/cmd_vel
 ros2 topic echo /polygon_stop --once
 
+## Dynamisches Sicherheitsfeld: Wände bekommen nur die kleinen Zonen (rot/gelb, 2 cm Stopp / 10 cm langsam), unbekannte
+## Hindernisse die größeren (dunkelrot/orange, 10 cm Stopp / 40 cm langsam); unbekannte Punkte in RViz magenta
+## Im Navigations-Terminal: "Sicherheitsfeld: Karte genutzt" = normal; "alle Punkte gelten als unbekannt" = vorsichtig
+## (keine Karte / Lokalisierung unsicher), dann gelten die größeren Zonen auch für Wände
+ros2 topic hz /safety/unknown_points
+
 ## Nicht den "Reset"-Knopf im Nav2-Panel benutzen: Abbrechen mit "Cancel", Neustart mit Ctrl-C und neu starten
 
 ## Erfahrungskarte: lernt bei jeder Fahrt mit (Lokalisierung muss passen), Zähler in maps/<karte>.experience.npz

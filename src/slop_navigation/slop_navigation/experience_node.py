@@ -10,6 +10,7 @@ sind, und gibt „vielleicht“-Zellen als weiche Kosten an den Planer (Nav2 Kee
   /experience/persistence nav_msgs/OccupancyGrid           Pub  Anzeige: Beständigkeit in % (weiß frei … schwarz fest)
   /experience/mask        nav_msgs/OccupancyGrid           Pub  weiche Kosten für den Keepout-Filter
   /experience/filter_info nav2_msgs/CostmapFilterInfo      Pub  nur mit soft_costs: schaltet den Filter ein
+  /experience/known       nav_msgs/OccupancyGrid           Pub  für das Sicherheitsfeld: 100 fest, 0 nicht fest, -1 ?
   Service ~/save          std_srvs/Trigger                     Zähler sofort speichern
 
 Ablauf je Scan (höchstens scan_rate Hz):
@@ -110,6 +111,7 @@ class Experience(Node):
         self.create_subscription(Odometry, '/odom', self.on_odom, 10)
         self.persist_pub = self.create_publisher(OccupancyGrid, '/experience/persistence', latched)
         self.mask_pub = self.create_publisher(OccupancyGrid, '/experience/mask', latched)
+        self.known_pub = self.create_publisher(OccupancyGrid, '/experience/known', latched)   # Sicherheitsfeld
         self.info_pub = self.create_publisher(CostmapFilterInfo, '/experience/filter_info', latched)
         self.create_service(Trigger, '~/save', self.on_save)
         self.create_timer(self._p('publish_period'), self.publish)
@@ -248,6 +250,7 @@ class Experience(Node):
         if self.last_persist is None or not np.array_equal(persist, self.last_persist):
             self.last_persist = persist
             self.persist_pub.publish(self._grid_msg(persist))
+            self.known_pub.publish(self._grid_msg(self.grid.known_grid(*a)))
         if self._p('soft_costs'):
             mask = self.grid.mask(*a, self._p('max_cost'), live=self._p('live_clear'))
             if self.last_mask is None or not np.array_equal(mask, self.last_mask):
