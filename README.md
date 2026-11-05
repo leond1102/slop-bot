@@ -19,6 +19,7 @@ Offene Aufgaben: [TODO.md](TODO.md)
 | [slop_bringup](src/slop_bringup) | `bringup.launch.py`: Antrieb + Sicherheit + Robotermodell + EKF in einem Start (`ekf:=false` ohne EKF) |
 | [slop_calibration](src/slop_calibration) | `calibrate`-Befehl (Gyro-Bias, Sensorneigung) und Speicher für die Ergebnisse im Ordner `calib/` (siehe [calib/README.md](calib/README.md)) |
 | [slop_lio](src/slop_lio) | FAST-LIO2 (Livox Mid-360s) und Brücke `lio_bridge`: `/lio/odom`, TF `map → odom`; die LIO-Geschwindigkeit geht als `odom1` in den EKF. Siehe [src/slop_lio/README.md](src/slop_lio/README.md) |
+| [slop_navigation](src/slop_navigation) | Karte aufnehmen mit `slam_toolbox` (`mapping.launch.py`, Anleitung im README); später Lokalisierung und Nav2 |
 | [slop_safety](src/slop_safety) | `twist_mux`-Konfiguration und `remote_guard`: Fahrsperre, solange keine RustDesk-Sitzung besteht |
 | [slop_teleop](src/slop_teleop) | `keyboard_teleop`: Tastatursteuerung mit Totmann (Taste halten = fahren) |
 | [slop_description](src/slop_description) | URDF/xacro des Roboters (Räder, Schleppräder, Livox, RealSense) und `description.launch.py` mit `robot_state_publisher`. Radmaße, Spur und Gelenknamen liest es aus `diff_drive.yaml` |
@@ -160,6 +161,7 @@ slop-bot_ws/
 ├── TODO.md              offene Aufgaben (u. a. EtherCAT-Zyklus als eigener Prozess)
 ├── calib/               Kalibrierergebnisse (gyro.yaml, mounts.yaml), siehe calib/README.md
 ├── bags/                Aufzeichnungen (nicht in Git)
+├── maps/                gespeicherte Karten (slam_toolbox / Nav2)
 ├── src/
 │   ├── slop_base/       Antrieb (EtherCAT)
 │   ├── slop_bringup/    bringup.launch.py (alles zusammen)
@@ -167,6 +169,7 @@ slop-bot_ws/
 │   ├── slop_description/ URDF + robot_state_publisher
 │   ├── slop_localization/ EKF (robot_localization)
 │   ├── slop_lio/        FAST-LIO2 + Brücke zu TF und EKF
+│   ├── slop_navigation/ Karte (slam_toolbox), später Nav2
 │   ├── slop_safety/     twist_mux + RustDesk-Fahrsperre
 │   ├── slop_sensors/    Sensortreiber-Launch + Configs
 │   ├── slop_teleop/     Tastatursteuerung

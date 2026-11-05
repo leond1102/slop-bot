@@ -20,9 +20,11 @@ pointcloud_to_laserscan:
     # Boden trifft es erst ab ca. 2,6 m. min_height über dem Bodenrauschen, max_height unter der Decke.
     min_height: 0.15
     max_height: 1.80
-    angle_min: -3.14159
-    angle_max: 3.14159
-    angle_increment: 0.00873       # 0,5°, 720 Strahlen
+    # 0,5°: 721 Strahlen (der letzte überlappt den ersten). So gewählt, weil slam_toolbox (Karto) round(Spanne/Schritt) + 1
+    # Strahlen erwartet und pointcloud_to_laserscan ceil(Spanne/Schritt) liefert; mit ±π und 0,00873 waren es 721 gegen 720.
+    angle_min: -3.1416
+    angle_max: 3.1416
+    angle_increment: 0.0087266
     scan_time: 0.1                 # s, = publish_freq 10 Hz
     range_min: 0.2
     range_max: 30.0

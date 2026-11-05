@@ -133,6 +133,9 @@ ros2 launch slop_lio lio.launch.py crop:=false
 ## LIO ohne 2D-Scan (/livox/points und /scan laufen sonst mit)
 ros2 launch slop_lio lio.launch.py scan:=false
 
+## LIO ohne map → odom (wenn slam_toolbox die Karte führt, macht mapping.launch.py selbst)
+ros2 launch slop_lio lio.launch.py map_tf:=false
+
 ## 2D-Scan prüfen (ca. 10 Hz, Frame base_footprint)
 ros2 topic hz /scan
 ros2 topic echo /scan --field header --once
@@ -171,13 +174,32 @@ ros2 run tf2_ros tf2_echo odom base_footprint
 ## Aufzeichnen für die Auswertung (Ordner bags/, nicht in Git)
 ros2 bag record -o ~/slop-bot_ws/bags/lio_test /livox/lidar /livox/imu /wheel/odom /odom /lio/odom /Odometry /tf /tf_static /joint_states
 
+# 5. Karte (slam_toolbox)
+
+## Karte aufnehmen (3 Terminals: Antrieb + Modell + EKF, LIO + slam_toolbox + RViz, Tastatur; beim Start 2-3 s stillstehen, langsam fahren, zum Schluss zurück zum Start)
+## Details und Tipps: src/slop_navigation/README.md
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
+
+ros2 launch slop_navigation mapping.launch.py
+
+ros2 run slop_teleop keyboard_teleop
+
+## Karte speichern (eigenes Terminal, solange mapping.launch.py läuft; Name frei wählbar)
+mkdir -p ~/slop-bot_ws/maps
+ros2 run nav2_map_server map_saver_cli -f ~/slop-bot_ws/maps/wohnung
+ros2 service call /slam_toolbox/serialize_map slam_toolbox/srv/SerializePoseGraph "{filename: '/home/jetson/slop-bot_ws/maps/wohnung'}"
+
+## Kartieren ohne RViz / wenn lio.launch.py schon läuft (dann muss es mit map_tf:=false gestartet sein)
+ros2 launch slop_navigation mapping.launch.py rviz:=false
+ros2 launch slop_navigation mapping.launch.py lio:=false
+
 # A. Bauen, Tests und einzelne Befehle
 
 ## Bauen – immer über das Skript (saubere Umgebung, ohne ~/ros2_ws und venv-Python)
 cd ~/slop-bot_ws && ./colcon_build.sh && source install/setup.bash
 
 ## Einzelne Pakete bauen
-./colcon_build.sh --packages-select slop_base slop_safety slop_teleop slop_sensors slop_description slop_localization slop_bringup slop_calibration slop_lio fast_lio
+./colcon_build.sh --packages-select slop_base slop_safety slop_teleop slop_sensors slop_description slop_localization slop_bringup slop_calibration slop_lio slop_navigation fast_lio
 
 ## Tests (ohne Hardware, 95 Stück)
 colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio && colcon test-result --verbose

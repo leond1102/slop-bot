@@ -5,6 +5,7 @@
     ros2 launch slop_lio lio.launch.py clouds:=true     # /cloud_registered für RViz
     ros2 launch slop_lio lio.launch.py crop:=false      # ohne Ausschneiden von Körper und Mast
     ros2 launch slop_lio lio.launch.py scan:=false      # ohne /livox/points und /scan (2D-Scan für slam_toolbox/Nav2)
+    ros2 launch slop_lio lio.launch.py map_tf:=false    # map → odom kommt von slam_toolbox (Kartieren/Lokalisieren)
 
 Beim Start den Roboter 2–3 s stillstehen lassen (IMU-Initialisierung von FAST-LIO). Läuft schon ein Livox-Treiber
 (sensors.launch.py), lidar:=false setzen, sonst stören sich zwei Treiber. Die Brücke braucht das Modell und den EKF
@@ -53,6 +54,9 @@ def lio_nodes(context, config, extrinsic):
     share = get_package_share_directory('slop_lio')
     params = {'publish.scan_publish_en': ParameterValue(LaunchConfiguration('clouds'), value_type=bool)}
     bridge = {'imu_to_lidar_xyz': extrinsic['extrinsic_T'], 'imu_to_lidar_rot': extrinsic['extrinsic_R']}
+    if context.launch_configurations['map_tf'].lower() != 'true':
+        # map gehört dann slam_toolbox: die Brücke liefert nur noch /lio/odom (Geschwindigkeit für den EKF)
+        bridge.update({'publish_map_odom': False, 'camera_init_frame': ''})
     to_cloud = {}
     if context.launch_configurations['crop'].lower() == 'true':
         boxes = [float(v) for v in exclude_boxes(share)]
@@ -90,6 +94,8 @@ def generate_launch_description():
         DeclareLaunchArgument('crop', default_value='true',
                               description='Körper und Mast aus den Scans schneiden (config/crop.yaml)'),
         DeclareLaunchArgument('cpus', default_value='2-6', description='Kerne für FAST-LIO (taskset)'),
+        DeclareLaunchArgument('map_tf', default_value='true',
+                              description='lio_bridge sendet map → odom (false, wenn slam_toolbox map besitzt)'),
         DeclareLaunchArgument('scan', default_value='true',
                               description='/livox/points (PointCloud2) und /scan (2D) für slam_toolbox und Nav2'),
         IncludeLaunchDescription(

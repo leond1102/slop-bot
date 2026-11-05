@@ -87,6 +87,11 @@
       "cmake-args": [
         "-DPython3_EXECUTABLE=/usr/bin/python3"
       ]
+    },
+    "slop_navigation": {
+      "cmake-args": [
+        "-DPython3_EXECUTABLE=/usr/bin/python3"
+      ]
     }
   }
 }
