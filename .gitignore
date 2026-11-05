@@ -13,3 +13,7 @@ __pycache__/
 
 # aufgezeichnete Rosbags (groß)
 bags/
+
+# letzte Pose der Lokalisierung (relocalize), ändert sich bei jedem Lauf
+maps/*.last_pose.yaml
+maps/*.last_pose.yaml.tmp

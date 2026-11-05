@@ -46,8 +46,11 @@ amcl:
     pf_err: 0.05
     pf_z: 0.99
     resample_interval: 1
-    recovery_alpha_fast: 0.0
-    recovery_alpha_slow: 0.0
+    # Wiederfindung (Augmented MCL): passt der Scan kurzfristig deutlich schlechter als langfristig, streut AMCL
+    # zufällige Partikel über die Karte. Nur beim Fahren wirksam. Werte wie in der ROS-Doku empfohlen; im Standard aus.
+    # Für einen versetzten Roboter sorgt vor allem relocalize (Suche über die ganze Karte).
+    recovery_alpha_fast: 0.1
+    recovery_alpha_slow: 0.001
 
     # Neuberechnung nach so viel Bewegung (Standard 0,25 m / 0,2 rad; der Roboter ist langsam)
     update_min_d: 0.10           # m

@@ -8,20 +8,30 @@
     ros2 launch slop_navigation localization.launch.py x:=2.0 y:=-1.0 yaw:=1.57   # Startpose in der Karte
     ros2 launch slop_navigation localization.launch.py rviz:=false lio:=false
 
-Startpose: Standard (0, 0, 0) = die Stelle und Richtung, an der das Kartieren begann. Steht der Roboter woanders, die
-Pose mitgeben oder in RViz mit "2D Pose Estimate" setzen. AMCL sendet map → odom; lio.launch.py läuft deshalb mit
-map_tf:=false.
+Startpose: AMCL startet bei x/y/yaw (Standard 0/0/0 = Start beim Kartieren). Danach prüft relocalize, ob der Scan dort
+zur Karte passt; sonst nimmt es die zuletzt gespeicherte Pose (<karte>.last_pose.yaml neben der Karte) oder durchsucht die
+ganze Karte. Im Betrieb sucht es neu, wenn der Scan länger nicht mehr passt (Roboter versetzt). Von Hand: RViz
+"2D Pose Estimate" oder ros2 service call /relocalize std_srvs/srv/Trigger. Ohne: relocalize:=false.
+AMCL sendet map → odom; lio.launch.py läuft deshalb mit map_tf:=false.
 """
 import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
+
+
+def relocalize_node(context):
+    """relocalize mit der letzten Pose neben der Karte: maps/office.yaml → maps/office.last_pose.yaml."""
+    map_yaml = context.launch_configurations['map']
+    pose_file = os.path.splitext(map_yaml)[0] + '.last_pose.yaml'
+    return [Node(package='slop_navigation', executable='relocalize', name='relocalize', output='screen',
+                 parameters=[{'pose_file': pose_file}], condition=IfCondition(LaunchConfiguration('relocalize')))]
 
 
 def generate_launch_description():
@@ -41,6 +51,8 @@ def generate_launch_description():
         DeclareLaunchArgument('yaw', default_value='0.0', description='Startpose Gier [rad] in der Karte'),
         DeclareLaunchArgument('lio', default_value='true', description='lio.launch.py mitstarten (Lidar, /scan, LIO)'),
         DeclareLaunchArgument('rviz', default_value='true', description='RViz mit Lokalisierungsansicht'),
+        DeclareLaunchArgument('relocalize', default_value='true',
+                              description='Pose prüfen und bei Bedarf in der ganzen Karte suchen (relocalize)'),
         IncludeLaunchDescription(PythonLaunchDescriptionSource(lio),
                                  launch_arguments={'map_tf': 'false', 'scan': 'true'}.items(),
                                  condition=IfCondition(LaunchConfiguration('lio'))),
@@ -51,6 +63,7 @@ def generate_launch_description():
                                   'initial_pose.yaw': num('yaw')}]),
         Node(package='nav2_lifecycle_manager', executable='lifecycle_manager', name='lifecycle_manager_localization',
              output='screen', parameters=[params]),
+        OpaqueFunction(function=relocalize_node),
         Node(package='rviz2', executable='rviz2', output='log', arguments=['-d', rviz_cfg],
              condition=IfCondition(LaunchConfiguration('rviz'))),
     ])

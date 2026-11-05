@@ -206,6 +206,15 @@ ros2 run slop_teleop keyboard_teleop
 ros2 launch slop_navigation localization.launch.py x:=2.0 y:=-1.0 yaw:=1.57
 ros2 launch slop_navigation localization.launch.py map:=$HOME/slop-bot_ws/maps/office.yaml
 
+## Roboter versetzt / Pose falsch: relocalize sucht von selbst (Scan passt 3 s lang unter 60 %); von Hand sofort suchen
+ros2 service call /relocalize std_srvs/srv/Trigger
+
+## Wie gut passt der Scan zur Karte? (Anteil der Scanpunkte auf Wänden, 0..1; gut ab 0.8)
+ros2 topic echo /relocalize/score
+
+## Ohne automatische Relokalisierung
+ros2 launch slop_navigation localization.launch.py relocalize:=false
+
 ## Im Stand nachschärfen (mehrmals aufrufen; AMCL rechnet sonst erst nach 10 cm Fahrt weiter)
 ros2 service call /request_nomotion_update std_srvs/srv/Empty
 
@@ -221,8 +230,8 @@ cd ~/slop-bot_ws && ./colcon_build.sh && source install/setup.bash
 ## Einzelne Pakete bauen
 ./colcon_build.sh --packages-select slop_base slop_safety slop_teleop slop_sensors slop_description slop_localization slop_bringup slop_calibration slop_lio slop_navigation fast_lio
 
-## Tests (ohne Hardware, 95 Stück)
-colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio && colcon test-result --verbose
+## Tests (ohne Hardware, 104 Stück)
+colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio slop_navigation && colcon test-result --verbose
 
 ## Nur Antrieb (Busprozess ethercat_bus + diff_drive_node; Zyklusstatistik steht im Log von ethercat_bus)
 ros2 run slop_base with_netcaps ros2 launch slop_base diff_drive.launch.py
