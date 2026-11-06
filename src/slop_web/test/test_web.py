@@ -204,3 +204,22 @@ def test_name_of_existing_map_is_rejected(cfg):
     with pytest.raises(ValueError, match='gibt es schon'):
         webconfig.params(cfg, {'name': 'office-3'})
     assert webconfig.params(cfg, {'name': 'office-4'})['name'] == 'office-4'
+
+
+def test_trigger_reply_parsing():
+    ok = "response:\nstd_srvs.srv.Trigger_Response(success=True, message='Dock gespeichert: x 3.00')"
+    assert webconfig.trigger_reply(ok) == (True, 'Dock gespeichert: x 3.00')
+    bad = 'std_srvs.srv.Trigger_Response(success=False, message="Marker ID 1 gerade nicht zu sehen")'
+    assert webconfig.trigger_reply(bad) == (False, 'Marker ID 1 gerade nicht zu sehen')
+    assert webconfig.trigger_reply('waiting for service to become available...') is None
+    assert webconfig.trigger_reply('') is None
+
+
+def test_shipped_config_has_dock():
+    real = webconfig.load(os.path.join(os.path.dirname(__file__), '..', 'config', 'web.yaml'))
+    assert any(i['id'] == 'dock' and i.get('uses_map') for i in real['items'])
+    assert next(s for s in real['sequences'] if s['id'] == 'all_dock')['steps'] == ['bringup', 'camera', 'navigation', 'dock']
+    acts = {a['id']: a for a in real['actions']}
+    for name, svc in (('dock_save', '/dock/save'), ('dock_start', '/dock/start'), ('dock_cancel', '/dock/cancel')):
+        assert svc in acts[name]['cmds'][0]
+    assert acts['dock_start'].get('confirm')                 # fährt selbstständig → Rückfrage

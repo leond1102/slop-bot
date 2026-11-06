@@ -50,6 +50,17 @@ journalctl --user -u slop-web -f       # Ausgabe ansehen
   `slop_navigation/README.md`). Gilt beim Start der Navigation, mit `locker` fragt die Seite vorher nach. Wechseln =
   Navigation stoppen und neu starten. Die laufende Stufe steht oben („Nav2 locker“, gelb) und neben der Navigation unter
   „Einzeln“ – auch, wenn die Navigation im Terminal gestartet wurde (aus `safety:=` in dessen Befehlszeile).
+- **Dockingstation** („Andocken komplett“ startet Antrieb, Kamera, Navigation und den Dock-Knoten; einzeln unter „Einzeln“):
+  Unter „Aktionen“ **Dock speichern** (Roboter vorher 0,6–1,5 m gerade vor den Marker stellen), **Andocken** (mit
+  Rückfrage, der Roboter fährt selbstständig) und **Andocken abbrechen**. Oben steht „Dock: <Stand>“ (bereit, anfahren,
+  feinfahren, fertig, fehler …), das Ergebnis kommt zusätzlich als Meldung. Details: `slop_dock/README.md`.
+- **Kamera-Debug (Dockingstation):** Karte „Kamera-Debug“ → „Debug-Bild anzeigen“: Kamerabild mit Overlay (erkannte Marker
+  mit ID, verworfene Kandidaten, Pose, Hinweis auf ein falsches Wörterbuch). Läuft nur, solange es offen ist; Dock-Knoten und
+  Kamera müssen laufen (die Karte sagt es, wenn nicht). Der Server liefert es als Videostrom unter `/api/dock/stream`.
+- **Sensor-Wächter:** Oben „Sensor-Wächter ✓“ oder rot „Nav2 gesperrt: <Quelle> …“ (auch bei Navigation aus dem Terminal).
+  Gesperrt = Nav2 steht, Fahren von der Seite geht weiter.
+- Aktionen mit Dienstaufruf (Dock, Relokalisierung, Erfahrung speichern …) zeigen die Antwort des Dienstes; meldet er
+  `success=False`, steht ein ✗ mit dem Grund da.
 - **Karte erweitern:** Karte wählen → „Karte erweitern komplett“ (Antrieb + slam_toolbox; die Startpose wird beim
   Start am Scan gesucht, Roboter dabei stillstehen lassen; vorher Navigation stoppen) → neue Bereiche abfahren → Name eingeben → „Erweiterte Karte
   speichern“ (speichert unter dem neuen Namen, überträgt Erfahrung und letzte Pose). Vorhandene Kartennamen werden
@@ -106,6 +117,9 @@ Aktionen. Danach neu bauen und den Webserver neu starten.
   DDS-Einstellungen fest; nachgestellt (Webserver mit den alten Einstellungen, Antrieb-Attrappe): Seite sieht den
   Antrieb, ein Knoten aus einem normalen Terminal empfängt die Fahrbefehle.
 - 2026-11-06: Fahren am Roboter über die Seite getestet.
+- 2026-11-06 Dock und Sensor-Wächter (Testserver Port 8092, Domäne 84): Dock-Knoten über die Seite gestartet, `robot.dock`
+  kommt an; „Dock speichern“ ohne Marker → ✗ „Marker ID 1 gerade nicht zu sehen“, „Andocken“ ohne Dock-Datei → ✗ mit Grund,
+  „Abbrechen“ ✓, Stopp. Die Seite selbst nicht im Browser angesehen (nur `gjs`-Syntaxprüfung).
 - 2026-11-06 Sicherheitsstufe (Testserver Port 8091, Domäne 84, Attrappe statt Nav2): Start mit `locker` → läuft,
   Anzeige „locker“; ungültige Stufe abgelehnt; Abfolge ohne Angabe → `streng`; im Terminal gestartete Navigation mit
   `safety:=locker` erkannt. JavaScript per `gjs` auf Syntax geprüft, die Seite selbst nicht im Browser angesehen.

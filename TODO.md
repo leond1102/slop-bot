@@ -9,9 +9,11 @@
 - [ ] Kamera wieder in Nav2 aufnehmen (Costmaps, Collision Monitore, Sensor-Wächter).
 - [ ] Sicherheitsstufe im Betrieb umschalten statt per Neustart.
 
-## Weboberfläche
+## Dockingstation
 
-- [ ] Anzeigen, wenn der Sensor-Wächter Nav2 sperrt (`/safety/sensor_status`).
+- [ ] Am Roboter testen: Marker ansehen (`/dock/image`), `/dock/save`, `/dock/start`.
+- [ ] Haltepunkt und Lidar-Wächter an Kontakte/Ladeanschluss anpassen, sobald die Mechanik steht.
+- [ ] Nach dem Andocken: Ladestand/Ladung erkennen, Abdocken (rückwärts oder Wenden).
 
 ## Sensoren und Kalibrierung
 

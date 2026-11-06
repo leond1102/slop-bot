@@ -1,0 +1,23 @@
+# Dockingstation (slop_dock/dock): ArUco-Marker mit der RealSense erkennen, in der Karte vermerken, mittig davor halten.
+# Der Marker hängt an der Wand auf Kamerahöhe (ca. 15 cm), Kante 10 cm, Wörterbuch ARUCO_ORIGINAL, ID 1.
+# Zahlen immer mit Punkt schreiben (0.5, nicht 1), sonst passt der Parametertyp nicht.
+dock:
+  ros__parameters:
+    marker_id: 1
+    marker_size: 0.10          # m, Kante des schwarzen Quadrats (ohne weißen Rand)
+    dictionary: ARUCO_ORIGINAL
+    approach_distance: 1.1     # m vor dem Marker (Antriebsachse): Nav2-Ziel; von hier aus fährt die Kamerasteuerung
+    stop_x: 0.48               # m: Marker-Abstand von der Antriebsachse am Ziel (Kamera sitzt 8 cm weiter vorn → 40 cm)
+    # Lockere Grenzen für „fertig“ (enger machen, wenn es gut läuft)
+    tol_x: 0.03                # m Längsfehler
+    tol_y: 0.03                # m Querversatz (die Messung selbst streut um 1–2 cm)
+    tol_yaw_deg: 6.0           # ° Abweichung vom Blick auf die Wand
+    v_max: 0.05                # m/s beim Feinfahren (umgeht die Collision Monitore: langsam lassen)
+    v_min: 0.02
+    w_max: 0.3                 # rad/s
+    marker_timeout: 1.0        # s ohne Marker beim Feinfahren → Abbruch
+    # Lidar-Wächter beim Feinfahren: Abbruch, wenn direkt vor dem Roboter etwas liegt (Körperfront bei x = 0,10 m)
+    guard_scan: true
+    guard_x_min: 0.10
+    guard_x_max: 0.20          # bei kleinerem stop_x (Kontakte!) hier entsprechend verkleinern
+    guard_half_width: 0.19

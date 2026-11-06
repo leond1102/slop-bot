@@ -50,6 +50,13 @@ items:
     ready: /camera/obstacles
     ready_timeout: 30
 
+  - id: dock
+    label: Dockingstation (ArUco-Marker)
+    hint: braucht die Kamera (Farbbild) und für „Andocken“ die Navigation; Marker ID 1 auf Kamerahöhe. Der Dock liegt neben der Karte
+    cmd: [ros2, launch, slop_dock, dock.launch.py, 'map:=$map']
+    uses_map: true
+    detect: dock.launch.py
+
   - id: localization
     label: Lokalisierung + RViz
     hint: Lidar, LIO, Karte, AMCL, Relokalisierung, Erfahrungskarte
@@ -102,6 +109,9 @@ sequences:
   - id: all_localization
     label: Lokalisieren komplett
     steps: [bringup, localization]
+  - id: all_dock
+    label: Andocken komplett
+    steps: [bringup, camera, navigation, dock]
   - id: all_mapping
     label: Kartieren komplett
     steps: [bringup, mapping]
@@ -139,6 +149,18 @@ actions:
       - [ros2, run, nav2_map_server, map_saver_cli, -f, '$maps_dir/$name', --free, '0.196']
       - [ros2, service, call, /slam_toolbox/serialize_map, slam_toolbox/srv/SerializePoseGraph, "{filename: '$maps_dir/$name'}"]
       - [ros2, run, slop_navigation, experience_transfer, '$map', '$maps_dir/$name.yaml']
+  - id: dock_save
+    label: Dock speichern
+    hint: Roboter 0,6–1,5 m gerade vor den Marker stellen (Lokalisierung muss passen); vermerkt den Marker in der Karte
+    cmds: [[ros2, service, call, /dock/save, std_srvs/srv/Trigger]]
+  - id: dock_start
+    label: Andocken
+    confirm: Der Roboter fährt selbstständig zum Dock. Hand am Notaus – starten?
+    hint: Nav2 fährt vor den Marker, dann regelt die Kamera mittig davor
+    cmds: [[ros2, service, call, /dock/start, std_srvs/srv/Trigger]]
+  - id: dock_cancel
+    label: Andocken abbrechen
+    cmds: [[ros2, service, call, /dock/cancel, std_srvs/srv/Trigger]]
   - id: drive_off
     label: Endstufen aus
     confirm: Endstufen ausschalten?

@@ -289,16 +289,41 @@ ros2 launch slop_navigation navigation.launch.py map:=$HOME/slop-bot_ws/maps/off
 ## Ohne Erfahrungskarte
 ros2 launch slop_navigation navigation.launch.py experience:=false
 
+# 8. Dockingstation (ArUco-Marker ID 1, ARUCO_ORIGINAL, 10 cm, auf Kamerahöhe)
+
+## Marker ausdrucken (100 %, matt, schwarzes Quadrat nachmessen = 10 cm)
+python3 ~/slop-bot_ws/tools/make_aruco_marker.py
+
+## Andocken (4 Terminals: Antrieb + Modell + EKF [nach dem Bauen neu starten], Kamera, Lokalisierung + Nav2, Dock); Details: src/slop_dock/README.md
+ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
+
+ros2 launch slop_sensors camera.launch.py
+
+ros2 launch slop_navigation navigation.launch.py
+
+ros2 launch slop_dock dock.launch.py
+
+## Dock in der Karte vermerken (Roboter 0,6–1,5 m gerade vor den Marker stellen, Lokalisierung muss passen)
+ros2 service call /dock/save std_srvs/srv/Trigger
+
+## Andocken / abbrechen / Stand
+ros2 service call /dock/start std_srvs/srv/Trigger
+ros2 service call /dock/cancel std_srvs/srv/Trigger
+ros2 topic echo /dock/status
+
+## Kamerabild mit eingezeichnetem Marker ansehen
+ros2 run rqt_image_view rqt_image_view /dock/image
+
 # A. Bauen, Tests und einzelne Befehle
 
 ## Bauen – immer über das Skript (saubere Umgebung, ohne ~/ros2_ws und venv-Python)
 cd ~/slop-bot_ws && ./colcon_build.sh && source install/setup.bash
 
 ## Einzelne Pakete bauen
-./colcon_build.sh --packages-select slop_base slop_safety slop_teleop slop_sensors slop_description slop_localization slop_bringup slop_calibration slop_lio slop_navigation fast_lio
+./colcon_build.sh --packages-select slop_base slop_safety slop_teleop slop_sensors slop_description slop_localization slop_bringup slop_calibration slop_lio slop_navigation slop_dock fast_lio
 
-## Tests (ohne Hardware, 161 Stück)
-colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio slop_navigation slop_web && colcon test-result --verbose
+## Tests (ohne Hardware, 215 Stück)
+colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio slop_navigation slop_web slop_dock && colcon test-result --verbose
 
 ## Nur Antrieb (Busprozess ethercat_bus + diff_drive_node; Zyklusstatistik steht im Log von ethercat_bus)
 ros2 run slop_base with_netcaps ros2 launch slop_base diff_drive.launch.py

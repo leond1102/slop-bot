@@ -78,6 +78,15 @@ def safety_of(cmdline):
     return found[-1] if found[-1] in SAFETY_LEVELS else '?'
 
 
+TRIGGER_RE = re.compile(r"success=(True|False), message=(['\"])(.*?)\2\)\s*$", re.S)
+
+
+def trigger_reply(out):
+    """Ausgabe von `ros2 service call … std_srvs/srv/Trigger` → (success, message) oder None, wenn es keine ist."""
+    m = TRIGGER_RE.search(out or '')
+    return (m.group(1) == 'True', m.group(3)) if m else None
+
+
 def argv(cmd, values):
     """Platzhalter in einer Befehlsliste ersetzen; fehlt ein Wert, ValueError."""
     try:

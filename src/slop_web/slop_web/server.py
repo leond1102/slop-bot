@@ -22,6 +22,7 @@ import time
 
 import rclpy
 import tornado.httpserver
+import tornado.iostream
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
@@ -238,6 +239,9 @@ class Web:
                 p = subprocess.run(['bash', '-c', f'{setup} && exec "$@"', 'slop_web', *argv], env=child_env(),
                                    capture_output=True, text=True, timeout=timeout, stdin=subprocess.DEVNULL)
                 out, ok = (p.stdout + p.stderr).strip(), p.returncode == 0
+                reply = webconfig.trigger_reply(out)
+                if reply:                                   # Trigger-Dienste: Antwort auswerten, nur den Text zeigen
+                    ok, out = ok and reply[0], reply[1] or out.splitlines()[-1]
             except subprocess.TimeoutExpired:
                 out, ok = f'keine Antwort nach {timeout:g} s (läuft der Dienst?)', False
             with open(self.action_log, 'a', encoding='utf-8') as f:
@@ -357,6 +361,50 @@ class LogHandler(tornado.web.RequestHandler):
         self.write(self.web.pm.tail(id, 300) or '(noch kein Log)')
 
 
+class DockStreamHandler(tornado.web.RequestHandler):
+    """Debug-Bild der Dockingstation (Kamerabild mit erkannten Markern) als Videostrom (MJPEG) für ein <img>.
+    Abonniert wird das Bild nur, solange der Strom offen ist; der Dock-Knoten empfängt das Farbbild dann ebenfalls."""
+    MAX_SECONDS = 900
+
+    def initialize(self, web):
+        self.web = web
+        self.alive = True
+
+    async def get(self):
+        import cv2
+        import numpy as np
+        self.set_header('Content-Type', 'multipart/x-mixed-replace; boundary=frame')
+        self.set_header('Cache-Control', 'no-store')
+        self.web.bridge.viewer(+1)
+        t0, last = time.monotonic(), None
+        loop = asyncio.get_running_loop()
+
+        def encode(fr):
+            img = np.frombuffer(fr[0], dtype=np.uint8).reshape(fr[2], fr[1], 3)
+            ok, buf = cv2.imencode('.jpg', img, [cv2.IMWRITE_JPEG_QUALITY, 70])
+            return buf.tobytes() if ok else None
+
+        try:
+            while self.alive and time.monotonic() - t0 < self.MAX_SECONDS:
+                fr = self.web.bridge.dock_frame()
+                if fr is not None and fr[3] != last:
+                    last = fr[3]
+                    jpg = await loop.run_in_executor(None, encode, fr)
+                    if jpg:
+                        self.write(b'--frame\r\nContent-Type: image/jpeg\r\nContent-Length: %d\r\n\r\n' % len(jpg))
+                        self.write(jpg)
+                        self.write(b'\r\n')
+                        await self.flush()
+                await asyncio.sleep(0.1)
+        except tornado.iostream.StreamClosedError:
+            pass
+        finally:
+            self.web.bridge.viewer(-1)
+
+    def on_connection_close(self):
+        self.alive = False
+
+
 class Socket(tornado.websocket.WebSocketHandler):
     # check_origin bleibt wie in tornado: nur Seiten vom selben Host dürfen sich verbinden
     def initialize(self, web):
@@ -390,6 +438,7 @@ def make_app(web, www):
         (r'/handy', PageHandler, {'path': page}),
         (r'/api/config', ConfigHandler, {'web': web}),
         (r'/api/log/([a-z_]+)', LogHandler, {'web': web}),
+        (r'/api/dock/stream', DockStreamHandler, {'web': web}),
         (r'/ws', Socket, {'web': web}),
         (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': www}),
     ])

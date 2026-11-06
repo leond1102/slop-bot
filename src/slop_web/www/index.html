@@ -162,6 +162,20 @@
       <h2>Aktionen</h2>
       <div class="actions" id="actions"></div>
     </section>
+
+    <section class="card">
+      <h2>Kamera-Debug (Dockingstation)</h2>
+      <div class="row">
+        <button id="dbgToggle">Debug-Bild anzeigen</button>
+        <span class="hint" id="dbgState"></span>
+      </div>
+      <div id="dbgBox" hidden style="margin-top:10px">
+        <img id="dbgImg" alt="Debug-Bild" style="width:100%;border-radius:8px;background:#000;min-height:120px">
+        <p class="hint" style="margin:6px 0 0">Grün = gesuchter Marker, orange = anderer Marker, grau dünn = verworfene
+          Kandidaten. Gelber Text: Hinweise (z. B. „gefunden in Wörterbuch 4X4_50“). Das Bild läuft nur, solange es
+          offen ist; der Dock-Knoten empfängt das Farbbild ebenfalls nur dann.</p>
+      </div>
+    </section>
   </div>
 
   <div class="col">
@@ -256,8 +270,25 @@ function ago(t) {
   return s < 60 ? `${s} s` : s < 3600 ? `${Math.floor(s / 60)} min` : `${Math.floor(s / 3600)} h ${Math.floor(s % 3600 / 60)} min`;
 }
 
+// Dockingstation: läuft der Dock-Knoten (von hier oder im Terminal gestartet)?
+function dockRunning() {
+  const st = status && status.items && status.items.dock;
+  return !!st && (st.state === 'läuft' || st.state === 'extern');
+}
+// Ergebnis des Andockens einmal melden (nicht beim ersten Laden der Seite: der Stand ist zwischengespeichert)
+let lastDock = undefined;
+function dockToast(text) {
+  if (lastDock !== undefined && text !== lastDock) {
+    const st = (text || '').split(':')[0];
+    if (st === 'fertig') toast('Angedockt – ' + text.slice(7), 'info');
+    else if (st === 'fehler') toast('Andocken fehlgeschlagen – ' + text.slice(8), 'error');
+  }
+  lastDock = text;
+}
+
 function render() {
   const r = status && status.robot;
+  if (r) dockToast(r.dock);
   const chips = [];
   if (!connected) chips.push(chip('nicht verbunden', 'bad'));
   else if (r) {
@@ -273,6 +304,15 @@ function render() {
     }
     const nav = navSafety();
     if (nav) chips.push(chip(`Nav2 ${nav}`, nav === 'locker' ? 'warn' : 'info'));
+    // Sensor-Wächter: sperrt Nav2, wenn Lidar oder EKF-Daten ausfallen (Tastatur und Web fahren weiter)
+    if (r.sensor && r.sensor.startsWith('gesperrt')) {
+      chips.push(`<span class="chip bad" title="${esc(r.sensor)}">Nav2 gesperrt: ${esc(r.sensor.slice(10, 70))}</span>`);
+    } else if (r.sensor) chips.push(chip('Sensor-Wächter ✓', 'ok'));
+    if (mode !== 'handy' && dockRunning() && r.dock) {
+      const st = r.dock.split(':')[0];
+      const cls = st === 'fertig' ? 'ok' : st === 'fehler' ? 'bad' : st === 'abgebrochen' ? 'warn' : st === 'bereit' ? '' : 'info';
+      chips.push(`<span class="chip ${cls}" title="${esc(r.dock)}">Dock: ${esc(r.dock.slice(0, 80))}</span>`);
+    }
     if (r.speed !== null) chips.push(chip(`${r.speed.toFixed(2)} m/s · ${r.turn.toFixed(2)} rad/s`, 'info'));
   }
   $('chips').innerHTML = chips.join('');
@@ -289,7 +329,7 @@ function render() {
   else if (r && r.driving) ds = 'fährt …';
   $('driveState').textContent = ds;
 
-  if (mode === 'desktop' && cfg && status) renderDesktop();
+  if (mode === 'desktop' && cfg && status) { renderDesktop(); dbgState(); }
 }
 
 function renderDesktop() {
@@ -382,6 +422,27 @@ function startWith(id) {
                'erst am Ziel Drehen in die Zielrichtung. Nur unter Aufsicht.')) return;
   send({t: 'start', id, params: p});
 }
+
+// ------------------------------------------------------------------ Kamera-Debug der Dockingstation
+let dbgOn = false;
+function dbgSet(on) {
+  dbgOn = on;
+  $('dbgBox').hidden = !on;
+  $('dbgToggle').textContent = on ? 'Debug-Bild ausblenden' : 'Debug-Bild anzeigen';
+  $('dbgImg').src = on ? '/api/dock/stream?t=' + Date.now() : '';       // leer = Verbindung zu, Kamera wird nicht mehr gebraucht
+  dbgState();
+}
+function dbgState() {
+  if (!dbgOn || !status) { $('dbgState').textContent = ''; return; }
+  const it = status.items || {}, up = (id) => it[id] && (it[id].state === 'läuft' || it[id].state === 'extern');
+  let t;
+  if (!up('dock')) t = 'Dock-Knoten läuft nicht – unter „Einzeln“ starten';
+  else if (!up('camera')) t = 'Kamera läuft nicht – unter „Einzeln“ starten';
+  else if (!(status.robot && status.robot.dock_image)) t = 'warte auf Bild …';
+  else t = 'Bild kommt';
+  $('dbgState').textContent = t;
+}
+$('dbgToggle').onclick = () => dbgSet(!dbgOn);
 
 document.addEventListener('click', (e) => {
   const b = e.target.closest('button');

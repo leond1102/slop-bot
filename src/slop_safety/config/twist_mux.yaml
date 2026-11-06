@@ -14,6 +14,10 @@ twist_mux:
         topic: navigation/cmd_vel
         timeout: 0.5
         priority: 20
+      dock:                         # slop_dock/dock: Feinfahren vor dem Marker (Kamerasteuerung, umgeht die Collision
+        topic: dock/cmd_vel         #   Monitore, deshalb höchstens 0,05 m/s). Über Nav2, unter der Tastatur. Die Sperre
+        timeout: 0.5                #   des Sensor-Wächters (30) trifft ihn nicht; Notaus und RustDesk-Sperre (100) schon.
+        priority: 40
 
     locks:
       remote:                       # slop_safety/remote_guard: true = keine RustDesk-Sitzung

@@ -7,6 +7,9 @@
   /relocalize/score       std_msgs/Float32      Sub  Lokalisierung (Anzeige)
   /wheel/odom             nav_msgs/Odometry     Sub  Geschwindigkeit, „Antrieb läuft“
   /scan, /camera/obstacles, /map                Sub  nur „kommen Daten?“ (roh, ohne Auspacken)
+  dock/image              sensor_msgs/Image     Sub  Debug-Bild der Dockingstation (Overlay) – NUR solange eine Seite es anschaut
+  /safety/sensor_status   std_msgs/String       Sub  Sensor-Wächter: „frei“ oder „gesperrt: …“ (Anzeige, alle 1 s)
+  /dock/status            std_msgs/String       Sub  Dockingstation: „zustand: text“ (Anzeige, nur bei Änderung gesendet)
 
 Notaus: setzt die Hand-Stopp-Sperre (/safety/stop true) und bricht laufende Nav2-Ziele ab, damit der Roboter nach dem
 Aufheben nicht einfach weiterfährt. Solange er aktiv ist, wird true alle 0,5 s wiederholt (überlebt einen Neustart von
@@ -21,8 +24,9 @@ from geometry_msgs.msg import Twist
 from nav_msgs.msg import OccupancyGrid, Odometry
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
-from sensor_msgs.msg import LaserScan, PointCloud2
-from std_msgs.msg import Bool, Float32
+from sensor_msgs.msg import Image, LaserScan, PointCloud2
+from rclpy.qos import DurabilityPolicy, QoSProfile
+from std_msgs.msg import Bool, Float32, String
 
 from slop_web.drive import Drive
 
@@ -48,6 +52,14 @@ class Bridge(Node):
                                  qos_profile_sensor_data, raw=True)
         # slam_toolbox sendet /map alle 2 s: zeigt, dass Kartieren/Erweitern wirklich läuft (nicht nur der Lidar)
         self.create_subscription(OccupancyGrid, '/map', lambda m: self._seen('/map', None), 1, raw=True)
+        latched = QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL)
+        self.create_subscription(String, '/safety/sensor_status', lambda m: self._seen('/safety/sensor_status', m.data), 10)
+        self.create_subscription(String, '/dock/status', lambda m: self._seen('/dock/status', m.data), latched)
+        self.viewers = 0                # Seiten, die das Dock-Debug-Bild gerade ansehen
+        self.dock_sub = None
+        self.dock_frame_data = None     # (bgr8-Bytes, Breite, Höhe, Zähler, monotone Zeit)
+        self.dock_count = 0
+        self.create_timer(0.5, self.manage_dock_view)
         self.cancel_clients = [self.create_client(CancelGoal, f'/{a}/_action/cancel_goal')
                                for a in ('navigate_to_pose', 'navigate_through_poses')]
         self.create_timer(0.05, self.send_drive)        # 20 Hz wie keyboard_teleop
@@ -67,6 +79,34 @@ class Bridge(Node):
             self.estop = msg.data
             if not msg.data:
                 self.estop_hold = False         # aufgehoben (auch aus dem Terminal)
+
+    # ---------------------------------------------------------------- Dock-Debug-Bild
+    def viewer(self, delta):
+        with self.lock:
+            self.viewers = max(0, self.viewers + delta)
+
+    def manage_dock_view(self):
+        """Bild nur abonnieren, wenn jemand zuschaut: Der Dock-Knoten empfängt das Farbbild ebenfalls nur dann."""
+        with self.lock:
+            want = self.viewers > 0
+        if want and self.dock_sub is None:
+            self.dock_sub = self.create_subscription(Image, 'dock/image', self.on_dock_image, 1)
+        elif not want and self.dock_sub is not None:
+            self.destroy_subscription(self.dock_sub)
+            self.dock_sub = None
+            with self.lock:
+                self.dock_frame_data = None
+
+    def on_dock_image(self, m):
+        if m.encoding != 'bgr8':
+            return
+        with self.lock:
+            self.dock_count += 1
+            self.dock_frame_data = (bytes(m.data), m.width, m.height, self.dock_count, time.monotonic())
+
+    def dock_frame(self):
+        with self.lock:
+            return self.dock_frame_data
 
     # ---------------------------------------------------------------- Fahren
     def drive_command(self, v, w, scale):
@@ -136,4 +176,7 @@ class Bridge(Node):
             'score': val('/relocalize/score', 3.0),
             'scan': self.fresh('/scan', 1.0),
             'camera': self.fresh('/camera/obstacles', 1.5),
+            'sensor': val('/safety/sensor_status', 3.0),    # Wächter sendet jede Sekunde; verstummt er, ist es None
+            'dock_image': self.dock_frame_data is not None and now - self.dock_frame_data[4] < 2.0,
+            'dock': (seen.get('/dock/status') or (None,))[0],   # nur bei Änderung gesendet → bleibt stehen
         }

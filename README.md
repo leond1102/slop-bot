@@ -24,6 +24,7 @@ Offene Aufgaben: [TODO.md](TODO.md)
 | [slop_navigation](src/slop_navigation) | Karte aufnehmen mit `slam_toolbox` (`mapping.launch.py`), lokalisieren mit `map_server` + AMCL (`localization.launch.py`) und `relocalize` (findet den Roboter nach dem Versetzen selbst wieder), navigieren mit Nav2 (`navigation.launch.py`: vorerst nur Lidar, Collision Monitor, Sicherheitsstufen `safety:=streng` (Abstand, nie rückwärts) und `safety:=locker` (extrem nah, volles Tempo, rückwärts)); Anleitung im README |
 | [slop_safety](src/slop_safety) | `twist_mux`-Konfiguration, `remote_guard` (Fahrsperre, solange keine RustDesk-Sitzung besteht) und `sensor_guard` (sperrt Nav2, wenn eine Quelle der Collision Monitore fehlt oder veraltet ist) |
 | [slop_teleop](src/slop_teleop) | `keyboard_teleop`: Tastatursteuerung mit Totmann (Taste halten = fahren) |
+| [slop_dock](src/slop_dock) | Dockingstation: ArUco-Marker ID 1 mit der RealSense erkennen (`/dock/save` vermerkt ihn in der Karte: `maps/<karte>.dock.yaml`), `/dock/start` fährt per Nav2 hin und stellt den Roboter mit der Kamera mittig davor; Anleitung im [README](src/slop_dock/README.md) |
 | [slop_web](src/slop_web) | Weboberfläche: Programme starten/stoppen, Fahren mit Totmann, Notaus – im Browser und am Handy (Tailnet) |
 | [slop_description](src/slop_description) | URDF/xacro des Roboters (Räder, Schleppräder, Livox, RealSense) und `description.launch.py` mit `robot_state_publisher`. Radmaße, Spur und Gelenknamen liest es aus `diff_drive.yaml` |
 | [slop_sensors](src/slop_sensors) | Launch-Dateien und Configs für Livox Mid-360s und RealSense D435i; `livox_to_cloud` (Livox → PointCloud2) und Einstellungen für den 2D-Scan `/scan` (`pointcloud_to_laserscan`); `depth_obstacles` (Hindernisse aus dem Tiefenbild der RealSense) |
@@ -112,10 +113,10 @@ baut in einer leeren Umgebung, nur mit `/opt/ros/humble`, und umgeht so drei Fal
 - `/opt/MVS/lib/aarch64` (Hikrobot-SDK, aus `~/.bashrc` und `~/.profile`) bringt eine alte libusb mit.
   `camera.launch.py` nimmt den Pfad zur Laufzeit aus `LD_LIBRARY_PATH`.
 
-Tests (161, ohne Hardware):
+Tests (215, ohne Hardware):
 
 ```bash
-source install/setup.bash && colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio slop_navigation slop_web && colcon test-result --verbose
+source install/setup.bash && colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio slop_navigation slop_web slop_dock && colcon test-result --verbose
 ```
 
 ## Neu aufsetzen
@@ -179,6 +180,7 @@ slop-bot_ws/
 │   ├── slop_bringup/    bringup.launch.py (alles zusammen)
 │   ├── slop_calibration/ Kalibrierbefehl + Speicher
 │   ├── slop_description/ URDF + robot_state_publisher
+│   ├── slop_dock/       Dockingstation (ArUco-Marker, mittig davor halten)
 │   ├── slop_localization/ EKF (robot_localization)
 │   ├── slop_lio/        FAST-LIO2 + Brücke zu TF und EKF
 │   ├── slop_navigation/ Karte, Lokalisierung, Erfahrungskarte, Nav2
@@ -189,5 +191,6 @@ slop-bot_ws/
 │   └── third_party/     Livox-SDK2, livox_ros_driver2, realsense-ros, FAST_LIO (Submodule), patches/
 └── tools/
     ├── diff_motor.py    Motortest ohne ROS
+    ├── make_aruco_marker.py  ArUco-Marker zum Ausdrucken
     └── logs/            CSV-Logs der Motortests
 ```
