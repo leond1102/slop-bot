@@ -174,3 +174,10 @@ def test_apply_dds_overrides_terminal_settings():
     assert len(changes) == 2                                                  # beide Abweichungen gemeldet
     _, again = webconfig.apply_dds({'ROS_LOCALHOST_ONLY': '1'}, env)
     assert again == []                                                        # passt schon: nichts zu melden
+
+
+def test_name_of_existing_map_is_rejected(cfg):
+    """map_saver_cli überschreibt ohne Rückfrage – vorhandene Karten dürfen nicht als Speichername durchgehen."""
+    with pytest.raises(ValueError, match='gibt es schon'):
+        webconfig.params(cfg, {'name': 'office-3'})
+    assert webconfig.params(cfg, {'name': 'office-4'})['name'] == 'office-4'

@@ -10,7 +10,7 @@ sind, und gibt „vielleicht“-Zellen als weiche Kosten an den Planer (Nav2 Kee
   /experience/persistence nav_msgs/OccupancyGrid           Pub  Anzeige: Beständigkeit in % (weiß frei … schwarz fest)
   /experience/mask        nav_msgs/OccupancyGrid           Pub  weiche Kosten für den Keepout-Filter
   /experience/filter_info nav2_msgs/CostmapFilterInfo      Pub  nur mit soft_costs: schaltet den Filter ein
-  /experience/known       nav_msgs/OccupancyGrid           Pub  für das Sicherheitsfeld: 100 fest, 0 nicht fest, -1 ?
+  /experience/known       nav_msgs/OccupancyGrid           Pub  Sicherheitsfeld + relocalize: 100 fest, 50 vielleicht, 0 frei, -1 ?
   Service ~/save          std_srvs/Trigger                     Zähler sofort speichern
 
 Ablauf je Scan (höchstens scan_rate Hz):
@@ -41,7 +41,7 @@ from std_msgs.msg import Float32
 from std_srvs.srv import Trigger
 from tf2_ros import Buffer, TransformListener
 
-from slop_navigation.experience_core import ExperienceGrid
+from slop_navigation.experience_core import ExperienceGrid, OldFormat
 
 
 def yaw_of(q):
@@ -69,6 +69,7 @@ class Experience(Node):
             # Strahlverfolgung
             ('max_range', 6.0),             # m: Treffer weiter weg zählen nicht (Winkelfehler)
             ('inf_free_range', 4.0),        # m: inf (kein Echo) räumt so weit frei
+            ('hit_protect', 2),             # Zellen um einen Treffer, die derselbe Scan nicht freiräumt (Wände!)
             ('scan_rate', 2.0),             # Hz: so oft wird ein Scan ausgewertet
             # Lernsperre
             ('min_score', 0.75),            # relocalize: Anteil Scanpunkte auf Wänden
@@ -111,7 +112,7 @@ class Experience(Node):
         self.create_subscription(Odometry, '/odom', self.on_odom, 10)
         self.persist_pub = self.create_publisher(OccupancyGrid, '/experience/persistence', latched)
         self.mask_pub = self.create_publisher(OccupancyGrid, '/experience/mask', latched)
-        self.known_pub = self.create_publisher(OccupancyGrid, '/experience/known', latched)   # Sicherheitsfeld
+        self.known_pub = self.create_publisher(OccupancyGrid, '/experience/known', latched)   # Sicherheitsfeld, relocalize
         self.info_pub = self.create_publisher(CostmapFilterInfo, '/experience/filter_info', latched)
         self.create_service(Trigger, '~/save', self.on_save)
         self.create_timer(self._p('publish_period'), self.publish)
@@ -154,6 +155,11 @@ class Experience(Node):
             return None
         try:
             g = ExperienceGrid.load(path)
+        except OldFormat as e:
+            backup = f'{path}.{time.strftime("%Y%m%d-%H%M%S")}.v1.alt'
+            self.get_logger().warn(f'{path}: {e} (hielt Wände oft für „vielleicht“) – beginne neu, alte Datei: {backup}')
+            os.replace(path, backup)
+            return None
         except (OSError, ValueError, KeyError) as e:
             self.get_logger().error(f'{path} unlesbar ({e}) – beginne neu, alte Datei bleibt als .kaputt')
             os.replace(path, path + '.kaputt')
@@ -215,7 +221,8 @@ class Experience(Node):
         x, y, yaw = t.x, t.y, yaw_of(tf.transform.rotation)
 
         free, hit = self.grid.ray_cells(x, y, yaw, msg.ranges, msg.angle_min, msg.angle_increment, msg.range_min,
-                                        msg.range_max, self._p('max_range'), self._p('inf_free_range'))
+                                        msg.range_max, self._p('max_range'), self._p('inf_free_range'),
+                                        hit_protect=self._p('hit_protect'))
         self.grid.observe_session(free, hit, now - self.session_t0)
         self.dirty = True
 

@@ -1,0 +1,4 @@
+#!/usr/bin/python3
+from slop_navigation.extend_start_node import main
+
+main()

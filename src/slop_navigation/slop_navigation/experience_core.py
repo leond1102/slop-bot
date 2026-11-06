@@ -22,6 +22,13 @@ import time
 import numpy as np
 
 UNKNOWN = -1                      # OccupancyGrid: keine Information
+# 2 = Zellen nahe an Treffern werden nicht freigeräumt (ray_cells hit_protect). Mit Version 1 gelernte Zähler hielten
+# die meisten Wände für „vielleicht“ und werden deshalb nicht weiterverwendet (experience legt sie als Sicherung ab).
+FORMAT_VERSION = 2
+
+
+class OldFormat(ValueError):
+    """Zähler stammen von einem älteren Lernverfahren."""
 PGM_OCCUPIED, PGM_FREE, PGM_UNKNOWN = 0, 254, 205   # Grauwerte von map_saver (trinary)
 
 
@@ -52,13 +59,15 @@ class ExperienceGrid:
         return np.where(inside, cy * self.width + cx, -1)
 
     def ray_cells(self, x, y, yaw, ranges, angle_min, angle_increment, range_min, range_max,
-                  max_range=6.0, inf_free_range=4.0, beam_step=1):
+                  max_range=6.0, inf_free_range=4.0, beam_step=1, hit_protect=2):
         """Strahlverfolgung eines 2D-Scans von der Pose (x, y, yaw) aus.
 
         Gibt (frei, belegt) als eindeutige Zellindizes zurück. Ein Treffer bis max_range markiert seine Zelle als belegt,
         die Zellen davor als frei. Treffer weiter weg räumen nur bis max_range frei (Winkelfehler wachsen mit dem
-        Abstand). inf (kein Echo im Höhenband) räumt bis inf_free_range frei. Zellen, die in diesem Scan belegt sind,
-        zählen nicht zugleich als frei.
+        Abstand). inf (kein Echo im Höhenband) räumt bis inf_free_range frei.
+        Zellen bis hit_protect Zellen um einen Treffer DIESES Scans zählen nicht als frei: Sonst räumen Strahlen, die
+        knapp neben einer Wand vorbeistreifen, und kleine Posenfehler die Wandzellen frei – eine Wand sähe dann aus
+        wie ein Stuhl, der mal da ist und mal nicht (am Slop-Bot gemessen: so nur 123 statt 305 Wandzellen „fest“).
         """
         r = np.asarray(ranges, dtype=np.float64)[::beam_step]
         ang = yaw + angle_min + np.arange(0, len(ranges), beam_step)[:len(r)] * angle_increment
@@ -86,8 +95,19 @@ class ExperienceGrid:
         py = y + d[None, :] * sin_a[:, None]
         free_idx = self.cell_index(px[inside], py[inside])
         free_idx = np.unique(free_idx[free_idx >= 0])
-        free_idx = np.setdiff1d(free_idx, hit_idx, assume_unique=True)
+        free_idx = np.setdiff1d(free_idx, self.around(hit_idx, hit_protect), assume_unique=True)
         return free_idx, hit_idx
+
+    def around(self, idx, radius):
+        """Zellindizes idx samt Nachbarn bis radius Zellen (Quadrat), eindeutig, ohne Umlauf an den Rändern."""
+        if radius <= 0 or idx.size == 0:
+            return idx
+        row, col = np.divmod(idx, self.width)
+        d = np.arange(-radius, radius + 1)
+        rr = (row[:, None, None] + d[None, :, None]).repeat(d.size, axis=2)
+        cc = (col[:, None, None] + d[None, None, :]).repeat(d.size, axis=1)
+        ok = (rr >= 0) & (rr < self.height) & (cc >= 0) & (cc < self.width)
+        return np.unique(rr[ok] * self.width + cc[ok])
 
     # ------------------------------------------------------------------ Lernen
     def decay_to(self, now, half_life_s):
@@ -147,11 +167,13 @@ class ExperienceGrid:
         return m
 
     def known_grid(self, min_seen, p_free, p_fixed):
-        """Für das Sicherheitsfeld: 100 = fest, 0 = oft gesehen und nicht fest (frei/vielleicht), -1 = keine Meinung."""
+        """Für Sicherheitsfeld und Relokalisierung (/experience/known):
+        100 = fest, 50 = vielleicht (mal belegt, z. B. Stuhl), 0 = frei, -1 = keine Meinung (zu selten gesehen)."""
         c = self.classes(min_seen, p_free, p_fixed)
         g = np.full(c.shape, UNKNOWN, dtype=np.int8)
         g[c == 3] = 100
-        g[(c == 1) | (c == 2)] = 0
+        g[c == 2] = 50
+        g[c == 1] = 0
         return g
 
     def persistence_grid(self, min_seen):
@@ -169,13 +191,16 @@ class ExperienceGrid:
     # ------------------------------------------------------------------ Speichern
     def save(self, path):
         tmp = path + '.tmp.npz'
-        np.savez_compressed(tmp, seen=self.seen, hit=self.hit, stamp=self.stamp,
+        np.savez_compressed(tmp, seen=self.seen, hit=self.hit, stamp=self.stamp, version=FORMAT_VERSION,
                             grid=np.array([self.width, self.height, self.resolution, self.origin_x, self.origin_y]))
         os.replace(tmp, path)
 
     @classmethod
     def load(cls, path):
         with np.load(path) as d:
+            version = int(d['version']) if 'version' in d else 1
+            if version != FORMAT_VERSION:
+                raise OldFormat(f'Lernverfahren Version {version}, aktuell {FORMAT_VERSION}')
             w, h, res, ox, oy = d['grid']
             g = cls(int(w), int(h), res, ox, oy)
             g.seen = d['seen'].astype(np.float32)
@@ -184,6 +209,36 @@ class ExperienceGrid:
         if g.seen.size != g.width * g.height or g.hit.size != g.seen.size:
             raise ValueError('Zählerlänge passt nicht zur Rastergröße')
         return g
+
+
+# ---------------------------------------------------------------------- Feste Struktur (Relokalisierung, Sicherheitsfeld, Export)
+KNOWN_FIXED, KNOWN_MAYBE, KNOWN_FREE = 100, 50, 0      # Werte von known_grid / /experience/known (-1 = keine Meinung)
+
+
+def structure(occupied, known=None, gone_radius=4):
+    """Was ist feste Struktur, was beweglich? Gemeinsame Regel für Relokalisierung, Sicherheitsfeld und Export.
+
+    occupied: Bool-Raster der Kartenwände, known: Raster wie /experience/known (gleiche Form) oder None.
+      fest       Erfahrung „fest“, oder Kartenwand, die weder beweglich noch verschwunden ist
+      beweglich  Erfahrung „vielleicht“ (mal da, mal nicht – auch ein Sofa, das beim Kartieren dastand)
+    Verschwunden ist eine Kartenwand erst, wenn die Erfahrung dort „frei“ sagt UND im Umkreis von gone_radius Zellen
+    nichts belegt war (fest oder vielleicht). Grund: Karte und aktuelle Scans liegen oft 5–20 cm gegeneinander versetzt
+    (am Slop-Bot gemessen); dann sieht die Erfahrung die Wand eine Zelle daneben, und die Kartenzelle selbst wirkt frei.
+    Rückgabe (fest, beweglich, Zahlen).
+    """
+    if known is None:
+        return occupied.copy(), np.zeros_like(occupied), {'fest': int(occupied.sum()), 'fest_aus_erfahrung': 0,
+                                                          'karte_beweglich': 0, 'karte_verschwunden': 0, 'vielleicht': 0}
+    known = np.asarray(known).reshape(occupied.shape)
+    exp_fixed = known == KNOWN_FIXED
+    maybe = known == KNOWN_MAYBE
+    something_near = near(exp_fixed | maybe, gone_radius)
+    gone = occupied & (known == KNOWN_FREE) & ~something_near
+    fixed = exp_fixed | (occupied & ~maybe & ~gone)
+    stats = {'fest': int(fixed.sum()), 'fest_aus_erfahrung': int((exp_fixed & ~occupied).sum()),
+             'karte_beweglich': int((occupied & maybe).sum()), 'karte_verschwunden': int(gone.sum()),
+             'vielleicht': int(maybe.sum())}
+    return fixed, maybe & ~fixed, stats
 
 
 # ---------------------------------------------------------------------- Karte aktualisieren (Export)
@@ -228,21 +283,22 @@ def near(mask, radius):
     return out
 
 
-def updated_map_image(img, grid, min_seen, p_free, p_fixed, edge_radius=2):
-    """Kartenbild mit der Erfahrung abgleichen (nur oft genug gesehene Zellen, der Rest bleibt wie im Original):
-      fest                          → Wand
-      frei                          → frei
-      vielleicht, in der Karte frei/unbekannt → frei (Stühle gehören nicht in die Karte, dafür gibt es die weichen Kosten)
-      vielleicht, in der Karte belegt → frei nur ohne feste Zelle im Umkreis edge_radius. Sonst ist es eine Wandkante, die
-                                      bei kleinen Posenfehlern mal getroffen wird und mal nicht – sie bleibt Wand.
-    Gibt (neues Bild, Anzahl neu belegt, Anzahl neu frei) zurück."""
+def updated_map_image(img, grid, min_seen, p_free, p_fixed, gone_radius=4):
+    """Kartenbild mit der Erfahrung abgleichen (Regel wie structure; nur oft genug gesehene Zellen, sonst bleibt alles):
+      Kartenwand verschwunden oder beweglich → frei, außer sie liegt direkt an fester Struktur (Wandkante: Posenfehler
+                                               machen Randzellen schnell zu „vielleicht“)
+      neue feste Struktur (Erfahrung „fest“, nicht in der Karte) → Wand
+      unbekannt in der Karte, Erfahrung frei/vielleicht → frei (inzwischen erkundet; Stühle gehören nicht in die Karte)
+    Gibt (neues Bild, Anzahl neu belegt, Anzahl neu frei, Anzahl entfernter Kartenwände) zurück."""
     if img.shape != (grid.height, grid.width):
         raise ValueError(f'Bild {img.shape[1]}×{img.shape[0]} passt nicht zur Erfahrung {grid.width}×{grid.height}')
-    c = grid.classes(min_seen, p_free, p_fixed).reshape(grid.height, grid.width)[::-1]   # Bildzeile 0 = oben
-    was_occ = img == PGM_OCCUPIED
-    occ = c == 3
-    free = (c == 1) | ((c == 2) & ~was_occ) | ((c == 2) & was_occ & ~near(occ, edge_radius))
+    known = grid.known_grid(min_seen, p_free, p_fixed).reshape(grid.height, grid.width)[::-1]   # Bildzeile 0 = oben
+    occ = img == PGM_OCCUPIED
+    fixed, _, _ = structure(occ, known, gone_radius)
+    removed = occ & ~fixed & ~near(fixed, 1)
+    added = fixed & ~occ
+    explored = (img == PGM_UNKNOWN) & ((known == KNOWN_FREE) | (known == KNOWN_MAYBE)) & ~fixed
     out = img.copy()
-    out[occ] = PGM_OCCUPIED
-    out[free] = PGM_FREE
-    return out, int((occ & ~was_occ).sum()), int((free & (img != PGM_FREE)).sum())
+    out[removed | explored] = PGM_FREE
+    out[added] = PGM_OCCUPIED
+    return out, int(added.sum()), int((removed | explored).sum()), int(removed.sum())

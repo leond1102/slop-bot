@@ -193,6 +193,18 @@ mkdir -p ~/slop-bot_ws/maps
 ros2 run nav2_map_server map_saver_cli -f ~/slop-bot_ws/maps/wohnung --free 0.196
 ros2 service call /slam_toolbox/serialize_map slam_toolbox/srv/SerializePoseGraph "{filename: '/home/jetson/slop-bot_ws/maps/wohnung'}"
 
+## Bestehende Karte ERWEITERN (neue Räume dazu): Navigation/Lokalisierung beenden, dann (Roboter beim Start stillstehen
+## lassen: die Startpose wird am Scan gesucht, um die letzte gespeicherte Pose oder in der ganzen Karte; x:= y:= yaw:=
+## gibt eine Vermutung vor)
+ros2 launch slop_navigation mapping.launch.py extend:=office-3
+## … in den neuen Bereich fahren (langsam, Überlappung mit dem Bekannten), dann unter NEUEM Namen speichern (wie oben)
+## und Erfahrung + letzte Pose übertragen; danach mit der neuen Karte navigieren
+ros2 run nav2_map_server map_saver_cli -f ~/slop-bot_ws/maps/office-4 --free 0.196
+ros2 service call /slam_toolbox/serialize_map slam_toolbox/srv/SerializePoseGraph "{filename: '/home/jetson/slop-bot_ws/maps/office-4'}"
+ros2 run slop_navigation experience_transfer ~/slop-bot_ws/maps/office-3.yaml ~/slop-bot_ws/maps/office-4.yaml
+ros2 launch slop_navigation navigation.launch.py map:=$HOME/slop-bot_ws/maps/office-4.yaml
+## Auf der Webseite: Karte wählen → „Karte erweitern komplett“ → fahren → Name eingeben → „Erweiterte Karte speichern“
+
 ## Kartieren ohne RViz / wenn lio.launch.py schon läuft (dann muss es mit map_tf:=false gestartet sein)
 ros2 launch slop_navigation mapping.launch.py rviz:=false
 ros2 launch slop_navigation mapping.launch.py lio:=false

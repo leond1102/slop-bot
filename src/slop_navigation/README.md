@@ -46,6 +46,34 @@ ros2 service call /slam_toolbox/serialize_map slam_toolbox/srv/SerializePoseGrap
 Getestet am 2026-11-05 im Stand ohne Motoren: `/scan` mit 721 Strahlen wird angenommen, `/map` erscheint, `map → odom`
 sendet nur `slam_toolbox` (`lio_bridge`: `publish_map_odom: false`). Erste Karte: `maps/office` (21 × 24 m, ca. 65 m² befahren).
 
+## Karte erweitern (neue Bereiche dazu)
+
+Statt neu zu kartieren, setzt slam_toolbox eine gespeicherte Karte fort (`mapping.launch.py extend:=office-3`, Details in
+`slop_navigation/map_extend.py`). AMCL bleibt für den Alltag; erweitert wird bewusst per Knopf/Befehl.
+
+1. Navigation/Lokalisierung beenden.
+2. `mapping.launch.py extend:=office-3`, Roboter beim Start stillstehen lassen: `extend_start` bestimmt die Startpose am
+   aktuellen Scan wie `relocalize` – Feinsuche um die letzte gespeicherte Pose (egal wie alt) bzw. um `x:= y:= yaw:=`,
+   sonst in der ganzen Karte (feste Struktur als Referenz). Erst dann startet slam_toolbox mit `office-3.posegraph/.data`
+   genau dort. Keine eindeutige Pose oder fehlender Posegraph → alles beendet sich mit Meldung.
+   (Bis 2026-11-06 vormittags verlangte die Launch eine höchstens 10 min alte gespeicherte Pose – über die Webseite
+   scheiterte das, weil man dort nicht „kurz lokalisieren“ kann.)
+3. In den neuen Bereich fahren (mit Überlappung zum Bekannten, langsam), dann unter **neuem Namen** speichern
+   (`map_saver_cli` + `serialize_map`). Die Webseite lehnt vorhandene Namen ab (map_saver überschreibt ohne Rückfrage).
+4. `experience_transfer office-3.yaml office-4.yaml`: Erfahrung und letzte Pose auf die größere Karte umrechnen
+   (Koordinaten bleiben gleich, nur Größe und Ursprung wachsen; Rundung höchstens eine halbe Zelle).
+5. Mit `map:=…/office-4.yaml` navigieren. Die erweiterte Karte hat wieder einen Posegraph, lässt sich also selbst
+   weiter erweitern.
+
+Getestet (2026-11-06, Domäne 83, Aufnahme `~/nav_test`, ohne Antrieb): slam_toolbox lädt den echten `office-3`-Posegraph;
+Start genau an der AMCL-Pose, 8 cm / 3° daneben und 25 cm / 8° daneben enden alle bei derselben Pose (−0,34 / −1,70 /
+−138,0°, also ~7 cm neben AMCL – der bekannte Versatz Karte/AMCL). Speichern unter neuem Namen (`.yaml/.pgm/.posegraph/
+.data`) und Übertragen funktionieren. Startsuche (`extend_start`, Domäne 85): alte, aber richtige gespeicherte Pose →
+in 0,2 s bestätigt (97 %); falsche gespeicherte Pose (Roboter woanders) → 36 %, ganze Karte durchsucht, gefunden in 1,6 s
+(98 % gegen 76 %); ohne /scan → nach 40 s Abbruch mit Meldung, slam_toolbox startet nicht. Über die Webseite: „läuft“
+erst, wenn slam_toolbox /map sendet (11 s); Abbruch erscheint als Fehlermeldung mit Grund. **Nicht getestet:** echtes
+Fahren in unbekannte Bereiche (der Roboter stand in der Aufnahme).
+
 ## Lokalisieren in der gespeicherten Karte
 
 ```bash
@@ -77,8 +105,23 @@ AMCL verfolgt die Pose nur. Wird der Roboter versetzt (getragen, geschoben; die 
 steht er beim Start nicht am Kartenstart, liegen alle Partikel falsch und AMCL findet von selbst nicht zurück. Nav2 hat
 dafür keine Standard-Node; `relocalize` (startet mit `localization.launch.py`, aus mit `relocalize:=false`) macht das:
 
-- **Erkennen:** jede Sekunde der Anteil der Scanpunkte, die in der Karte auf einer Wand liegen (±10 cm), auf
-  `/relocalize/score`. Richtige Pose: 90–99 %, versetzt: 15–50 %.
+- **Referenz ist nur feste Struktur** (seit 2026-11-06): Mit der Erfahrungskarte (`/experience/known`) zählen Wände,
+  Schränke, Tische – nicht Stühle oder Mülleimer, auch wenn sie beim Kartieren dastanden. Regel wie Sicherheitsfeld und
+  Export (`experience_core.structure`):
+  - **fest** (Treffer): Erfahrung „fest“, oder Kartenwand, die weder beweglich noch verschwunden ist
+  - **beweglich** (neutral): Erfahrung „vielleicht“. Ein Scanpunkt dort zählt weder als Treffer noch als Fehler.
+  - Eine Kartenwand gilt erst als **verschwunden**, wenn die Erfahrung dort „frei“ sagt und im Umkreis von 20 cm nichts
+    belegt war – Karte und Scans liegen am Slop-Bot oft 5–20 cm gegeneinander versetzt.
+  - **Welche Pose gewinnt** (Suche, Eindeutigkeit), entscheiden nur Treffer auf fester Struktur: Ein Sofa kann einen
+    sonst symmetrischen Raum nicht „eindeutig“ machen und die Suche nicht anziehen. **Ob die Pose gut genug ist**
+    (80 % / 60 %), zählt ohne die neutralen Punkte (höchstens die Hälfte darf herausfallen): Stühle an ihren üblichen
+    Plätzen lösen keine falsche Suche aus.
+  - Ohne Erfahrung (oder solange sie zu wenig gesehen hat) wie bisher: alle Kartenwände. Im Log:
+    „Referenz: … feste Zellen (davon … neu aus der Erfahrung); aus der Karte ausgenommen: … beweglich, … verschwunden“.
+  - Aufnahme `~/nav_test` (Büro): Referenz 3042 Zellen (Karte 2737, davon 44 beweglich, 113 verschwunden, +462 neu);
+    Güte an der AMCL-Pose 0,91 → 0,98; Suche findet die Pose (98 % gegen 76 %, vorher 92 % gegen 72 %).
+- **Erkennen:** jede Sekunde die Güte – Anteil der Scanpunkte auf fester Struktur (±10 cm), bewegliche Stellen neutral –
+  auf `/relocalize/score`. Richtige Pose: 90–99 %, versetzt: 15–50 %.
 - **Beim Start**, sobald AMCL läuft: passt die Startpose (≥ 80 %), nichts tun; sonst die zuletzt gespeicherte Pose
   (`maps/<karte>.last_pose.yaml`, nicht in Git) fein nachsuchen; passt die auch nicht, die ganze Karte durchsuchen.
 - **Im Betrieb:** unter 60 % für 3 s → die ganze Karte durchsuchen; danach 10 s Pause.
@@ -158,6 +201,10 @@ ist, und gibt „vielleicht“ als weiche Kosten an den Planer. Startet mit `loc
 
 - **Zählen:** je Zelle *gesehen* (Strahl ging hindurch oder traf) und *belegt* (Strahl traf). Beständigkeit
   p = belegt / gesehen. Ab 5 Beobachtungen: p ≥ 0,80 fest, 0,15–0,80 vielleicht, darunter frei.
+- **Treffer-Schutz** (`hit_protect`, 2 Zellen = 10 cm): Zellen um einen Treffer räumt derselbe Scan nicht frei. Ohne ihn
+  räumten flach streifende Strahlen und kleine Posenfehler die Wandzellen frei – Wände sahen aus wie Stühle (gemessen:
+  nur 123 statt 305 Wandzellen „fest“; von 2737 Kartenwänden galten 1111 als „vielleicht“). Dateien, die vor
+  2026-11-06 ohne Schutz gelernt wurden (Format 1), legt `experience` beim Start als `….v1.alt` beiseite und beginnt neu.
 - **Vergessen:** Halbwertszeit 7 Tage (`half_life_days`; Baustelle eher 1–2). p bleibt dabei gleich, aber neue
   Beobachtungen wiegen mehr: Ein weggeräumter Schrank wird nach einigen Fahrten zu „vielleicht“, dann „frei“.
 - **Lernsperre** (sonst schriebe eine falsche Pose Wände an falsche Stellen): nur bei relocalize-Score ≥ 75 %,
@@ -169,16 +216,17 @@ ist, und gibt „vielleicht“ als weiche Kosten an den Planer. Startet mit `loc
   wirklich etwas, trägt es die Sensorschicht ein.
 - **Overwrite** in der globalen Sensorschicht (`combination_method: 0`): Was die Sensoren sehen, ersetzt die Karte auch
   als frei – ein Stuhl, der beim Kartieren im Weg stand, verschwindet für den Planer, sobald das Lidar durchsieht.
-- **Karte aktualisieren** (`experience_export`, schreibt neue Dateien, Original bleibt): fest → Wand, frei → frei,
-  vielleicht → frei (außer an Wandkanten: in der Karte belegt und eine feste Zelle ≤ 2 Zellen daneben). Nur Zellen mit
-  ≥ 10 Beobachtungen. Erfahrung und letzte Pose werden für die neue Karte mitkopiert.
+- **Karte aktualisieren** (`experience_export`, schreibt neue Dateien, Original bleibt): dieselbe Regel wie die
+  Relokalisierung – Kartenwände fallen nur weg, wenn sie beweglich oder verschwunden sind und nicht direkt an fester
+  Struktur liegen; neue feste Struktur wird Wand, erkundete Fläche frei. Nur Zellen mit ≥ 10 Beobachtungen. Fiele mehr
+  als ein Fünftel der Kartenwände weg, bricht der Export ab (`--trotzdem`). Erfahrung und letzte Pose werden mitkopiert.
 - Dateien: `maps/<karte>.experience.npz` (jede Minute und beim Beenden). Passt das Raster nicht mehr (neue Karte unter
   altem Namen), wird die alte Datei als `.alt` beiseitegelegt und neu begonnen.
 - Anzeige: RViz „Erfahrung (Beständigkeit)“ (`/experience/persistence`, Standard aus).
 - Grenzen: nur das Höhenband des Lidars (0,15–1,8 m); Kamera noch nicht. Taugt erst nach einigen Fahrten.
 - Getestet (2026-11-05, Domäne 78, Aufnahme `~/nav_test`, ohne Antrieb): lernt aus echten Scans, Maske kommt im
   Keepout-Filter des `planner_server` an; Maskenwert 40 auf freiem Gang → Costmap 40 (Kosten 102), nicht gesperrt.
-  16 Unit-Tests (`test/test_experience.py`, `test/test_relocalize.py`).
+  Stand 2026-11-06: 26 Unit-Tests (`test/test_experience.py`, `test/test_relocalize.py`, `test/test_safety.py`).
 
 ### Sicherheit
 

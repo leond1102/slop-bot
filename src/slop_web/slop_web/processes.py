@@ -95,6 +95,7 @@ class Run:
     ended: float = None
     popen: object = None                        # nur für selbst gestartete (nicht übernommene) Prozesse
     members: set = field(default_factory=set)   # zuletzt gefundene Prozesse (tick)
+    reported: bool = False                      # Ende schon gemeldet (Webseite)
 
     def to_json(self):
         return {'id': self.id, 'pid': self.pid, 'starttime': self.starttime, 'log': self.log,

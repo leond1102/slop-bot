@@ -44,8 +44,14 @@ journalctl --user -u slop-web -f       # Ausgabe ansehen
 
 - **Abfolgen** („Navigation komplett“ usw.) starten die Schritte nacheinander und warten jeweils, bis Daten kommen
   (Antrieb: `/wheel/odom`, Kamera: `/camera/obstacles`, Lidar: `/scan`). Was schon läuft, wird übersprungen.
+- **Karte erweitern:** Karte wählen → „Karte erweitern komplett“ (Antrieb + slam_toolbox; die Startpose wird beim
+  Start am Scan gesucht, Roboter dabei stillstehen lassen; vorher Navigation stoppen) → neue Bereiche abfahren → Name eingeben → „Erweiterte Karte
+  speichern“ (speichert unter dem neuen Namen, überträgt Erfahrung und letzte Pose). Vorhandene Kartennamen werden
+  abgelehnt, das Original bleibt immer unverändert.
 - **Einzeln:** Start/Stopp je Programm, „Log“ zeigt die Ausgabe (wie im Terminal). Stopp wirkt wie Strg+C, nach 15 s
   SIGTERM, nach 25 s SIGKILL. Lokalisierung, Navigation und Kartieren schließen sich gegenseitig aus (je ein Lidar-Treiber).
+- Beendet sich ein Programm von selbst (nicht über „Stopp“), zeigt die Seite eine Fehlermeldung mit der wichtigsten
+  Logzeile (z. B. „Karte erweitern: nach 40 s kein /scan – läuft der Lidar?“).
 - **Im Terminal gestartet** erkennt die Seite („im Terminal“) und fasst es nicht an – dort mit Strg+C beenden.
 - RViz öffnet sich auf dem Bildschirm des Jetson (RustDesk), wie beim Start im Terminal.
 - **Fahren:** Taste halten = fahren, loslassen = Stopp. Desktop: `W`/`↑` vor, `S`/`↓` zurück, `A`/`←` `D`/`→` drehen,

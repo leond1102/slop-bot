@@ -89,3 +89,72 @@ def test_scan_points_filters_and_thins():
     assert list(r) == [1.0, 2.0] and a[0] == pytest.approx(0.1)
     r, _ = scan_points([1.0] * 721, -math.pi, 0.0087266, max_points=120)
     assert len(r) == 120
+
+
+# ---------------------------------------------------------------------- Nur feste Struktur als Referenz
+def experience_for(grid, cells, value):
+    """Raster wie /experience/known: überall keine Meinung (-1), an cells (Liste von (Zeile, Spalte)-Bereichen) value."""
+    exp = np.full(grid.shape, -1, dtype=np.int8)
+    for rows, cols in cells:
+        exp[rows, cols] = value
+    return exp
+
+
+def test_movable_object_is_not_a_reference():
+    """Leerer Raum, den nur ein Sofa unsymmetrisch macht. Ohne Erfahrung orientiert sich die Suche am Sofa; weiß die
+    Erfahrung, dass es beweglich ist (vielleicht), verlässt sie sich nicht darauf und meldet „nicht eindeutig“ – auch
+    wenn das Sofa gerade an seinem Platz steht."""
+    g = room(asymmetric=False)
+    sofa = (slice(50, 60), slice(30, 60))            # 1,5 × 0,5 m bei (1,5…3,0; 2,5…3,0)
+    g[sofa] = 100                                    # stand beim Kartieren da – und steht auch jetzt da
+    x, y, yaw = 2.5, 2.0, 0.4
+    r, a = scan_points(raycast(g, x, y, yaw), -math.pi, 2 * math.pi / 360)
+    best, why = decide(global_search(model_of(g), r, a))
+    assert best is not None, why                     # alte Bewertung: Sofa als Anker
+    exp = experience_for(g, [sofa], 50)
+    m = MapModel(g.ravel(), g.shape[1], g.shape[0], RES, 0.0, 0.0, experience=exp.ravel())
+    assert m.stats['karte_beweglich'] == 300 and m.stats['vielleicht'] == 300
+    best, why = decide(global_search(m, r, a))
+    assert best is None and 'nicht eindeutig' in why, why
+    assert m.score(r, a, x, y, yaw) > 0.95           # an der richtigen Pose trotzdem gute Güte (Sofa neutral)
+
+
+def test_moved_chairs_do_not_lower_score():
+    """Beim Kartieren standen Stühle an Stelle A, jetzt an Stelle B. Beide Stellen kennt die Erfahrung als „vielleicht“:
+    Der Scan trifft die Stühle bei B (neutral) und sieht durch A hindurch – die Bewertung bleibt hoch."""
+    mapped = room()
+    spot_a = (slice(60, 66), slice(60, 66))
+    spot_b = (slice(30, 36), slice(100, 130))        # Stuhlreihe 1,5 m
+    mapped[spot_a] = 100
+    now = room()
+    now[spot_b] = 100
+    x, y, yaw = 3.5, 2.5, 0.2
+    r, a = scan_points(raycast(now, x, y, yaw), -math.pi, 2 * math.pi / 360)
+    old = model_of(mapped).score(r, a, x, y, yaw)
+    exp = experience_for(mapped, [spot_a, spot_b], 50)
+    m = MapModel(mapped.ravel(), mapped.shape[1], mapped.shape[0], RES, 0.0, 0.0, experience=exp.ravel())
+    new = m.score(r, a, x, y, yaw)
+    assert new > 0.95 and new > old + 0.03, (old, new)
+    best, why = decide(global_search(m, r, a))
+    assert best is not None, why
+    assert best.distance_to(Candidate(0, x, y, yaw))[0] < 0.12
+
+
+def test_new_fixed_structure_counts_and_neutral_is_capped():
+    """Fest gewordene Struktur, die nicht in der Karte steht (neuer Schrank), zählt als Treffer. Und fallen fast alle
+    Punkte auf „vielleicht“, zählt trotzdem mindestens die Hälfte (keine perfekte Bewertung aus wenigen Treffern)."""
+    g = room()
+    cabinet = (slice(90, 100), slice(20, 30))
+    now = g.copy()
+    now[cabinet] = 100
+    x, y, yaw = 2.0, 3.0, 0.0
+    r, a = scan_points(raycast(now, x, y, yaw), -math.pi, 2 * math.pi / 360)
+    plain = model_of(g).score(r, a, x, y, yaw)
+    m = MapModel(g.ravel(), g.shape[1], g.shape[0], RES, 0.0, 0.0,
+                 experience=experience_for(g, [cabinet], 100).ravel())
+    assert m.stats['fest_aus_erfahrung'] == 100
+    assert m.score(r, a, x, y, yaw) > plain
+    everything_maybe = np.where(now > 50, 50, -1).astype(np.int8)
+    everything_maybe[0, :] = 100                     # nur die untere Wand bleibt fest
+    m2 = MapModel(now.ravel(), now.shape[1], now.shape[0], RES, 0.0, 0.0, experience=everything_maybe.ravel())
+    assert m2.score(r, a, x, y, yaw) <= 0.5

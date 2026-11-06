@@ -4,15 +4,13 @@ Bekannte Struktur (Wand, Schrank, Tisch) darf der Roboter eng passieren; alles a
 die größeren Zonen des zweiten Collision Monitors. Grundsatz: im Zweifel unbekannt. Ohne Karte, ohne sichere Lokalisierung,
 außerhalb der Karte oder ohne Meinung gilt ein Punkt als unbekannt – das macht den Roboter vorsichtiger, nie mutiger.
 
-Bekannt ist eine Zelle, wenn
-  - die Erfahrungskarte sie für fest hält (/experience/known = 100), oder
-  - sie in der gespeicherten Karte belegt ist und die Erfahrung nicht widerspricht (/experience/known ≠ 0;
-    0 = oft gesehen und nicht fest, z. B. ein Stuhl, der beim Kartieren da stand),
-und dann um known_dilate (Lokalisierungsfehler) erweitert.
+Bekannt ist feste Struktur nach experience_core.structure (dieselbe Regel wie Relokalisierung und Export): Erfahrung
+„fest“, oder Kartenwand, die weder beweglich (vielleicht, z. B. ein Stuhl, der beim Kartieren da stand) noch verschwunden
+ist (frei und im Umkreis von 20 cm nichts). Danach um known_dilate (Lokalisierungsfehler) erweitert.
 """
 import numpy as np
 
-from slop_navigation.experience_core import near
+from slop_navigation.experience_core import near, structure
 
 OCCUPIED_MIN = 65          # OccupancyGrid-Wert ab dem eine Kartenzelle belegt ist (map_server: 100)
 
@@ -20,10 +18,8 @@ OCCUPIED_MIN = 65          # OccupancyGrid-Wert ab dem eine Kartenzelle belegt i
 def known_mask(width, height, map_data, exp_data=None, dilate_cells=2):
     """Bool-Raster (Zeile 0 = kleinstes y) der bekannten Struktur."""
     m = np.asarray(map_data, dtype=np.int16).reshape(height, width)
-    known = m >= OCCUPIED_MIN
-    if exp_data is not None:
-        e = np.asarray(exp_data, dtype=np.int16).reshape(height, width)
-        known = (e == 100) | (known & (e != 0))
+    e = None if exp_data is None else np.asarray(exp_data, dtype=np.int16).reshape(height, width)
+    known, _, _ = structure(m >= OCCUPIED_MIN, e)
     return near(known, dilate_cells) if dilate_cells > 0 else known
 
 

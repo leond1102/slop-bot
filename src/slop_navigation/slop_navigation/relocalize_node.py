@@ -3,10 +3,12 @@
 setzt sie (/initialpose). Merkt sich außerdem die letzte gute Pose für den nächsten Start.
 
   /map           nav_msgs/OccupancyGrid           Sub  (map_server, transient local)
+  /experience/known  nav_msgs/OccupancyGrid       Sub  Erfahrungskarte: 100 fest, 50 vielleicht, 0 frei, -1 ? (optional)
   /scan          sensor_msgs/LaserScan            Sub
   /amcl_pose     geometry_msgs/PoseWithCovStamped Sub  zum Speichern der letzten Pose
   /initialpose   geometry_msgs/PoseWithCovStamped Pub  gefundene Pose an AMCL
-  /relocalize/score  std_msgs/Float32             Pub  Anteil der Scanpunkte auf einer Wand (0..1), check_period
+  /relocalize/score  std_msgs/Float32             Pub  Güte 0..1: Anteil der Scanpunkte auf fester Struktur, übliche
+                                                       Plätze beweglicher Dinge neutral (relocalize_core), check_period
   Service relocalize  std_srvs/Trigger                 sofort in der ganzen Karte suchen
 
 Start: sobald AMCL läuft (TF map → base_footprint da), in dieser Reihenfolge prüfen, bis eine Pose passt (≥ min_score):
@@ -16,6 +18,11 @@ Start: sobald AMCL läuft (TF map → base_footprint da), in dieser Reihenfolge 
 Betrieb: Liegt der Anteil länger als bad_duration s unter bad_score, wird die ganze Karte durchsucht. Liegt das eindeutige
 Ergebnis woanders als die aktuelle Pose, wird es gesetzt; danach cooldown s Pause.
 Die letzte Pose wird alle save_period s gespeichert, wenn sie passt (score ≥ min_score).
+
+Referenz ist nur feste Struktur: Mit der Erfahrungskarte zählen Wände, Schränke, Tische (fest), nicht Stühle oder
+Mülleimer (vielleicht) – auch nicht, wenn sie beim Kartieren dastanden. Welche Pose gewinnt, entscheidet allein die feste
+Struktur; bewegliche Dinge an ihren üblichen Plätzen verschlechtern nur die Güte nicht. Ohne Erfahrungskarte (oder bevor
+sie genug gesehen hat) gilt die gespeicherte Karte wie bisher. Details: relocalize_core.py.
 """
 import math
 import os
@@ -59,9 +66,16 @@ class Relocalize(Node):
             ('max_points', 120),            # Scanpunkte für die Bewertung
             ('relocalize_at_start', True),
             ('auto', True),                 # im Betrieb automatisch suchen
+            ('use_experience', True),       # nur feste Struktur als Referenz (/experience/known)
+            ('experience_period', 10.0),    # s: so oft höchstens das Kartenmodell mit neuer Erfahrung neu bauen
         ]:
             self.declare_parameter(name, default)
         self.model = None
+        self.map_msg = None
+        self.exp_msg = None
+        self.exp_dirty = False
+        self.last_build = 0.0
+        self.last_stats = None
         self.scan = None
         self.amcl_pose = None
         self.started = False
@@ -73,6 +87,8 @@ class Relocalize(Node):
         self.tf_listener = TransformListener(self.tf_buffer, self)
         latched = QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL, reliability=ReliabilityPolicy.RELIABLE)
         self.create_subscription(OccupancyGrid, '/map', self.on_map, latched)
+        if self._p('use_experience'):
+            self.create_subscription(OccupancyGrid, '/experience/known', self.on_experience, latched)
         self.create_subscription(LaserScan, '/scan', lambda m: setattr(self, 'scan', m), qos_profile_sensor_data)
         self.create_subscription(PoseWithCovarianceStamped, '/amcl_pose', lambda m: setattr(self, 'amcl_pose', m), latched)
         self.pose_pub = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 10)
@@ -83,8 +99,9 @@ class Relocalize(Node):
         self.cancel_clients = [self.create_client(CancelGoal, f'/{a}/_action/cancel_goal')
                                for a in ('navigate_to_pose', 'navigate_through_poses')]
         self.create_timer(self._p('check_period'), self.check)
-        self.get_logger().info(f'Relokalisierung bereit (Pose passt ab {self._p("min_score"):.0%} Scanpunkte auf Wänden; '
-                               f'unter {self._p("bad_score"):.0%} für {self._p("bad_duration"):g} s wird gesucht)')
+        self.get_logger().info(f'Relokalisierung bereit (Pose passt ab {self._p("min_score"):.0%} Scanpunkte auf fester '
+                               f'Struktur; unter {self._p("bad_score"):.0%} für {self._p("bad_duration"):g} s wird gesucht; '
+                               f'Erfahrungskarte {"an" if self._p("use_experience") else "aus"})')
 
     def _p(self, name):
         return self.get_parameter(name).value
@@ -92,9 +109,38 @@ class Relocalize(Node):
     # ---------------------------------------------------------------- Eingänge
     def on_map(self, msg):
         info = msg.info
-        self.model = MapModel(msg.data, info.width, info.height, info.resolution, info.origin.position.x,
-                              info.origin.position.y, tolerance=self._p('tolerance'))
+        self.map_msg = msg
         self.get_logger().info(f'Karte {info.width}×{info.height} Zellen à {info.resolution:.2f} m geladen')
+        self.build_model()
+
+    def on_experience(self, msg):
+        self.exp_msg = msg
+        self.exp_dirty = True                  # neu bauen in check(), höchstens alle experience_period s
+
+    def build_model(self):
+        """Kartenmodell aus Karte + (falls passend) Erfahrung. Referenz = feste Struktur, siehe relocalize_core."""
+        m = self.map_msg
+        if m is None:
+            return
+        info, e = m.info, self.exp_msg
+        if e is not None and (e.info.width != info.width or e.info.height != info.height):
+            e = None                           # Erfahrung gehört zu einer anderen Karte
+        self.model = MapModel(m.data, info.width, info.height, info.resolution, info.origin.position.x,
+                              info.origin.position.y, tolerance=self._p('tolerance'),
+                              experience=e.data if e is not None else None)
+        self.exp_dirty = False
+        self.last_build = time.monotonic()
+        st = self.model.stats
+        # nur melden, wenn sich die Referenz merklich ändert (Erfahrung kommt alle paar Sekunden)
+        if self.last_stats is None or abs(st['fest'] - self.last_stats['fest']) > 0.05 * max(self.last_stats['fest'], 1) \
+                or (st['vielleicht'] > 0) != (self.last_stats['vielleicht'] > 0):
+            self.get_logger().info(
+                f'Referenz: {st["fest"]} feste Zellen' + (
+                    f' (davon {st["fest_aus_erfahrung"]} neu aus der Erfahrung); aus der Karte ausgenommen: '
+                    f'{st["karte_beweglich"]} beweglich, {st["karte_verschwunden"]} verschwunden; '
+                    f'{st["vielleicht"]} Stellen „vielleicht belegt“ neutral' if e is not None
+                    else ' (nur Karte, noch keine Erfahrung)'))
+            self.last_stats = st
 
     def points(self):
         s = self.scan
@@ -112,6 +158,8 @@ class Relocalize(Node):
 
     # ---------------------------------------------------------------- Ablauf
     def check(self):
+        if self.exp_dirty and time.monotonic() - self.last_build >= self._p('experience_period'):
+            self.build_model()
         if self.model is None or self.scan is None:
             return
         pose = self.current_pose()

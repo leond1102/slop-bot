@@ -14,6 +14,7 @@ import asyncio
 import json
 import logging
 import os
+import re
 import signal
 import subprocess
 import threading
@@ -85,9 +86,9 @@ def tailscale_ip():
 class Web:
     def __init__(self, cfg, bridge):
         self.cfg, self.bridge = cfg, bridge
-        home = os.path.expanduser('~')
-        self.pm = ProcessManager(os.path.join(home, '.ros', 'log', 'slop_web'),
-                                 os.path.join(home, '.ros', 'slop_web', 'state.json'),
+        log_dir = os.path.expanduser(cfg.get('log_dir', '~/.ros/log/slop_web'))
+        state_dir = os.path.expanduser(cfg.get('state_dir', '~/.ros/slop_web'))
+        self.pm = ProcessManager(log_dir, os.path.join(state_dir, 'state.json'),
                                  [cfg['ros_setup'], os.path.expanduser(cfg['workspace_setup'])])
         self.items = {i['id']: i for i in cfg.get('items', [])}
         self.seqs = {s['id']: s for s in cfg.get('sequences', [])}
@@ -95,11 +96,29 @@ class Web:
         self.seq_state = {}             # Abfolge → Text („startet Kamera …“)
         self.busy_actions = set()
         self.clients = set()
-        self.action_log = os.path.join(home, '.ros', 'log', 'slop_web', 'aktionen.log')
+        self.action_log = os.path.join(log_dir, 'aktionen.log')
 
     # ---------------- Status
     def tick(self):
         self.pm.tick([i['detect'] for i in self.items.values() if i.get('detect')])
+        for id, run in self.pm.runs.items():
+            if run.ended is None or run.reported:
+                continue
+            run.reported = True
+            if run.stop_since is None:                  # nicht von hier gestoppt: hat sich selbst beendet
+                self.notify(f'{self.items[id]["label"]} hat sich beendet: {self.reason(id)}', 'error')
+
+    def reason(self, id):
+        """Aussagekräftigste Zeile vom Ende des Logs (Fehler zuerst), sonst die letzte."""
+        lines = [l for l in self.pm.tail(id, 60).splitlines() if l.strip()]
+        pick = lines[-1] if lines else 'kein Log (Log ansehen)'
+        for key in ('ERROR', 'geht nicht', 'Error', 'Fehler'):
+            hits = [l for l in lines if key in l and 'process has died' not in l]
+            if hits:
+                pick = hits[-1]
+                break
+        # Vorsätze wie „[node-1] [ERROR] [1793…] [node]: “ weg, damit nur der Text bleibt
+        return re.sub(r'^(\[[^\]]*\]\s*)+:?\s*', '', pick)[-220:]
 
     def external(self, id):
         pat = self.items[id].get('detect')
@@ -116,7 +135,7 @@ class Web:
         out = {'state': state, 'external': ext}
         ready = self.items[id].get('ready')
         if ready:
-            out['data'] = self.bridge.fresh(ready, 2.0)      # kommen die erwarteten Daten bei der Seite an?
+            out['data'] = self.bridge.fresh(ready, max(2.0, float(self.items[id].get('ready_age', 1.0)) + 1.0))
             out['ready'] = ready
         if run is not None:
             out.update(pid=run.pid, started=run.started, exit_code=run.exit_code, signal=run.sent,
@@ -157,11 +176,12 @@ class Web:
     async def wait_ready(self, id):
         item = self.items[id]
         topic, timeout = item.get('ready'), float(item.get('ready_timeout', 30))
+        max_age = float(item.get('ready_age', 1.0))         # s: so alt darf die letzte Nachricht sein
         t0 = time.monotonic()
         while time.monotonic() - t0 < timeout:
             if not self.running(id):
                 raise ValueError(f'{item["label"]} hat sich beim Start beendet – Log ansehen')
-            if topic is None or self.bridge.fresh(topic, 1.0):
+            if topic is None or self.bridge.fresh(topic, max_age):
                 return
             await asyncio.sleep(0.5)
         raise ValueError(f'{item["label"]}: nach {timeout:g} s keine Daten auf {topic} – Log ansehen')
@@ -205,16 +225,16 @@ class Web:
                 self.pm.stop(id)
 
     # ---------------- Aktionen
-    def _run_cmds(self, argvs):
+    def _run_cmds(self, argvs, timeout=25.0):
         setup = ' && '.join(f'source {s}' for s in self.pm.setup_scripts)
         lines = []
         for argv in argvs:
             try:
                 p = subprocess.run(['bash', '-c', f'{setup} && exec "$@"', 'slop_web', *argv], env=child_env(),
-                                   capture_output=True, text=True, timeout=25, stdin=subprocess.DEVNULL)
+                                   capture_output=True, text=True, timeout=timeout, stdin=subprocess.DEVNULL)
                 out, ok = (p.stdout + p.stderr).strip(), p.returncode == 0
             except subprocess.TimeoutExpired:
-                out, ok = 'keine Antwort nach 25 s (läuft der Dienst?)', False
+                out, ok = f'keine Antwort nach {timeout:g} s (läuft der Dienst?)', False
             with open(self.action_log, 'a', encoding='utf-8') as f:
                 f.write(f'# {time.strftime("%Y-%m-%d %H:%M:%S")}  {" ".join(argv)}\n{out}\n')
             lines.append(('✓ ' if ok else '✗ ') + (out.splitlines()[-1] if out else ' '.join(argv[:4])))
@@ -230,7 +250,8 @@ class Web:
         argvs = [webconfig.argv(c, values) for c in action['cmds']]
         self.busy_actions.add(id)
         try:
-            lines = await asyncio.get_running_loop().run_in_executor(None, self._run_cmds, argvs)
+            lines = await asyncio.get_running_loop().run_in_executor(
+                None, self._run_cmds, argvs, float(action.get('timeout', 25)))
         finally:
             self.busy_actions.discard(id)
         ok = all(line.startswith('✓') for line in lines)

@@ -6,7 +6,7 @@
   /safety/remote_active   std_msgs/Bool         Sub  RustDesk-Sitzung erkannt (Anzeige)
   /relocalize/score       std_msgs/Float32      Sub  Lokalisierung (Anzeige)
   /wheel/odom             nav_msgs/Odometry     Sub  Geschwindigkeit, „Antrieb läuft“
-  /scan, /camera/obstacles                      Sub  nur „kommen Daten?“ (roh, ohne Auspacken)
+  /scan, /camera/obstacles, /map                Sub  nur „kommen Daten?“ (roh, ohne Auspacken)
 
 Notaus: setzt die Hand-Stopp-Sperre (/safety/stop true) und bricht laufende Nav2-Ziele ab, damit der Roboter nach dem
 Aufheben nicht einfach weiterfährt. Solange er aktiv ist, wird true alle 0,5 s wiederholt (überlebt einen Neustart von
@@ -18,7 +18,7 @@ import time
 
 from action_msgs.srv import CancelGoal
 from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
+from nav_msgs.msg import OccupancyGrid, Odometry
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import LaserScan, PointCloud2
@@ -46,6 +46,8 @@ class Bridge(Node):
                                  raw=True)
         self.create_subscription(PointCloud2, '/camera/obstacles', lambda m: self._seen('/camera/obstacles', None),
                                  qos_profile_sensor_data, raw=True)
+        # slam_toolbox sendet /map alle 2 s: zeigt, dass Kartieren/Erweitern wirklich läuft (nicht nur der Lidar)
+        self.create_subscription(OccupancyGrid, '/map', lambda m: self._seen('/map', None), 1, raw=True)
         self.cancel_clients = [self.create_client(CancelGoal, f'/{a}/_action/cancel_goal')
                                for a in ('navigate_to_pose', 'navigate_through_poses')]
         self.create_timer(0.05, self.send_drive)        # 20 Hz wie keyboard_teleop

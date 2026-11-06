@@ -4,7 +4,8 @@
 #
 # items      einzelne Starts; conflicts = darf nicht gleichzeitig laufen (z. B. zwei Lidar-Treiber)
 #            detect = Teil der Befehlszeile, an dem ein im Terminal gestarteter Prozess erkannt wird
-#            ready = Topic, das nach dem Start Daten liefern muss, bevor eine Abfolge weitermacht
+#            ready = Topic, das nach dem Start Daten liefern muss, bevor eine Abfolge weitermacht (ready_age: so alt darf
+#            die letzte Nachricht sein, Standard 1 s; ready_timeout: so lange wird gewartet)
 # sequences  Abfolgen „alles für …“: Schritte nacheinander, bereits laufende werden übersprungen
 # actions    kurze Befehle (Dienstaufrufe), laufen höchstens timeout s
 
@@ -13,6 +14,8 @@ listen: [127.0.0.1, tailscale]       # nur lokal und im Tailnet, nicht im Büro-
 maps_dir: ~/slop-bot_ws/maps
 default_map: office-3
 workspace_setup: ~/slop-bot_ws/install/setup.bash
+state_dir: ~/.ros/slop_web            # welche Programme von hier gestartet wurden (Testserver: eigenen Ordner nehmen!)
+log_dir: ~/.ros/log/slop_web          # Ausgabe der gestarteten Programme und Aktionen
 ros_setup: /opt/ros/humble/setup.bash
 
 # DDS wie in ~/.bashrc – gilt für den Webserver UND alles, was er startet, egal aus welchem Terminal er kommt.
@@ -52,7 +55,7 @@ items:
     cmd: [ros2, launch, slop_navigation, localization.launch.py, 'map:=$map']
     uses_map: true
     detect: localization.launch.py
-    conflicts: [navigation, mapping]
+    conflicts: [navigation, mapping, extend]
     ready: /scan
     ready_timeout: 30
 
@@ -63,7 +66,7 @@ items:
     uses_map: true
     uses_experience_costs: true
     detect: navigation.launch.py
-    conflicts: [localization, mapping]
+    conflicts: [localization, mapping, extend]
     ready: /scan
     ready_timeout: 30
 
@@ -72,9 +75,22 @@ items:
     hint: beim Start 2–3 s stillstehen, langsam fahren, zum Schluss zurück zum Start
     cmd: [ros2, launch, slop_navigation, mapping.launch.py]
     detect: mapping.launch.py
-    conflicts: [localization, navigation]
-    ready: /scan
-    ready_timeout: 30
+    conflicts: [localization, navigation, extend]
+    ready: /map                        # slam_toolbox läuft (alle 2 s)
+    ready_age: 5
+    ready_timeout: 60
+
+  - id: extend
+    label: Karte erweitern (slam_toolbox) + RViz
+    hint: setzt die gewählte Karte fort; die Startpose wird beim Start am Scan gesucht (Roboter dabei stillstehen lassen).
+      Vorher Navigation/Lokalisierung stoppen. Neue Bereiche abfahren, dann „Erweiterte Karte speichern“
+    cmd: [ros2, launch, slop_navigation, mapping.launch.py, 'extend:=$map']
+    uses_map: true
+    detect: 'extend:='
+    conflicts: [localization, navigation, mapping]
+    ready: /map                        # erst wenn slam_toolbox läuft (nach der Startpose-Suche), nicht schon der Lidar
+    ready_age: 5                       # /map kommt alle 2 s
+    ready_timeout: 90
 
 sequences:
   - id: all_navigation
@@ -86,6 +102,9 @@ sequences:
   - id: all_mapping
     label: Kartieren komplett
     steps: [bringup, mapping]
+  - id: all_extend
+    label: Karte erweitern komplett
+    steps: [bringup, extend]
 
 actions:
   - id: cancel_goal
@@ -102,10 +121,21 @@ actions:
   - id: map_save
     label: Karte speichern
     needs_name: true
-    hint: während „Kartieren“ läuft; speichert $name.yaml/.pgm und den slam_toolbox-Stand in maps/
+    timeout: 90
+    hint: während „Kartieren“ läuft; speichert $name.yaml/.pgm und den slam_toolbox-Stand in maps/ (neuer Name)
     cmds:
       - [ros2, run, nav2_map_server, map_saver_cli, -f, '$maps_dir/$name', --free, '0.196']
       - [ros2, service, call, /slam_toolbox/serialize_map, slam_toolbox/srv/SerializePoseGraph, "{filename: '$maps_dir/$name'}"]
+  - id: map_save_extended
+    label: Erweiterte Karte speichern
+    needs_name: true
+    timeout: 90
+    hint: während „Karte erweitern“ läuft; speichert unter dem neuen Namen und überträgt Erfahrung und letzte Pose der
+      gewählten Karte (die Originalkarte bleibt unverändert)
+    cmds:
+      - [ros2, run, nav2_map_server, map_saver_cli, -f, '$maps_dir/$name', --free, '0.196']
+      - [ros2, service, call, /slam_toolbox/serialize_map, slam_toolbox/srv/SerializePoseGraph, "{filename: '$maps_dir/$name'}"]
+      - [ros2, run, slop_navigation, experience_transfer, '$map', '$maps_dir/$name.yaml']
   - id: drive_off
     label: Endstufen aus
     confirm: Endstufen ausschalten?

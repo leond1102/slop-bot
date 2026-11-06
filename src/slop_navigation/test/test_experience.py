@@ -4,8 +4,8 @@ import math
 import numpy as np
 import pytest
 
-from slop_navigation.experience_core import (PGM_FREE, PGM_OCCUPIED, PGM_UNKNOWN, UNKNOWN, ExperienceGrid, read_pgm,
-                                             updated_map_image, write_pgm)
+from slop_navigation.experience_core import (PGM_FREE, PGM_OCCUPIED, PGM_UNKNOWN, UNKNOWN, ExperienceGrid, OldFormat,
+                                             read_pgm, structure, updated_map_image, write_pgm)
 
 RES = 0.05
 P = dict(min_seen=3, p_free=0.15, p_fixed=0.8)
@@ -151,7 +151,7 @@ def test_export_updates_only_well_observed_cells(tmp_path):
     write_pgm(path, img)
     assert (read_pgm(path) == img).all()
 
-    new, n_occ, n_free = updated_map_image(img, g, min_seen=10, p_free=0.15, p_fixed=0.8)
+    new, n_occ, n_free, _ = updated_map_image(img, g, min_seen=10, p_free=0.15, p_fixed=0.8)
     assert new[80 - 1 - 20, 60] == PGM_FREE                    # verschwundene Wand im Gang → frei
     assert new[iy, ix] == PGM_OCCUPIED                         # nie gesehen → bleibt
     pillar = g.classes(10, 0.15, 0.8).reshape(80, 100)[::-1]
@@ -169,7 +169,46 @@ def test_export_keeps_wall_edges_but_removes_lone_chair():
     cols = {i: i % 100 for i in (wall_edge, wall, chair)}
     for i in (wall_edge, wall, chair):
         img[rows[i], cols[i]] = PGM_OCCUPIED
-    new, _, n_free = updated_map_image(img, g, min_seen=10, p_free=0.15, p_fixed=0.8)
+    new, _, n_free, n_removed = updated_map_image(img, g, min_seen=10, p_free=0.15, p_fixed=0.8)
     assert new[rows[wall], cols[wall]] == PGM_OCCUPIED
     assert new[rows[wall_edge], cols[wall_edge]] == PGM_OCCUPIED            # Wandkante bleibt
-    assert new[rows[chair], cols[chair]] == PGM_FREE and n_free == 1        # einzelner Stuhl verschwindet
+    assert new[rows[chair], cols[chair]] == PGM_FREE and n_free == 1 == n_removed  # einzelner Stuhl verschwindet
+
+
+def test_hit_protect_keeps_grazed_wall():
+    """Wandoberfläche mitten in einer Zellzeile (wie bei einem kleinen Posenfehler): flache Strahlen laufen vor ihrem
+    Treffer ein Stück innerhalb der Wandzeile. Ohne Schutz räumen sie Wandzellen frei, mit Schutz nicht."""
+    g = grid()
+    wall_y = 1.03                                               # Zeile 40 umfasst y 1.00 … 1.05
+    angles = np.radians(np.arange(2.5, 7.51, 0.25))
+    ranges = [(wall_y - 0.9) / math.sin(a) for a in angles]     # Strahlen von (0, 0.9) bis zur Wand
+    wall_row = {cell(g, x, wall_y) for x in np.arange(0.5, 3.0, 0.05)}
+    free0, _ = g.ray_cells(0.0, 0.9, 0.0, ranges, angles[0], angles[1] - angles[0], 0.2, 30.0, hit_protect=0)
+    free2, hit2 = g.ray_cells(0.0, 0.9, 0.0, ranges, angles[0], angles[1] - angles[0], 0.2, 30.0, hit_protect=2)
+    cleared0, cleared2 = len(set(free0.tolist()) & wall_row), len(set(free2.tolist()) & wall_row)
+    assert cleared0 >= 5 and cleared2 < cleared0 / 3, (cleared0, cleared2)
+    assert set(free2.tolist()).isdisjoint(set(g.around(hit2, 2).tolist()))
+
+
+def test_old_format_is_recognized(tmp_path):
+    path = str(tmp_path / 'alt.npz')
+    np.savez_compressed(path, seen=np.zeros(8000, np.float32), hit=np.zeros(8000, np.float32), stamp=0.0,
+                        grid=np.array([100, 80, RES, -2.0, -1.0]))      # ohne „version“: Lernverfahren 1
+    with pytest.raises(OldFormat):
+        ExperienceGrid.load(path)
+
+
+def test_structure_rule():
+    occ = np.zeros((20, 20), dtype=bool)
+    occ[5, :] = True                                            # Wand
+    occ[15, 15] = True                                          # Kiste beim Kartieren
+    known = np.full((20, 20), -1, dtype=np.int8)
+    known[5, :10] = 0                                           # Wand frei gesehen …
+    known[7, :10] = 100                                         # … Treffer 2 Zellen daneben (Versatz) → bleibt
+    known[5, 12] = 50                                           # Wandstück, das mal da ist → beweglich
+    known[15, 15] = 0                                           # Kiste weg, nichts in der Nähe → verschwunden
+    fixed, movable, st = structure(occ, known)
+    assert fixed[5, :10].all() and not fixed[5, 12] and movable[5, 12] and not fixed[15, 15]
+    assert st['karte_verschwunden'] == 1 and st['karte_beweglich'] == 1 and st['fest_aus_erfahrung'] == 10
+    fixed0, _, st0 = structure(occ, None)
+    assert (fixed0 == occ).all() and st0['karte_verschwunden'] == 0

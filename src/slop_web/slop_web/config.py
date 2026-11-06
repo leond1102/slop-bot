@@ -55,6 +55,10 @@ def params(cfg, raw):
     if 'name' in raw:
         if not isinstance(raw['name'], str) or not NAME_RE.match(raw['name']):
             raise ValueError('Name nur aus Buchstaben, Ziffern, _ und - (höchstens 40 Zeichen)')
+        base = os.path.join(cfg['maps_dir'], raw['name'])
+        if any(os.path.exists(base + ext) for ext in ('.yaml', '.pgm', '.posegraph', '.data')):
+            raise ValueError(f'Karte „{raw["name"]}“ gibt es schon – neuen Namen wählen (map_saver überschreibt ohne '
+                             'Rückfrage)')
         out['name'] = raw['name']
     return out
 

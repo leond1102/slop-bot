@@ -12,7 +12,7 @@ W, H, RES, OX, OY = 60, 40, 0.05, -1.0, -1.0          # 3 × 2 m, x -1..2, y -1.
 def world_map():
     m = np.zeros((H, W), dtype=np.int8)
     m[:, 50] = 100                                     # Wand bei x = 1.525
-    m[10, 20] = 100                                    # Stuhl, der beim Kartieren da stand: (0.025, -0.475)
+    m[10, 20] = m[10, 21] = 100                        # zwei Stühle, die beim Kartieren da standen: (0.025 | 0.075, -0.475)
     return m
 
 
@@ -30,13 +30,20 @@ def test_wall_known_with_tolerance_free_space_unknown():
 
 
 def test_experience_overrides_map_both_ways():
+    m = world_map()
+    m[30, 30] = 100                                    # Kiste beim Kartieren, längst weg: (0.525, 0.525)
     exp = np.full((H, W), -1, dtype=np.int8)
-    exp[10, 20] = 0                                    # Stuhl aus der Karte: oft gesehen, nicht fest
+    exp[10, 20:22] = 50                                # Stühle aus der Karte: oft gesehen, mal da, mal nicht
+    exp[30, 30] = 0                                    # Kiste: immer frei gesehen, nichts in der Nähe → verschwunden
     exp[30, 10] = 100                                  # neuer Schrank, nicht in der Karte: fest
-    k = known_mask(W, H, world_map().ravel(), exp.ravel(), dilate_cells=0)
+    exp[:, 50] = 0                                     # Wand selbst frei gesehen (Karte versetzt) …
+    exp[:, 53] = 100                                   # … die Treffer liegen 15 cm daneben → Wand bleibt
+    k = known_mask(W, H, m.ravel(), exp.ravel(), dilate_cells=0)
     assert not known(0.025, -0.475, k)                 # Karten-Stuhl gilt als unbekannt (vorsichtig)
+    assert not known(0.075, -0.475, k)
+    assert not known(0.525, 0.525, k)                  # verschwundene Kiste
     assert known(-0.475, 0.525, k)                     # neuer Schrank gilt als bekannt
-    assert known(1.53, 0.0, k)                         # Wand ohne Meinung der Erfahrung: Karte gilt
+    assert known(1.53, 0.0, k)                         # Kartenwand trotz „frei“: Treffer 15 cm daneben
 
 
 def test_experience_known_grid_values():
@@ -45,7 +52,7 @@ def test_experience_known_grid_values():
     g.seen[[i_fixed, i_maybe, i_free]] = 10.0
     g.hit[i_fixed], g.hit[i_maybe] = 10.0, 5.0
     kg = g.known_grid(min_seen=5, p_free=0.15, p_fixed=0.8)
-    assert kg[i_fixed] == 100 and kg[i_maybe] == 0 and kg[i_free] == 0 and kg[8] == -1
+    assert kg[i_fixed] == 100 and kg[i_maybe] == 50 and kg[i_free] == 0 and kg[8] == -1
 
 
 def test_scan_points_body_filter_and_transform():

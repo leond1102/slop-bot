@@ -3,7 +3,7 @@
 
   /scan                   sensor_msgs/LaserScan            Sub  (base_footprint)
   /map                    nav_msgs/OccupancyGrid           Sub  gespeicherte Karte (transient local)
-  /experience/known       nav_msgs/OccupancyGrid           Sub  Erfahrung: 100 fest, 0 sicher nicht fest, -1 keine Meinung
+  /experience/known       nav_msgs/OccupancyGrid           Sub  Erfahrung: 100 fest, 50 vielleicht, 0 frei, -1 ?
   /relocalize/score       std_msgs/Float32                 Sub  Lokalisierung sicher?
   /amcl_pose              geometry_msgs/PoseWithCovStamped Sub  Lokalisierung sicher?
   /safety/unknown_points  sensor_msgs/PointCloud2          Pub  unbekannte Hindernisse (Scan-Frame, Scan-Zeitstempel)
