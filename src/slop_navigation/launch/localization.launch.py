@@ -4,7 +4,7 @@
     ros2 launch slop_navigation localization.launch.py                            # Terminal 2: dieses
     ros2 run slop_teleop keyboard_teleop                                          # Terminal 3: fahren
 
-    ros2 launch slop_navigation localization.launch.py map:=$HOME/slop-bot_ws/maps/office.yaml   # voller Pfad, kein ~
+    ros2 launch slop_navigation localization.launch.py map:=$HOME/slop-bot_ws/maps/office-3.yaml   # voller Pfad, kein ~
     ros2 launch slop_navigation localization.launch.py x:=2.0 y:=-1.0 yaw:=1.57   # Startpose in der Karte
     ros2 launch slop_navigation localization.launch.py rviz:=false lio:=false
 
@@ -30,7 +30,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 
 def relocalize_node(context):
-    """relocalize mit der letzten Pose neben der Karte: maps/office.yaml → maps/office.last_pose.yaml."""
+    """relocalize mit der letzten Pose neben der Karte: maps/office-3.yaml → maps/office-3.last_pose.yaml."""
     map_yaml = context.launch_configurations['map']
     pose_file = os.path.splitext(map_yaml)[0] + '.last_pose.yaml'
     return [Node(package='slop_navigation', executable='relocalize', name='relocalize', output='screen',
@@ -38,7 +38,7 @@ def relocalize_node(context):
 
 
 def experience_node(context):
-    """Erfahrungskarte mit Zählerdatei neben der Karte: maps/office.yaml → maps/office.experience.npz."""
+    """Erfahrungskarte mit Zählerdatei neben der Karte: maps/office-3.yaml → maps/office-3.experience.npz."""
     map_yaml = context.launch_configurations['map']
     return [Node(package='slop_navigation', executable='experience', name='experience', output='screen',
                  parameters=[{'file': os.path.splitext(map_yaml)[0] + '.experience.npz',

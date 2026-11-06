@@ -10,6 +10,7 @@ ament_python_install_package(${PROJECT_NAME})
 # Startskripte (ros2 run slop_safety <name>)
 install(PROGRAMS
   scripts/remote_guard
+  scripts/sensor_guard
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
@@ -17,6 +18,7 @@ install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
 if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
   ament_add_pytest_test(test_remote_guard test/test_remote_guard.py)
+  ament_add_pytest_test(test_sensor_guard test/test_sensor_guard.py)
 endif()
 
 ament_package()

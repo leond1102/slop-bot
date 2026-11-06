@@ -57,6 +57,9 @@
   .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .hint { color: var(--muted); font-size: 13px; }
   label.inline { display: inline-flex; align-items: center; gap: 6px; }
+  select.locker { border-color: var(--warn); color: var(--warn); font-weight: 600; }
+  .safetyhint { margin-top: 6px; }
+  .safetyhint.locker { color: var(--warn); }
 
   .seqs { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-top: 10px; }
   .seqs button { padding: 12px; font-weight: 600; }
@@ -135,7 +138,14 @@
       <div class="row">
         <label class="inline">Karte <select id="map"></select></label>
         <label class="inline"><input type="checkbox" id="costs"> weiche Kosten (Erfahrungskarte)</label>
+        <label class="inline">Sicherheit
+          <select id="safety">
+            <option value="streng" selected>streng</option>
+            <option value="locker">locker</option>
+          </select>
+        </label>
       </div>
+      <div class="hint safetyhint" id="safetyHint"></div>
       <div class="seqs" id="seqs"></div>
       <div class="row" style="margin-top:10px">
         <button id="stopAll">Alles stoppen</button>
@@ -261,6 +271,8 @@ function render() {
       chips.push(chip(`Kamera ${r.camera ? '✓' : '–'}`, r.camera ? 'ok' : ''));
       if (r.score !== null) chips.push(chip(`Lokalisierung ${Math.round(r.score * 100)} %`, r.score >= 0.8 ? 'ok' : r.score >= 0.6 ? 'warn' : 'bad'));
     }
+    const nav = navSafety();
+    if (nav) chips.push(chip(`Nav2 ${nav}`, nav === 'locker' ? 'warn' : 'info'));
     if (r.speed !== null) chips.push(chip(`${r.speed.toFixed(2)} m/s · ${r.turn.toFixed(2)} rad/s`, 'info'));
   }
   $('chips').innerHTML = chips.join('');
@@ -299,6 +311,7 @@ function renderDesktop() {
     else btn = `<button data-start="${i.id}">Start</button>`;
     let badge = state, cls = state;
     if (state === 'läuft' && st.started) badge = `läuft ${ago(st.started)}`;
+    if (st.safety && (state === 'läuft' || state === 'extern')) badge += ` · ${st.safety}`;
     // läuft, aber die erwarteten Daten kommen bei der Seite nicht an (z. B. unterschiedliche DDS-Einstellungen)
     const noData = (state === 'läuft' || state === 'extern') && st.data === false &&
                    (state === 'extern' || status.now - st.started > 20);
@@ -323,6 +336,7 @@ function buildDesktop() {
   const dds = Object.entries(cfg.dds || {}).map(([k, v]) => `${k}=${v}`).join(', ');
   $('ddsInfo').textContent = `DDS: ${dds || 'Standard'}`;
   $('map').innerHTML = cfg.maps.map(m => `<option ${m === cfg.default_map ? 'selected' : ''}>${esc(m)}</option>`).join('');
+  showSafety();
   $('actions').innerHTML = cfg.actions.map(a => a.needs_name
     ? `<div class="mapsave"><input type="text" id="name_${a.id}" placeholder="Kartenname, z. B. office-4" maxlength="40">
        <button data-action="${a.id}" title="${esc(a.hint || '')}">${esc(a.label)}</button></div>`
@@ -330,14 +344,50 @@ function buildDesktop() {
 }
 
 function startParams() {
-  return {map: $('map').value, experience_costs: $('costs').checked};
+  return {map: $('map').value, experience_costs: $('costs').checked, safety: $('safety').value};
+}
+
+// ------------------------------------------------------------------ Sicherheitsstufe von Nav2
+const SAFETY_TEXT = {
+  streng: 'streng: Abstand zu Unbekanntem, langsamer nahe an Hindernissen, nie rückwärts.',
+  locker: 'locker: extrem nah an alles, volles Tempo, rückwärts erlaubt; dreht sich erst am Ziel in die Zielrichtung. Nur unter Aufsicht.',
+};
+function showSafety() {
+  const v = $('safety').value;
+  $('safety').classList.toggle('locker', v === 'locker');
+  $('safetyHint').className = 'hint safetyhint' + (v === 'locker' ? ' locker' : '');
+  $('safetyHint').textContent = SAFETY_TEXT[v] + ' Gilt beim Start der Navigation; wechseln = Navigation stoppen und neu starten.';
+}
+$('safety').onchange = showSafety;
+// Stufe der laufenden Navigation (von hier oder im Terminal gestartet), sonst null
+function navSafety() {
+  if (!cfg || !status) return null;
+  for (const i of cfg.items) {
+    const st = status.items[i.id];
+    if (i.uses_safety && st && st.safety && (st.state === 'läuft' || st.state === 'extern')) return st.safety;
+  }
+  return null;
+}
+// Startet dieser Knopf etwas mit Sicherheitsstufe (Navigation direkt oder in einer Abfolge)?
+function usesSafety(id) {
+  const item = cfg.items.find(i => i.id === id);
+  if (item) return !!item.uses_safety;
+  const seq = cfg.sequences.find(s => s.id === id);
+  return !!seq && seq.steps.some(s => usesSafety(s));
+}
+function startWith(id) {
+  const p = startParams();
+  if (p.safety === 'locker' && usesSafety(id) &&
+      !confirm('Navigation mit Sicherheitsstufe LOCKER starten?\n\nExtrem nah an alles, volles Tempo, rückwärts erlaubt, ' +
+               'erst am Ziel Drehen in die Zielrichtung. Nur unter Aufsicht.')) return;
+  send({t: 'start', id, params: p});
 }
 
 document.addEventListener('click', (e) => {
   const b = e.target.closest('button');
   if (!b) return;
-  if (b.dataset.seq) send({t: 'start', id: b.dataset.seq, params: startParams()});
-  else if (b.dataset.start) send({t: 'start', id: b.dataset.start, params: startParams()});
+  if (b.dataset.seq) startWith(b.dataset.seq);
+  else if (b.dataset.start) startWith(b.dataset.start);
   else if (b.dataset.stop !== undefined && b.dataset.stop !== '') send({t: 'stop', id: b.dataset.stop});
   else if (b.dataset.log) openLog(b.dataset.log);
   else if (b.dataset.action) {

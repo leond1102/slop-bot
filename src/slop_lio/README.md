@@ -98,4 +98,4 @@ Eine Neigung des Lidars (wenige Grad) bleibt unberücksichtigt.
 - `extrinsic_T` / `extrinsic_R` sind die Werte des Mid-360, für das Mid-360s nicht verifiziert.
 - Die EKF-Gier driftet im Stand um ca. 0,04°/s (Rest-Bias des Gyros). `map` bleibt davon unberührt, die Drift landet in
   `map → odom`. Hilft: `ros2 run slop_calibration calibrate gyro` im warmen Zustand.
-- Unter Fahrt noch nicht gemessen.
+- Unter Fahrt am 2026-11-06 getestet, Messwerte unter Fahrt (wie die Tabelle oben) fehlen noch.

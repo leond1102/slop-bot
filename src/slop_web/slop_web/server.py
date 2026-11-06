@@ -31,7 +31,7 @@ from rclpy.signals import SignalHandlerOptions
 
 from slop_web import config as webconfig
 from slop_web.drive import DriveLimits
-from slop_web.processes import ProcessManager
+from slop_web.processes import ProcessManager, proc_cmdline
 from slop_web.ros_bridge import Bridge
 
 log = logging.getLogger('slop_web')
@@ -133,6 +133,11 @@ class Web:
         if state in ('aus', 'beendet') and ext:
             state = 'extern'
         out = {'state': state, 'external': ext}
+        if self.items[id].get('uses_safety'):              # in welcher Sicherheitsstufe läuft Nav2?
+            if run is not None and state in ('läuft', 'stoppt'):
+                out['safety'] = webconfig.safety_of(run.cmd)
+            elif state == 'extern':
+                out['safety'] = webconfig.safety_of(proc_cmdline(ext[0]))
         ready = self.items[id].get('ready')
         if ready:
             out['data'] = self.bridge.fresh(ready, max(2.0, float(self.items[id].get('ready_age', 1.0)) + 1.0))
@@ -308,8 +313,9 @@ class Web:
     def client_config(self):
         c = self.cfg
         return {
-            'items': [{k: i.get(k) for k in ('id', 'label', 'hint', 'uses_map', 'uses_experience_costs')}
+            'items': [{k: i.get(k) for k in ('id', 'label', 'hint', 'uses_map', 'uses_experience_costs', 'uses_safety')}
                       for i in c.get('items', [])],
+            'safety_levels': list(webconfig.SAFETY_LEVELS),
             'sequences': [{'id': s['id'], 'label': s['label'], 'steps': s['steps']} for s in c.get('sequences', [])],
             'actions': [{k: a.get(k) for k in ('id', 'label', 'hint', 'needs_name', 'confirm')}
                         for a in c.get('actions', [])],

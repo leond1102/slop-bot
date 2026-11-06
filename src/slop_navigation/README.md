@@ -1,7 +1,8 @@
 # slop_navigation
 
 Karte aufnehmen mit `slam_toolbox`, in der gespeicherten Karte lokalisieren mit `map_server` + AMCL + `relocalize`,
-navigieren mit Nav2 (Costmaps aus Lidar und Kamera, NavFn, Regulated Pure Pursuit, Collision Monitor).
+navigieren mit Nav2 (Costmaps vorerst nur aus dem Lidar, NavFn, Regulated Pure Pursuit, Collision Monitor, zwei
+Sicherheitsstufen streng/locker).
 
 ## Karte aufnehmen
 
@@ -44,7 +45,8 @@ ros2 service call /slam_toolbox/serialize_map slam_toolbox/srv/SerializePoseGrap
 - `wohnung.posegraph` + `wohnung.data`: Posegraph für slam_toolbox (Lokalisieren oder Weiterkartieren).
 
 Getestet am 2026-11-05 im Stand ohne Motoren: `/scan` mit 721 Strahlen wird angenommen, `/map` erscheint, `map → odom`
-sendet nur `slam_toolbox` (`lio_bridge`: `publish_map_odom: false`). Erste Karte: `maps/office` (21 × 24 m, ca. 65 m² befahren).
+sendet nur `slam_toolbox` (`lio_bridge`: `publish_map_odom: false`). Erste Karte war `maps/office` (21 × 24 m, ca. 65 m²
+befahren; am 2026-11-06 gelöscht, Standard ist jetzt `office-3`).
 
 ## Karte erweitern (neue Bereiche dazu)
 
@@ -71,8 +73,8 @@ Start genau an der AMCL-Pose, 8 cm / 3° daneben und 25 cm / 8° daneben enden a
 .data`) und Übertragen funktionieren. Startsuche (`extend_start`, Domäne 85): alte, aber richtige gespeicherte Pose →
 in 0,2 s bestätigt (97 %); falsche gespeicherte Pose (Roboter woanders) → 36 %, ganze Karte durchsucht, gefunden in 1,6 s
 (98 % gegen 76 %); ohne /scan → nach 40 s Abbruch mit Meldung, slam_toolbox startet nicht. Über die Webseite: „läuft“
-erst, wenn slam_toolbox /map sendet (11 s); Abbruch erscheint als Fehlermeldung mit Grund. **Nicht getestet:** echtes
-Fahren in unbekannte Bereiche (der Roboter stand in der Aufnahme).
+erst, wenn slam_toolbox /map sendet (11 s); Abbruch erscheint als Fehlermeldung mit Grund. 2026-11-06 am Roboter in neue
+Bereiche gefahren und getestet.
 
 ## Lokalisieren in der gespeicherten Karte
 
@@ -83,12 +85,12 @@ ros2 run slop_teleop keyboard_teleop                                         # f
 ```
 
 ```
-maps/office.yaml ─► map_server ─► /map ─┐
-/scan ──────────────────────────────────┼─► AMCL ─► TF map → odom, /amcl_pose, /particle_cloud
-TF odom → base_footprint (EKF) ─────────┘
+maps/office-3.yaml ─► map_server ─► /map ─┐
+/scan ────────────────────────────────────┼─► AMCL ─► TF map → odom, /amcl_pose, /particle_cloud
+TF odom → base_footprint (EKF) ───────────┘
 ```
 
-- Standardkarte `~/slop-bot_ws/maps/office.yaml`, andere mit `map:=$HOME/slop-bot_ws/maps/<name>.yaml` (voller Pfad, `~`
+- Standardkarte `~/slop-bot_ws/maps/office-3.yaml`, andere mit `map:=$HOME/slop-bot_ws/maps/<name>.yaml` (voller Pfad, `~`
   geht nicht).
 - **Startpose:** AMCL startet bei (0, 0, 0) = Stelle und Richtung, an der das Kartieren begann (oder `x:=… y:=… yaw:=…`).
   Passt das nicht, findet `relocalize` den Roboter selbst (siehe unten). Von Hand: in RViz **2D Pose Estimate**.
@@ -154,9 +156,13 @@ Karte (±10 cm). Startpose absichtlich 30 cm und 10° daneben gesetzt: nach 25 N
 
 ```bash
 ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py   # Antrieb, Modell, EKF
-ros2 launch slop_sensors camera.launch.py                                    # Kamera + Hinderniserkennung
-ros2 launch slop_navigation navigation.launch.py                             # Lokalisierung + Nav2 + RViz
+ros2 launch slop_navigation navigation.launch.py                             # Lokalisierung + Nav2 + RViz (streng)
+ros2 launch slop_navigation navigation.launch.py safety:=locker              # oder: locker (siehe Sicherheitsstufen)
 ```
+
+**Vorerst nur mit dem Lidar:** Die Kamera ist aus Costmaps, Collision Monitoren und Sensor-Wächter herausgenommen (die
+Einträge stehen auskommentiert in `config/nav2.yaml` und `slop_safety/config/sensor_guard.yaml`). Nav2 sieht damit nichts
+unter 0,15 m Höhe.
 
 Ziel in RViz mit **Nav2 Goal** setzen (Pfeil an die Stelle und in Zielrichtung ziehen). Die Tastatur hat immer Vorrang
 (twist_mux: Tastatur 50, Nav2 20), Hand-Stopp und RustDesk-Sperre (100) sperren auch Nav2.
@@ -185,10 +191,10 @@ Berührung (Innenkreis), darunter abnehmende Kosten nach außen, 0 = frei, 255 =
   sucht. Er plant nicht durch unbekannte Bereiche (`allow_unknown: false`).
 - **Lokal** (`odom`, 4 × 4 m mitfahrend, 5 Hz, nur Sensoren): Grundlage für den **Controller**. Er prüft jeden Befehl mit dem
   Footprint gegen diese Karte. `odom` springt nicht, wenn AMCL korrigiert.
-- Sensoren: `/scan` (Lidar, markiert und räumt frei, `inf` = bis zur Reichweite frei), `/camera/obstacles` (markiert),
-  `/camera/floor` (räumt frei, Raytracing von `camera_link` aus). Ein Hindernis, das weggeht, verschwindet erst, wenn ein
-  Sensor durch seine Zelle hindurchsieht. Vor dem Roboter erledigt das die Kamera mit dem freien Boden; niedrige Dinge
-  sieht das Lidar erst ab ca. 2,6 m.
+- Sensoren: vorerst nur `/scan` (Lidar, markiert und räumt frei, `inf` = bis zur Reichweite frei). Mit Kamera kämen
+  `/camera/obstacles` (markiert) und `/camera/floor` (räumt frei, Raytracing von `camera_link` aus) dazu. Ein Hindernis,
+  das weggeht, verschwindet erst, wenn ein Sensor durch seine Zelle hindurchsieht. Niedrige Dinge sieht das Lidar erst ab
+  ca. 2,6 m, unter 0,15 m Höhe gar nicht.
 - Worauf es ankommt: Footprint richtig; der Roboter darf sich selbst nicht als Hindernis sehen (Ausschnitt-Quader);
   `inflation_radius` größer als der Außenkreis, sonst fährt der Planer zu dicht an Wände; Freiräumen muss möglich sein, sonst
   bleiben „Geister“ (z. B. vorbeigelaufene Menschen) liegen.
@@ -228,16 +234,47 @@ ist, und gibt „vielleicht“ als weiche Kosten an den Planer. Startet mit `loc
   Keepout-Filter des `planner_server` an; Maskenwert 40 auf freiem Gang → Costmap 40 (Kosten 102), nicht gesperrt.
   Stand 2026-11-06: 26 Unit-Tests (`test/test_experience.py`, `test/test_relocalize.py`, `test/test_safety.py`).
 
-### Sicherheit
+### Sicherheitsstufen (`safety:=streng` | `safety:=locker`)
+
+| | **streng** (Standard) | **locker** |
+|---|---|---|
+| Wofür | Alltag, Menschen in der Nähe | enge Stellen, Rangieren, Roboter unter Aufsicht |
+| Abstand | Wände eng (A: 2 cm Stopp, 10 cm langsam), Unbekanntes mit Abstand (B: 10 cm Stopp, 40 cm langsam) | alles gleich, bekannt oder nicht: 1 cm Stopp, keine Langsam-Zone |
+| Tempo nahe an Hindernissen | gedrosselt (Langsam-Zonen, RPP nach Costmap-Kosten) | voll; frontal bremst nur die Vorausschau (ab ca. 11 cm, physikalisch nötig) |
+| Rückwärts | nie | erlaubt: Liegt der Weg hinter dem Roboter, fährt er rückwärts |
+| Drehen auf der Stelle | ja (RPP dreht zum Weg und am Ziel) | unterwegs nein (Bögen statt Wenden), **am Ziel ja: dreht in die Zielrichtung** |
+| Verhaltensbaum | `navigate_to_pose.xml` | `navigate_to_pose_locker.xml`: erst hinfahren, dann drehen |
+| Planer | bleibt eher in der Gangmitte (`cost_scaling_factor` 4) | nimmt den kurzen Weg dicht an der Wand (20) |
+| Knoten | B `collision_monitor_dynamic` + `unknown_obstacles` + A | nur A |
+| Wächter überwacht | `/scan`, `/safety/unknown_points`, `/odom` | `/scan`, `/odom` |
+
+- `locker` lädt `config/nav2_locker.yaml` nach `nav2.yaml` (überschreibt nur, was dort steht), die Launch startet B und
+  `unknown_obstacles` nicht und hängt A direkt an `cmd_vel_smoothed`. Gewechselt wird durch Neustart von
+  `navigation.launch.py`.
+- **Zwei Schritte in `locker`:** RPP (Humble) kann nicht zugleich rückwärts fahren und sich auf der Stelle drehen – mit
+  `use_rotate_to_heading: true` schaltet es `allow_reversing` still ab. Deshalb zwei RPP-Controller im
+  `controller_server` und eigene Verhaltensbäume (`behavior_trees/*_locker.xml`):
+  1. `FollowPath` (rückwärts erlaubt, kein Drehen auf der Stelle) fährt hin, bis die Position stimmt
+     (`position_goal_checker`, 0,15 m, Richtung egal).
+  2. Danach, außerhalb der Pipeline mit Neuplanung, dreht `RotateToGoal` (wie `FollowPath` in streng) auf der Stelle in
+     die Zielrichtung (`general_goal_checker`, ±0,25 rad). Kommt währenddessen ein neues Ziel, bricht der Schritt ab und
+     es geht mit dem neuen Ziel von vorn los. Beim Drehen schwenkt das Heck wie in streng bis 0,43 m aus.
+- **Grenze von `locker`:** Von 0,18 m/s braucht der Roboter ca. 10 cm bis zum Stand. Seitlich darf er mit vollem Tempo
+  1 cm an etwas vorbei; frontal (vorwärts wie rückwärts) bremst die Vorausschau (0,6 s bis zur Berührung) ab ca. 11 cm.
+  Hinten wie vorn sieht er nichts unter 0,15 m Höhe.
+- Darunter gelten in beiden Stufen dieselben Sperren: twist_mux, Totmann, Fahrsperre ohne RustDesk, Watchdog im Busprozess.
+
+### Sicherheit (Stufe streng, wenn nicht anders gesagt)
 
 ```
-controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cmd_vel_smoothed─► collision_monitor_dynamic (B)
-    ─cmd_vel_dynamic─► collision_monitor (A) ─/navigation/cmd_vel─► twist_mux (Prio 20) ─/cmd_vel─► diff_drive_node
-    ─► ethercat_bus (Watchdog 0,3 s)
+streng: controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cmd_vel_smoothed─►
+        collision_monitor_dynamic (B) ─cmd_vel_dynamic─► collision_monitor (A) ─/navigation/cmd_vel─►
+        twist_mux (Prio 20) ─/cmd_vel─► diff_drive_node ─► ethercat_bus (Watchdog 0,3 s)
+locker: … velocity_smoother ─cmd_vel_smoothed─► collision_monitor (A, 1-cm-Stopp + Vorausschau) ─/navigation/cmd_vel─► …
 ```
 
 - **Nie rückwärts:** RPP `allow_reversing: false`, `velocity_smoother` `min_velocity` x = 0 (ein Rückwärtsbefehl wird 0),
-  Verhaltensbäume ohne `BackUp`. Hinten gibt es keine Kamera und unter 0,15 m kein Lidar.
+  Verhaltensbäume ohne `BackUp` (in beiden Stufen). Hinten gibt es keine Kamera und unter 0,15 m kein Lidar.
 - **Kein Drehen als Recovery** (`Spin` aus den Bäumen entfernt): Das Heck schwenkt bis 0,43 m aus. Recovery = Costmaps
   leeren und 5 s warten.
 - **Tempo:** höchstens 0,18 m/s (Ziel 0,15) und 0,6 rad/s; Beschleunigung 0,2 m/s².
@@ -246,8 +283,9 @@ controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cm
 
   | | sieht | Stopp | Langsam (40 %) | Vorausschau |
   |---|---|---|---|---|
-  | **B** `collision_monitor_dynamic` | nur unbekannte Lidar-Punkte (`/safety/unknown_points`) + Kamera | 10 cm vor der Front, ±0,22 m | 40 cm vor, 15 cm hinter und neben dem Körper | ≥ 1 s |
-  | **A** `collision_monitor` | alles (Lidar + Kamera), unabhängig von Karte und Lokalisierung | 2 cm um den Körper | 10 cm um den Körper | ≥ 0,6 s |
+  | **B** `collision_monitor_dynamic` | nur unbekannte Lidar-Punkte (`/safety/unknown_points`) | 10 cm vor der Front, ±0,22 m | 40 cm vor, 15 cm hinter und neben dem Körper | ≥ 1 s |
+  | **A** `collision_monitor` | alle Lidar-Punkte, unabhängig von Karte und Lokalisierung | 2 cm um den Körper | 10 cm um den Körper | ≥ 0,6 s |
+  | **A** in `locker` | alle Lidar-Punkte | 1 cm um den Körper | – | ≥ 0,6 s |
 
   - `unknown_obstacles` trennt die Scanpunkte: bekannt = in der Erfahrungskarte fest, oder in der Karte belegt und die
     Erfahrung widerspricht nicht; ± 10 cm Toleranz. **Im Zweifel unbekannt:** ohne Karte, ohne TF, bei unsicherer
@@ -256,13 +294,33 @@ controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cm
   - Zonen in RViz: A rot/gelb, B dunkelrot/orange, unbekannte Punkte magenta.
   - Bremsweg bei 0,18 m/s ≈ 10 cm, bei 40 % ≈ 2,4 cm: Die kleinen Zonen von A sind frontal nur mit der Vorausschau
     sicher (bei 2 cm Abstand höchstens 0,03 m/s). B: Langsam-Zone 40 cm bremst von 0,18 auf 0,07 m/s (≈ 10 cm),
-    danach reichen 2,4 cm Bremsweg für die 10-cm-Stoppzone. Flache Dinge (< 0,15 m) sieht nur die Kamera, und erst ab
-    0,25 m: angehalten wird davor über die lokale Costmap (Gedächtnis) und die Kollisionsprüfung von RPP.
+    danach reichen 2,4 cm Bremsweg für die 10-cm-Stoppzone. Flache Dinge (< 0,15 m) sähe nur die Kamera (vorerst aus).
   - Vorausschau: **unter Humble nur für Geradeausfahrt, nicht für Drehungen** (getestet), und sie nimmt immer den
     Footprint der lokalen Costmap (`points` werden ignoriert). Gegen Anstoßen beim Drehen schützt der Controller: RPP
     prüft jeden Befehl, auch Drehen auf der Stelle, mit dem Footprint gegen die lokale Costmap.
-  - **Humble ignoriert eine Quelle, die länger als 1 s nichts liefert (kein Stopp!).** Fällt `/scan` aus, fehlt der
-    Lidar-Schutz; fällt `unknown_obstacles` aus, sieht B nur noch die Kamera. → Wächter (folgt im Sicherheits-Update).
+  - **Humble ignoriert eine Quelle, die länger als 1 s nichts liefert oder für die das TF fehlt (kein Stopp!).** Fehlt
+    `/odom` (EKF), trifft das alle Quellen. Dagegen hilft der Sensor-Wächter (nächster Punkt).
+- **Sensor-Wächter** (`sensor_guard` aus `slop_safety`, startet mit `navigation.launch.py`, beide Stufen): sperrt Nav2
+  über twist_mux (`safety/sensor_lock`, Priorität 30), sobald eine Quelle der Collision Monitore fehlt oder veraltet ist.
+  Tastatur und Web fahren weiter.
+
+  | Quelle | Grenze | gemessen (2026-11-06, Stand) | Stufe |
+  |---|---|---|---|
+  | `/scan` | 0,4 s | höchstens 0,15 s | beide |
+  | `/safety/unknown_points` | 0,4 s | höchstens 0,15 s | streng |
+  | `/odom` | 0,3 s | – (50 Hz) | beide |
+  | `/camera/obstacles` | 0,4 s | höchstens 0,24 s | vorerst aus |
+
+  - Geprüft wird, ob Nachrichten ankommen und wie alt ihr Zeitstempel ist (so rechnet auch der Collision Monitor), auch
+    Zeitstempel mehr als 0,2 s in der Zukunft. Freigabe erst nach 1 s ohne Problem.
+  - Reaktion: Quelle 0,4 s still → Sperre → `diff_drive_node` bremst nach 0,5 s ohne `/cmd_vel`. Gesamt ~1 s nach den
+    letzten Daten, genau dann ignorierte der Collision Monitor die Quelle. Bis dahin rechnet er die letzten Daten auf
+    die aktuelle Pose um.
+  - Fail-Safe: Startet gesperrt. Läuft der Wächter nicht oder hängt er, sperrt twist_mux nach 0,5 s von selbst.
+  - Nav2 behält sein Ziel. Nach der Freigabe fährt es weiter. Dauert die Sperre länger, meldet der Fortschrittsprüfer
+    nach 15 s einen Fehler. Der Verhaltensbaum versucht es dann bis zu 6 Mal neu und bricht das Ziel danach ab.
+  - Stand ansehen: `ros2 topic echo /safety/sensor_status` („frei“ oder „gesperrt: /scan seit 0.5 s still“). Im Log alle
+    60 s das höchste Alter je Quelle. Einstellungen: `slop_safety/config/sensor_guard.yaml`.
 - **Pose neu gesetzt** (`relocalize` im Betrieb): laufende Nav2-Ziele werden abgebrochen, ein neues Ziel ist nötig.
 - Darunter wie immer: twist_mux-Sperren, Totmann der Tastatur, Fahrsperre ohne RustDesk, Watchdog im Busprozess.
 
@@ -288,10 +346,23 @@ controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cm
   `waitForTransform` der Costmap-Sensoren. **Behoben ab ros-humble-tf2 0.25.24** (`dpkg -l | grep ros-humble-tf2`).
 - Approach-Polygon des Collision Monitors: unter Humble werden `points` ignoriert, es nimmt immer
   `local_costmap/published_footprint`.
+- 2026-11-06 am Roboter gefahren: Ziele anfahren, Erfahrungskarte im Betrieb.
+- **Sicherheitsstufen (2026-11-06, Domäne 84, ohne Antrieb):** 13 Tests (`test/test_safety_modes.py`: nur Lidar, Kette
+  lückenlos, streng nie rückwärts, locker rückwärts ohne Drehen unterwegs, Stoppzone 1 cm, Bäume nennen nur vorhandene
+  Controller/Goal-Checker, in locker Drehen nach der Pipeline). Launch für beide Stufen
+  aufgelöst (locker ohne B und `unknown_obstacles`, Wächter mit 2 Quellen; falscher Wert → Abbruch mit Meldung). Mit
+  echten Knoten (`controller_server`, `planner_server`, `velocity_smoother`, `collision_monitor`, nur konfiguriert)
+  kommen alle Werte an, auch in den Costmaps; RPP meldet in `locker` kein „Disabling reversing“.
+  Simulation (leere Karte, Attrappen-Roboter integriert `/navigation/cmd_vel`, ganzer Nav2-Stapel): locker, Ziel 1 m hinter
+  dem Roboter mit 90° → 0,86 m rückwärts, dann auf der Stelle auf 79° gedreht, erreicht (11,6 s); Ziel schräg vorn mit
+  180° → Bogen vorwärts, dann auf 172° gedreht, erreicht. streng, gleiches Ziel → erst gedreht, vorwärts hin, am Ziel
+  gedreht, nie rückwärts (18,1 s). **Am Roboter nicht gefahren.**
+- **Sensor-Wächter (2026-11-06, Domäne 84, ohne Antrieb):** 10 Unit-Tests (`slop_safety/test/test_sensor_guard.py`).
+  Mit echtem twist_mux und Attrappen-Quellen: Nav2 kommt 1,1 s nach dem Start durch. `/scan` aus → Nav2 nach 0,4 s
+  gesperrt, Tastatur fährt weiter, Freigabe 1,2 s nach Rückkehr. Kamera-Zeitstempel 0,5 s in der Zukunft oder `/odom`
+  0,5 s alt → sofort gesperrt. Wächter mit `kill -9` beendet → twist_mux sperrt nach 0,4 s. Strg+C sperrt sofort.
+  Mit echtem Lidar und echter Kamera (40 s, Stand): keine Fehlsperre, Alter siehe Tabelle oben.
 
 ### Offen
 
-- **Karte neu aufnehmen:** `maps/office` wurde mit dem alten, zu kurzen Ausschnitt-Quader aufgenommen. Wo der Roboter
-  länger stand (Startpunkt), stehen Teile seiner eigenen Rückseite als „Wand“ in der Karte (48 Zellen im Footprint am
-  Startpunkt). Beim Speichern `--free 0.196` angeben (siehe oben), sonst gilt Unbekanntes als frei.
-- Noch nicht gefahren: Ziele anfahren, Controller abstimmen (Tempo, Lookahead, Toleranzen).
+Siehe [TODO.md](../../TODO.md).

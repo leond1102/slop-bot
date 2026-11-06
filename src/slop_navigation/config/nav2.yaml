@@ -1,18 +1,25 @@
 # Nav2 für den Slop-Bot (navigation.launch.py). Grundlage: nav2_bringup/params/nav2_params.yaml (Humble 1.1).
 #
 # Roboter: Differentialantrieb, Drehpunkt = Antriebsachse = base_footprint. Körper 50 × 32 cm, beginnt 10 cm vor der
-# Achse (Footprint unten, gleiche Maße im URDF). Höchstens 0,18 m/s. Hinten keine Kamera und unter 0,15 m kein Lidar →
-# nie rückwärts fahren (RPP allow_reversing false, velocity_smoother min_velocity x = 0, keine BackUp-Recovery).
+# Achse (Footprint unten, gleiche Maße im URDF). Höchstens 0,18 m/s.
+#
+# Zwei Sicherheitsstufen (navigation.launch.py safety:=streng|locker):
+#   streng (Standard, diese Datei): nie rückwärts (RPP allow_reversing false, velocity_smoother min_velocity x = 0, keine
+#           BackUp-Recovery), zwei Collision Monitore mit Abstand zu Unbekanntem, langsamer in der Nähe von Hindernissen.
+#   locker  (zusätzlich nav2_locker.yaml): extrem nah an alles, volles Tempo, rückwärts erlaubt (Details dort).
 #
 # Befehlskette:  controller_server / behavior_server ─cmd_vel_nav─► velocity_smoother ─cmd_vel_smoothed─►
 #                collision_monitor_dynamic ─cmd_vel_dynamic─► collision_monitor ─/navigation/cmd_vel─►
 #                twist_mux (Priorität 20, Tastatur 50) ─/cmd_vel─► diff_drive_node
 #                (zwei Collision Monitore: unbekannte Hindernisse mit großen, alles mit sehr kleinen Zonen – siehe unten)
 #
-# Sensoren für die Costmaps:
+# Sensoren für Costmaps und Collision Monitore: VORERST NUR DAS LIDAR.
 #   /scan              Lidar, 360°, Höhenband 0,15–1,8 m (sieht niedrige Dinge erst ab ca. 2,6 m)
+# Kamera (vorerst aus, Einträge unten bleiben stehen; zum Einschalten wieder in die observation_sources aufnehmen und in
+# slop_safety/config/sensor_guard.yaml überwachen lassen):
 #   /camera/obstacles  RealSense vorn, Hindernisse 0,05–0,9 m, 0,25–2,5 m vor der Kamera (base_footprint)
 #   /camera/floor      RealSense, freier Boden: räumt Zellen frei (Raytracing von der Kamera aus)
+# Ohne Kamera sieht Nav2 nichts unter 0,15 m Höhe (Kabel, flache Kisten, Füße von Stühlen).
 
 bt_navigator:
   ros__parameters:
@@ -143,7 +150,7 @@ local_costmap:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
         footprint_clearing_enabled: true
-        observation_sources: scan camera_obstacles camera_floor
+        observation_sources: scan        # Kamera vorerst aus: scan camera_obstacles camera_floor
         scan:
           topic: /scan
           data_type: "LaserScan"
@@ -206,7 +213,7 @@ global_costmap:
         # Weg stand, verschwindet, sobald das Lidar durch seine Zelle sieht. Nicht gesehene Zellen behalten die Karte
         # (geht nur mit track_unknown_space: true, sonst löschte die Schicht die Karte großflächig).
         combination_method: 0
-        observation_sources: scan camera_obstacles camera_floor
+        observation_sources: scan        # Kamera vorerst aus: scan camera_obstacles camera_floor
         scan:
           topic: /scan
           data_type: "LaserScan"
@@ -300,22 +307,24 @@ velocity_smoother:
 #                                         B: nur UNBEKANNTE Hindernisse,               A: ALLE Punkte, kartenunabhängig,
 #                                            größere Zonen (Mensch, Stuhl, Kiste)         sehr kleine Zonen (letzte Bremse)
 #
-# Unbekannt = Lidar-Punkte, die nicht auf bekannter Struktur liegen (unknown_obstacles: Karte + Erfahrungskarte), plus
-# alle Kamera-Hindernisse (flache Dinge sind nie Wand). Im Zweifel (keine Karte, Lokalisierung unsicher) gilt alles als
-# unbekannt, dann gelten die größeren Zonen auch für Wände. Wände passiert der Roboter so eng, Menschen mit Abstand.
+# Unbekannt = Lidar-Punkte, die nicht auf bekannter Struktur liegen (unknown_obstacles: Karte + Erfahrungskarte) (mit
+# Kamera: dazu alle Kamera-Hindernisse, flache Dinge sind nie Wand). Im Zweifel (keine Karte, Lokalisierung unsicher) gilt
+# alles als unbekannt, dann gelten die größeren Zonen auch für Wände. Wände passiert der Roboter so eng, Menschen mit Abstand.
+# Gilt für safety:=streng. Bei safety:=locker läuft B nicht, A hat andere Zonen (nav2_locker.yaml).
 #
 # Zonen in base_footprint (x vorn, y links); Footprint x -0,40…0,10, y ±0,16. Ein Polygon greift, wenn MEHR als
 # max_points Punkte darin liegen.
 # Bremsweg: 0,18 m/s → ca. 7 cm Rampe (≈ 0,2 m/s²) + 0,15 s Reaktion (Scan, Zyklus) ≈ 10 cm; mit 40 % (0,07 m/s) ≈ 2,4 cm.
 # Deshalb sind die 2-cm-Stoppzone und die 10-cm-Langsamzone von A nur zusammen mit dem Approach-Polygon sicher: Es bremst
 # frontal so früh, dass bis zur Berührung ≥ 0,6 s bleiben (bei 2 cm Abstand höchstens 0,03 m/s).
-# Flache Hindernisse (< 0,15 m) sieht nur die Kamera, und die erst ab 0,25 m vor der Kamera: B bremst sie in der
-# Langsam-Zone (bis 40 cm) ab, angehalten wird davor über die lokale Costmap (merkt sich Kamera-Hindernisse) und die
-# Kollisionsprüfung des Controllers (RPP), nicht über die Stoppzonen.
+# Flache Hindernisse (< 0,15 m) sieht nur die Kamera – und die ist vorerst aus. Mit Kamera (erst ab 0,25 m vor ihr): B
+# bremst sie in der Langsam-Zone (bis 40 cm) ab, angehalten wird davor über die lokale Costmap (merkt sich
+# Kamera-Hindernisse) und die Kollisionsprüfung des Controllers (RPP), nicht über die Stoppzonen.
 #
 # Humble (1.1.20): eine Quelle, die länger als source_timeout nichts liefert, wird IGNORIERT (kein Stopp!). Fällt /scan
-# aus, fehlt der Lidar-Schutz – Wächter dafür folgt (Sicherheits-Update). Fällt unknown_obstacles aus, verhält sich B wie
-# „nur Kamera“, A bleibt.
+# aus, fehlte der Lidar-Schutz. Dasselbe, wenn das TF odom → base_footprint (EKF) fehlt: dann ALLE Quellen. Deshalb
+# sperrt slop_safety/sensor_guard Nav2 über twist_mux, sobald /scan, /safety/unknown_points (nur streng) oder /odom
+# älter als 0,3–0,4 s sind (config/sensor_guard.yaml in slop_safety).
 # Humble: Bei action_type "approach" werden `points` ignoriert, das Polygon kommt immer von footprint_topic (Standard
 # local_costmap/published_footprint, mit footprint_padding 2 cm).
 
@@ -360,7 +369,7 @@ collision_monitor_dynamic:
       max_points: 3
       visualize: False
       enabled: True
-    observation_sources: ["unknown", "camera"]
+    observation_sources: ["unknown"]     # Kamera vorerst aus: ["unknown", "camera"]
     unknown:
       type: "pointcloud"
       topic: "/safety/unknown_points"   # unknown_obstacles, Punkte auf z = 0,5
@@ -382,7 +391,7 @@ collision_monitor:
     cmd_vel_in_topic: "cmd_vel_dynamic"
     cmd_vel_out_topic: "/navigation/cmd_vel"
     transform_tolerance: 0.3
-    source_timeout: 1.0                  # s; ältere Daten werden ignoriert (kein Stopp, siehe oben)
+    source_timeout: 1.0                  # s; ältere Daten werden ignoriert (kein Stopp, siehe oben) → sensor_guard sperrt vorher
     base_shift_correction: True
     stop_pub_timeout: 2.0
     polygons: ["PolygonStop", "PolygonSlow", "FootprintApproach"]
@@ -415,7 +424,7 @@ collision_monitor:
       max_points: 3
       visualize: False
       enabled: True
-    observation_sources: ["scan", "camera"]
+    observation_sources: ["scan"]        # Kamera vorerst aus: ["scan", "camera"]
     scan:
       type: "scan"
       topic: "/scan"

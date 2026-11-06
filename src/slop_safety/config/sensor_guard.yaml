@@ -1,0 +1,33 @@
+# Sensor-Wächter (slop_safety/sensor_guard), startet mit slop_navigation/navigation.launch.py. Die Launch setzt `sources`
+# je Sicherheitsstufe: streng [scan, unknown, odom], locker [scan, odom] (dort läuft collision_monitor_dynamic nicht).
+#
+# Der Collision Monitor von Nav2 (Humble) ignoriert eine Quelle, deren letzte Daten älter als source_timeout (1 s) sind
+# oder für die das TF fehlt – ohne zu stoppen. Der Wächter sperrt Nav2 vorher: safety/sensor_lock → twist_mux
+# (Sperre mit Priorität 30: Nav2 steht, Tastatur und Web fahren weiter).
+#
+# max_age muss deutlich unter source_timeout liegen. Bis der Roboter steht, kommen noch der Prüftakt (0,1 s) und
+# cmd_vel_timeout von diff_drive_node (0,5 s) dazu: 0,4 + 0,1 + 0,5 = 1,0 s ohne neue Daten, dann wird gebremst.
+# Zahlen immer mit Punkt schreiben (0.4, nicht 1), sonst passt der Parametertyp nicht.
+sensor_guard:
+  ros__parameters:
+    rate: 10.0                  # Hz Prüf- und Sendetakt (twist_mux-Timeout der Sperre: 0,5 s)
+    release_after: 1.0          # s: so lange müssen alle Quellen frisch sein, bevor die Sperre fällt
+    max_future: 0.2             # s: Zeitstempel weiter in der Zukunft gelten als Fehler (TF-Abfrage schlüge fehl)
+    report_period: 60.0         # s; Log mit dem höchsten Alter je Quelle (zum Einstellen von max_age), 0 = aus
+    sources: [scan, unknown, odom]   # Kamera vorerst aus Nav2 heraus (nur Lidar); zum Einschalten camera ergänzen
+    scan:                       # Lidar-Scan → Collision Monitor A
+      topic: /scan
+      type: sensor_msgs/msg/LaserScan
+      max_age: 0.4              # 10 Hz; Zeitstempel = Scanbeginn (gemessen im Stand höchstens 0,15 s alt)
+    unknown:                    # unbekannte Hindernisse (unknown_obstacles, kommt bei jedem Scan) → Collision Monitor B
+      topic: /safety/unknown_points
+      type: sensor_msgs/msg/PointCloud2
+      max_age: 0.4
+    camera:                     # Kamera-Hindernisse (depth_obstacles, bis 15 Hz) → A und B; nur wirksam, wenn in sources
+      topic: /camera/obstacles
+      type: sensor_msgs/msg/PointCloud2
+      max_age: 0.4              # gemessen im Stand höchstens 0,24 s
+    odom:                       # EKF (50 Hz): ohne TF odom → base_footprint ignorieren A und B ALLE Quellen
+      topic: /odom
+      type: nav_msgs/msg/Odometry
+      max_age: 0.3

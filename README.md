@@ -2,10 +2,12 @@
 
 Differentialantrieb mit zwei Schrittmotoren am EtherCAT-Treiber CL57E-4A, Livox Mid-360s und RealSense D435i.
 
-**Stand (Branch `slam-neu`):** Antrieb, Sicherheit, Tastatursteuerung, Sensortreiber, Robotermodell (URDF), EKF und
-LIO-Odometrie. Die Antriebsnode sendet Rohodometrie der Räder (`/wheel/odom`), der EKF daraus `/odom` und das TF
-`odom → base_footprint` (Räder, Livox-Gyro, LIO-Geschwindigkeit). Das URDF liefert `base_footprint → Sensoren`, FAST-LIO über
-`lio_bridge` das TF `map → odom`. Eine gespeicherte Karte und Navigation gibt es noch nicht. (Der alte FAST-LIO-Stack liegt auf `main`.)
+**Stand (Branch `slam-neu`):** Antrieb, Sicherheit, Tastatursteuerung, Sensortreiber, Robotermodell (URDF), EKF,
+LIO-Odometrie, Karten (aufnehmen, erweitern), Lokalisierung mit AMCL und Relokalisierung, Erfahrungskarte, Navigation mit
+Nav2 (dynamisches Sicherheitsfeld, Sensor-Wächter) und Weboberfläche. Die Antriebsnode sendet Rohodometrie der Räder
+(`/wheel/odom`), der EKF daraus `/odom` und das TF `odom → base_footprint` (Räder, Livox-Gyro, LIO-Geschwindigkeit). Das
+URDF liefert `base_footprint → Sensoren`. `map → odom` kommt von AMCL (Lokalisierung, Navigation), slam_toolbox
+(Kartieren) oder `lio_bridge` (nur LIO). Standardkarte: `maps/office-3`. (Der alte FAST-LIO-Stack liegt auf `main`.)
 
 Alle Startbefehle: [STARTBEFEHLE.md](STARTBEFEHLE.md)
 Offene Aufgaben: [TODO.md](TODO.md)
@@ -19,8 +21,8 @@ Offene Aufgaben: [TODO.md](TODO.md)
 | [slop_bringup](src/slop_bringup) | `bringup.launch.py`: Antrieb + Sicherheit + Robotermodell + EKF in einem Start (`ekf:=false` ohne EKF) |
 | [slop_calibration](src/slop_calibration) | `calibrate`-Befehl (Gyro-Bias, Sensorneigung) und Speicher für die Ergebnisse im Ordner `calib/` (siehe [calib/README.md](calib/README.md)) |
 | [slop_lio](src/slop_lio) | FAST-LIO2 (Livox Mid-360s) und Brücke `lio_bridge`: `/lio/odom`, TF `map → odom`; die LIO-Geschwindigkeit geht als `odom1` in den EKF. Siehe [src/slop_lio/README.md](src/slop_lio/README.md) |
-| [slop_navigation](src/slop_navigation) | Karte aufnehmen mit `slam_toolbox` (`mapping.launch.py`), lokalisieren mit `map_server` + AMCL (`localization.launch.py`) und `relocalize` (findet den Roboter nach dem Versetzen selbst wieder), navigieren mit Nav2 (`navigation.launch.py`: Costmaps aus Lidar und Kamera, Collision Monitor, nie rückwärts); Anleitung im README |
-| [slop_safety](src/slop_safety) | `twist_mux`-Konfiguration und `remote_guard`: Fahrsperre, solange keine RustDesk-Sitzung besteht |
+| [slop_navigation](src/slop_navigation) | Karte aufnehmen mit `slam_toolbox` (`mapping.launch.py`), lokalisieren mit `map_server` + AMCL (`localization.launch.py`) und `relocalize` (findet den Roboter nach dem Versetzen selbst wieder), navigieren mit Nav2 (`navigation.launch.py`: vorerst nur Lidar, Collision Monitor, Sicherheitsstufen `safety:=streng` (Abstand, nie rückwärts) und `safety:=locker` (extrem nah, volles Tempo, rückwärts)); Anleitung im README |
+| [slop_safety](src/slop_safety) | `twist_mux`-Konfiguration, `remote_guard` (Fahrsperre, solange keine RustDesk-Sitzung besteht) und `sensor_guard` (sperrt Nav2, wenn eine Quelle der Collision Monitore fehlt oder veraltet ist) |
 | [slop_teleop](src/slop_teleop) | `keyboard_teleop`: Tastatursteuerung mit Totmann (Taste halten = fahren) |
 | [slop_web](src/slop_web) | Weboberfläche: Programme starten/stoppen, Fahren mit Totmann, Notaus – im Browser und am Handy (Tailnet) |
 | [slop_description](src/slop_description) | URDF/xacro des Roboters (Räder, Schleppräder, Livox, RealSense) und `description.launch.py` mit `robot_state_publisher`. Radmaße, Spur und Gelenknamen liest es aus `diff_drive.yaml` |
@@ -31,11 +33,12 @@ Offene Aufgaben: [TODO.md](TODO.md)
 ## Datenfluss
 
 ```
-keyboard_teleop ──teleop/cmd_vel (Prio 50)──┐
-(Nav2, später)  ──navigation/cmd_vel (20)───┤
-remote_guard ──safety/remote_lock (Sperre)──┼─► twist_mux ──/cmd_vel──► diff_drive_node ──EtherCAT──► CL57E-4A
-Hand-Stopp   ──safety/stop (Sperre)─────────┘                              ▲ prüft zusätzlich
-                                                                           └ safety/remote_lock
+keyboard_teleop, Web ──teleop/cmd_vel (Prio 50)────┐
+Nav2 (collision_monitor) ──navigation/cmd_vel (20)─┤
+remote_guard ──safety/remote_lock (Sperre 100)─────┤
+Hand-Stopp, Web-Notaus ──safety/stop (Sperre 100)──┼─► twist_mux ──/cmd_vel──► diff_drive_node ──EtherCAT──► CL57E-4A
+sensor_guard ──safety/sensor_lock (Sperre 30)──────┘                              ▲ prüft zusätzlich
+                                                                                  └ safety/remote_lock
 
 livox_lidar_publisher ─► /livox/lidar, /livox/imu        (Frame livox_frame)
 camera (RealSense)    ─► /camera/color, /camera/depth, /camera/imu   (Frames unter camera_link)
@@ -62,14 +65,22 @@ robot_state_publisher (URDF) ──► TF base_footprint → base_link → Räde
   beendet sich dann ebenfalls.
 - **Anlaufsperre:** Nach Freigabe oder aufgehobener Sperre zählen Fahrbefehle erst nach 1 s Ruhe oder einem Stopp-Befehl.
 - **Fehler an einem Rad schaltet beide ab.** Neu freigeben: `ros2 service call /diff_drive/enable std_srvs/srv/SetBool "data: true"`.
+- **Nav2-Sicherheitsstufen** (`navigation.launch.py safety:=…`): `streng` (Standard) hält Abstand zu Unbekanntem, wird
+  nahe an Hindernissen langsamer und fährt nie rückwärts. `locker` fährt extrem nah an alles, mit vollem Tempo, auch
+  rückwärts, und dreht sich erst am Ziel in die Zielrichtung. Nav2 nutzt vorerst nur das Lidar (Kamera aus).
+- **Sensor-Wächter** (`sensor_guard`, startet mit `navigation.launch.py`): Die Collision Monitore von Nav2 ignorieren unter
+  Humble eine Quelle ohne frische Daten, ohne zu stoppen. Der Wächter sperrt Nav2 vorher über twist_mux (Priorität 30),
+  sobald `/scan`, `/safety/unknown_points` (nur streng, 0,4 s) oder `/odom` (0,3 s) fehlen oder veraltet sind.
+  Tastatur und Web fahren weiter. Läuft der Wächter nicht, ist Nav2 nach 0,5 s gesperrt. Stand:
+  `ros2 topic echo /safety/sensor_status`. Details: [src/slop_navigation/README.md](src/slop_navigation/README.md).
 
 ## Hardware und Geometrie
 
 | | |
 |---|---|
 | Rechner | Jetson Orin, 8 Kerne. EtherCAT-Zyklus (Prozess `ethercat_bus`) auf Kern 7 (SCHED_FIFO 80), USB-Interrupts auf CPU1 |
-| Antrieb | CL57E-4A an `enP8p1s0`, Achse 3 = links (Getriebe 1:7,5), Achse 4 = rechts (1:14, gespiegelt). Schrittmotoren ohne Encoder (Open Loop) |
-| Räder | Ø 7 cm, Spur 24 cm, angetrieben vorn. Schleppräder 34 cm dahinter. Höchstens 10 U/min am Rad → 0,037 m/s, 0,31 rad/s |
+| Antrieb | CL57E-4A an `enP8p1s0`, Achse 3 = links (Getriebe 1:5,18), Achse 4 = rechts (1:13,73, gespiegelt). Schrittmotoren ohne Encoder (Open Loop) |
+| Räder | Ø 7 cm, Spur 24 cm, angetrieben vorn. Schleppräder 34 cm dahinter. Höchstens 50 U/min am Rad → 0,183 m/s, 1,53 rad/s (`max_wheel_rpm` in `diff_drive.yaml`) |
 | `base_footprint` | Boden, Mitte zwischen den angetriebenen Rädern; x vorn, y links, z oben (TF `odom → base_footprint` vom EKF) |
 | Lidar | Livox **Mid-360s** (SDK-Typ 35, eigene Config `MID360s_config.json`), IP `192.168.1.162`; Jetson `192.168.1.50/24` am USB-LAN-Adapter (NetworkManager `livox-mid360`). 4 Scanlinien, ~20 000 Punkte je Scan bei 10 Hz, davon ~18 % Nullpunkte (kein Echo) |
 | Kamera | RealSense D435i, SN 262722070636, USB 3.2. Farbe + Tiefe 640×480 @ 30 Hz, IMU 200 Hz (über den RSUSB-Build, siehe unten) |
@@ -79,8 +90,8 @@ robot_state_publisher (URDF) ──► TF base_footprint → base_link → Räde
 
 | Sensor | Position zu `base_footprint` | Neigung |
 |---|---|---|
-| Lidar `livox_frame` | x 0,03, y 0, z 0,315 m | roll −0,15°, pitch +1,27° (Schwerkraft), yaw nie bestimmt |
-| Kamera `camera_link` | x 0,08, y 0, z 0,15 m (vorn am Roboter, seit 2026-11-05) | **nach dem Umbau neu messen** (`calibrate mount`); in `mounts.yaml` steht noch die alte Lage |
+| Lidar `livox_frame` | x 0,03, y 0, z 0,315 m | roll +0,19°, pitch +1,41° (Schwerkraft, 2026-11-05), yaw nie bestimmt |
+| Kamera `camera_link` | x 0,08, y 0, z 0,15 m (vorn am Roboter, seit 2026-11-05) | roll −0,28°, pitch +2,33° (nach dem Umbau gemessen, 2026-11-05) |
 
 Die Kamera soll Hindernisse und Abgründe vor dem Roboter erkennen; das Lidar sieht den Boden erst ab ca. 2,6 m.
 
@@ -101,7 +112,7 @@ baut in einer leeren Umgebung, nur mit `/opt/ros/humble`, und umgeht so drei Fal
 - `/opt/MVS/lib/aarch64` (Hikrobot-SDK, aus `~/.bashrc` und `~/.profile`) bringt eine alte libusb mit.
   `camera.launch.py` nimmt den Pfad zur Laufzeit aus `LD_LIBRARY_PATH`.
 
-Tests (104, ohne Hardware):
+Tests (161, ohne Hardware):
 
 ```bash
 source install/setup.bash && colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio slop_navigation slop_web && colcon test-result --verbose
@@ -141,7 +152,7 @@ Weitere Build-Optionen in `colcon.meta`: Livox-SDK2 braucht `-DCMAKE_POLICY_VERS
   mit `tools/diff_motor.py jog --revs 10`) und driftet bei Schlupf oder Schrittverlust. Sie geht als `/wheel/odom` (ohne TF)
   in den EKF, zusammen mit dem Livox-Gyro und der LIO-Geschwindigkeit. Weitere Quellen (z. B. Kamera-IMU) kommen als Block in
   [ekf.yaml](src/slop_localization/config/ekf.yaml). Der EKF ist die einzige Quelle für `odom → base_footprint`.
-- **LIO:** Stand, Messwerte und offene Punkte in [src/slop_lio/README.md](src/slop_lio/README.md). Unter Fahrt noch nicht vermessen.
+- **LIO:** Stand, Messwerte und offene Punkte in [src/slop_lio/README.md](src/slop_lio/README.md). Am 2026-11-06 unter Fahrt getestet.
 - **Livox ohne Zeitsynchronisation (kein PTP):** Der Treiber stempelt mit der Empfangszeit des Jetson.
 - Der Livox-Treiber stürzt beim Beenden manchmal ab (exit −11) und ignoriert SIGINT. Harmlos, Reste beendet
   `pkill -9 -x livox_ros_drive`.
@@ -159,7 +170,7 @@ slop-bot_ws/
 ├── stop_all.sh          hängengebliebene Roboter-Prozesse beenden
 ├── colcon.meta          CMake-Optionen je Paket
 ├── STARTBEFEHLE.md      alle Startbefehle
-├── TODO.md              offene Aufgaben (u. a. EtherCAT-Zyklus als eigener Prozess)
+├── TODO.md              offene Aufgaben
 ├── calib/               Kalibrierergebnisse (gyro.yaml, mounts.yaml), siehe calib/README.md
 ├── bags/                Aufzeichnungen (nicht in Git)
 ├── maps/                gespeicherte Karten (slam_toolbox / Nav2)
@@ -170,8 +181,8 @@ slop-bot_ws/
 │   ├── slop_description/ URDF + robot_state_publisher
 │   ├── slop_localization/ EKF (robot_localization)
 │   ├── slop_lio/        FAST-LIO2 + Brücke zu TF und EKF
-│   ├── slop_navigation/ Karte (slam_toolbox), später Nav2
-│   ├── slop_safety/     twist_mux + RustDesk-Fahrsperre
+│   ├── slop_navigation/ Karte, Lokalisierung, Erfahrungskarte, Nav2
+│   ├── slop_safety/     twist_mux, RustDesk-Fahrsperre, Sensor-Wächter
 │   ├── slop_sensors/    Sensortreiber-Launch + Configs
 │   ├── slop_teleop/     Tastatursteuerung
 │   ├── slop_web/        Weboberfläche (Browser, Handy)

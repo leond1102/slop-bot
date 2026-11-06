@@ -7,7 +7,7 @@ find_package(ament_cmake_python REQUIRED)
 # Python-Modul slop_navigation (Relokalisierung, Erfahrungskarte)
 ament_python_install_package(${PROJECT_NAME})
 
-# Launch-Dateien und Parameter (slam_toolbox, AMCL, später Nav2)
+# Launch-Dateien und Parameter (slam_toolbox, AMCL, Nav2 mit den Sicherheitsstufen streng/locker)
 install(DIRECTORY config launch behavior_trees DESTINATION share/${PROJECT_NAME})
 
 # Startskripte (ros2 run slop_navigation <name>)
@@ -19,6 +19,7 @@ if(BUILD_TESTING)
   ament_add_pytest_test(test_experience test/test_experience.py)
   ament_add_pytest_test(test_safety test/test_safety.py)
   ament_add_pytest_test(test_map_extend test/test_map_extend.py)
+  ament_add_pytest_test(test_safety_modes test/test_safety_modes.py)
 endif()
 
 ament_package()

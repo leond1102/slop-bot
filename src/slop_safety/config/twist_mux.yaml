@@ -24,3 +24,7 @@ twist_mux:
         topic: safety/stop          # Aufheben mit "data: false". Ohne Nachricht nicht gesperrt (timeout 0).
         timeout: 0.0
         priority: 100
+      sensors:                      # slop_safety/sensor_guard (startet mit navigation.launch.py): true = eine Quelle
+        topic: safety/sensor_lock   # der Collision Monitore fehlt oder ist veraltet. Node sendet mit 10 Hz. Kommt
+        timeout: 0.5                # 0,5 s nichts (Wächter tot oder nicht gestartet) → gesperrt.
+        priority: 30                # sperrt nur Nav2 (20); Tastatur und Web (50) fahren weiter

@@ -1,8 +1,8 @@
 """Was die Seite starten kann (config/web.yaml) – ohne ROS, damit testbar.
 
-Befehle sind Listen (kein Shell-Text). Platzhalter $map, $name, $experience_costs, $maps_dir werden nur mit geprüften
-Werten ersetzt: map muss eine vorhandene Karte in maps_dir sein, name nur Buchstaben/Ziffern/_/-, experience_costs
-true/false. So kann vom Browser aus nichts anderes ausgeführt werden als hier steht.
+Befehle sind Listen (kein Shell-Text). Platzhalter $map, $name, $experience_costs, $safety, $maps_dir werden nur mit
+geprüften Werten ersetzt: map muss eine vorhandene Karte in maps_dir sein, name nur Buchstaben/Ziffern/_/-, experience_costs
+true/false, safety eine der SAFETY_LEVELS. So kann vom Browser aus nichts anderes ausgeführt werden als hier steht.
 """
 import glob
 import os
@@ -12,6 +12,8 @@ from string import Template
 import yaml
 
 NAME_RE = re.compile(r'^[A-Za-z0-9_-]{1,40}$')
+SAFETY_LEVELS = ('streng', 'locker')            # navigation.launch.py safety:=…, die erste ist der Standard
+SAFETY_RE = re.compile(r'(?:^|\s)safety:=(\S+)')
 
 
 def load(path):
@@ -52,6 +54,10 @@ def params(cfg, raw):
             raise ValueError(f'Karte {m!r} gibt es nicht in {cfg["maps_dir"]}')
         out['map'] = os.path.join(cfg['maps_dir'], m + '.yaml')
     out['experience_costs'] = 'true' if raw.get('experience_costs') in (True, 'true', 1) else 'false'
+    safety = raw.get('safety') or SAFETY_LEVELS[0]
+    if safety not in SAFETY_LEVELS:
+        raise ValueError(f'Sicherheitsstufe {safety!r} gibt es nicht ({" oder ".join(SAFETY_LEVELS)})')
+    out['safety'] = safety
     if 'name' in raw:
         if not isinstance(raw['name'], str) or not NAME_RE.match(raw['name']):
             raise ValueError('Name nur aus Buchstaben, Ziffern, _ und - (höchstens 40 Zeichen)')
@@ -61,6 +67,15 @@ def params(cfg, raw):
                              'Rückfrage)')
         out['name'] = raw['name']
     return out
+
+
+def safety_of(cmdline):
+    """Sicherheitsstufe aus einer Befehlszeile (navigation.launch.py … safety:=locker): ohne Angabe der Standard, bei
+    mehreren die letzte (wie ros2 launch), unbekannter Wert → '?'."""
+    found = SAFETY_RE.findall(cmdline or '')
+    if not found:
+        return SAFETY_LEVELS[0]
+    return found[-1] if found[-1] in SAFETY_LEVELS else '?'
 
 
 def argv(cmd, values):

@@ -8,8 +8,8 @@
   /amcl_pose              geometry_msgs/PoseWithCovStamped Sub  Lokalisierung sicher?
   /safety/unknown_points  sensor_msgs/PointCloud2          Pub  unbekannte Hindernisse (Scan-Frame, Scan-Zeitstempel)
 
-Der zweite Collision Monitor (collision_monitor_dynamic) sieht nur diese Punkte und die Kamera-Hindernisse und hat die
-größeren Zonen; der erste (collision_monitor) sieht alles und hat nur sehr kleine Zonen. Wände passiert der Roboter so eng,
+Der zweite Collision Monitor (collision_monitor_dynamic, nur in der Sicherheitsstufe streng) sieht nur diese Punkte (die
+Kamera ist vorerst aus) und hat die größeren Zonen; der erste (collision_monitor) sieht alles und hat nur sehr kleine Zonen. Wände passiert der Roboter so eng,
 Menschen und Stühle mit Abstand.
 
 Im Zweifel unbekannt: Ohne Karte, ohne TF, bei unsicherer Lokalisierung oder außerhalb der Karte werden ALLE Punkte

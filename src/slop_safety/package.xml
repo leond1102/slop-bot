@@ -3,7 +3,7 @@
 <package format="3">
   <name>slop_safety</name>
   <version>0.1.0</version>
-  <description>Slop-Bot Sicherheit: twist_mux-Konfiguration und Fahrsperre ohne aktive RustDesk-Sitzung</description>
+  <description>Slop-Bot Sicherheit: twist_mux-Konfiguration, Fahrsperre ohne aktive RustDesk-Sitzung und Sensor-Wächter für Nav2</description>
   <maintainer email="leodresel11@gmail.com">Leon</maintainer>
   <license>Apache-2.0</license>
 
@@ -12,6 +12,9 @@
 
   <exec_depend>rclpy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>rosidl_runtime_py</exec_depend>
   <exec_depend>twist_mux</exec_depend>
   <exec_depend>iproute2</exec_depend>
   <exec_depend>ament_index_python</exec_depend>

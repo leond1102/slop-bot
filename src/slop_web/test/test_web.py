@@ -68,10 +68,33 @@ def test_maps_and_params(cfg):
 
 
 @pytest.mark.parametrize('raw', [{'map': '../../etc/passwd'}, {'map': 'gibtsnicht'}, {'name': 'a b'},
-                                 {'name': '$(reboot)'}, {'name': 'x' * 41}, {'name': 5}])
+                                 {'name': '$(reboot)'}, {'name': 'x' * 41}, {'name': 5},
+                                 {'safety': 'aus'}, {'safety': 'locker; reboot'}, {'safety': ['locker']}])
 def test_params_reject_bad_input(cfg, raw):
     with pytest.raises(ValueError):
         webconfig.params(cfg, raw)
+
+
+def test_safety_level(cfg):
+    cmd = ['ros2', 'launch', 'x', 'nav.launch.py', 'safety:=$safety']
+    assert webconfig.argv(cmd, webconfig.params(cfg, {}))[-1] == 'safety:=streng'            # Standard
+    assert webconfig.argv(cmd, webconfig.params(cfg, {'safety': 'locker'}))[-1] == 'safety:=locker'
+    assert webconfig.safety_of('ros2 launch slop_navigation navigation.launch.py map:=/m.yaml safety:=locker') == 'locker'
+    assert webconfig.safety_of('ros2 launch slop_navigation navigation.launch.py map:=/m.yaml') == 'streng'
+    assert webconfig.safety_of('') == 'streng'
+    assert webconfig.safety_of('x safety:=streng safety:=locker') == 'locker'                 # die letzte gilt
+    assert webconfig.safety_of("bash -c 'x safety:=locker'\"'\"'])") == '?'                   # nie Fremdtext anzeigen
+
+
+def test_shipped_config_passes_safety_to_navigation():
+    """Die echte web.yaml: Navigation bekommt die Stufe, und jeder Platzhalter ist ersetzbar."""
+    real = webconfig.load(os.path.join(os.path.dirname(__file__), '..', 'config', 'web.yaml'))
+    nav = next(i for i in real['items'] if i['id'] == 'navigation')
+    assert nav.get('uses_safety') and 'safety:=$safety' in nav['cmd']
+    values = {'map': '/m.yaml', 'experience_costs': 'false', 'safety': 'locker', 'name': 'n', 'maps_dir': '/m'}
+    for item in real['items']:
+        webconfig.argv(item['cmd'], values)
+    assert 'camera' not in next(q for q in real['sequences'] if q['id'] == 'all_navigation')['steps']
 
 
 def test_action_needs_name(cfg):

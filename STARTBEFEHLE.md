@@ -220,7 +220,7 @@ ros2 run slop_teleop keyboard_teleop
 
 ## Andere Startpose / andere Karte (sonst in RViz "2D Pose Estimate")
 ros2 launch slop_navigation localization.launch.py x:=2.0 y:=-1.0 yaw:=1.57
-ros2 launch slop_navigation localization.launch.py map:=$HOME/slop-bot_ws/maps/office.yaml
+ros2 launch slop_navigation localization.launch.py map:=$HOME/slop-bot_ws/maps/office-4.yaml
 
 ## Roboter versetzt / Pose falsch: relocalize sucht von selbst (Scan passt 3 s lang unter 60 %); von Hand sofort suchen
 ros2 service call /relocalize std_srvs/srv/Trigger
@@ -240,13 +240,15 @@ ros2 run tf2_ros tf2_echo map base_footprint
 
 # 7. Navigation (Nav2)
 
-## Navigieren (3 Terminals: Antrieb + Modell + EKF, Kamera mit Hinderniserkennung, Lokalisierung + Nav2 + RViz; Ziel in RViz mit "Nav2 Goal", Tastatur in einem 4. Terminal hat Vorrang)
-## Details, Costmaps und Sicherheit: src/slop_navigation/README.md
+## Navigieren (2 Terminals: Antrieb + Modell + EKF, Lokalisierung + Nav2 + RViz; Ziel in RViz mit "Nav2 Goal", Tastatur in einem 3. Terminal hat Vorrang)
+## Vorerst nur mit dem Lidar (Kamera nicht nötig). Details, Costmaps und Sicherheit: src/slop_navigation/README.md
 ros2 run slop_base with_netcaps ros2 launch slop_bringup bringup.launch.py
 
-ros2 launch slop_sensors camera.launch.py
-
 ros2 launch slop_navigation navigation.launch.py
+
+## Sicherheitsstufe locker: extrem nah an alles, volles Tempo, rückwärts erlaubt, dreht sich erst am Ziel in die Zielrichtung (Standard: safety:=streng)
+## Auf der Webseite: Auswahl „Sicherheit“ neben der Karte, dann Navigation starten
+ros2 launch slop_navigation navigation.launch.py safety:=locker
 
 ## Ziel abbrechen (oder im Nav2-Panel in RViz "Cancel"); Hand-Stopp stoppt auch Nav2
 ros2 service call /navigate_to_pose/_action/cancel_goal action_msgs/srv/CancelGoal "{}"
@@ -262,6 +264,10 @@ ros2 topic echo /polygon_stop --once
 ## Im Navigations-Terminal: "Sicherheitsfeld: Karte genutzt" = normal; "alle Punkte gelten als unbekannt" = vorsichtig
 ## (keine Karte / Lokalisierung unsicher), dann gelten die größeren Zonen auch für Wände
 ros2 topic hz /safety/unknown_points
+
+## Sensor-Wächter (startet mit navigation.launch.py): "frei" oder "gesperrt: /scan seit 0.5 s still" usw.
+## Gesperrt = Nav2 steht, Tastatur und Web fahren weiter
+ros2 topic echo /safety/sensor_status
 
 ## Nicht den "Reset"-Knopf im Nav2-Panel benutzen: Abbrechen mit "Cancel", Neustart mit Ctrl-C und neu starten
 
@@ -291,8 +297,8 @@ cd ~/slop-bot_ws && ./colcon_build.sh && source install/setup.bash
 ## Einzelne Pakete bauen
 ./colcon_build.sh --packages-select slop_base slop_safety slop_teleop slop_sensors slop_description slop_localization slop_bringup slop_calibration slop_lio slop_navigation fast_lio
 
-## Tests (ohne Hardware, 104 Stück)
-colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio slop_navigation && colcon test-result --verbose
+## Tests (ohne Hardware, 161 Stück)
+colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio slop_navigation slop_web && colcon test-result --verbose
 
 ## Nur Antrieb (Busprozess ethercat_bus + diff_drive_node; Zyklusstatistik steht im Log von ethercat_bus)
 ros2 run slop_base with_netcaps ros2 launch slop_base diff_drive.launch.py

@@ -1,6 +1,7 @@
 # Slop-Bot Weboberfläche: was die Seite starten darf. Befehle wie in STARTBEFEHLE.md, als Liste (kein Shell-Text).
-# Platzhalter: $map (Karte aus maps_dir, im Browser wählbar), $experience_costs (true/false), $name (Kartenname),
-# $maps_dir. Der Browser kann NUR diese Einträge auslösen.
+# Platzhalter: $map (Karte aus maps_dir, im Browser wählbar), $experience_costs (true/false), $safety (streng/locker,
+# Sicherheitsstufe von Nav2), $name (Kartenname), $maps_dir. Der Browser kann NUR diese Einträge auslösen.
+# uses_safety: true = die Seite zeigt an, in welcher Sicherheitsstufe der Eintrag läuft (aus safety:= in der Befehlszeile).
 #
 # items      einzelne Starts; conflicts = darf nicht gleichzeitig laufen (z. B. zwei Lidar-Treiber)
 #            detect = Teil der Befehlszeile, an dem ein im Terminal gestarteter Prozess erkannt wird
@@ -61,10 +62,12 @@ items:
 
   - id: navigation
     label: Navigation (Nav2) + Lokalisierung + RViz
-    hint: Ziel in RViz mit „Nav2 Goal“
-    cmd: [ros2, launch, slop_navigation, navigation.launch.py, 'map:=$map', 'experience_costs:=$experience_costs']
+    hint: Ziel in RViz mit „Nav2 Goal“. Sicherheitsstufe oben wählen; wechseln = stoppen und neu starten
+    cmd: [ros2, launch, slop_navigation, navigation.launch.py, 'map:=$map', 'experience_costs:=$experience_costs',
+          'safety:=$safety']
     uses_map: true
     uses_experience_costs: true
+    uses_safety: true
     detect: navigation.launch.py
     conflicts: [localization, mapping, extend]
     ready: /scan
@@ -95,7 +98,7 @@ items:
 sequences:
   - id: all_navigation
     label: Navigation komplett
-    steps: [bringup, camera, navigation]
+    steps: [bringup, navigation]       # Nav2 nutzt vorerst nur das Lidar, die Kamera wird nicht gebraucht
   - id: all_localization
     label: Lokalisieren komplett
     steps: [bringup, localization]

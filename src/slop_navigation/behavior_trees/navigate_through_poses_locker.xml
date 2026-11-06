@@ -1,0 +1,49 @@
+<!--
+  Slop-Bot, Sicherheitsstufe locker (navigation.launch.py safety:=locker): wie navigate_through_poses.xml, aber in zwei Schritten,
+  weil RPP unter Humble nicht zugleich rückwärts fahren und auf der Stelle drehen kann:
+    1. Hinfahren (Pipeline mit Neuplanung): Controller FollowPath (darf rückwärts, dreht nicht auf der Stelle),
+       Goal-Checker position_goal_checker (nur die Position zählt).
+    2. Erst danach, außerhalb der Pipeline (sonst stieße sie Schritt 1 neu an und unterbräche das Drehen):
+       Controller RotateToGoal (dreht auf der Stelle in die Zielrichtung), Goal-Checker general_goal_checker (mit Richtung).
+       Kommt währenddessen ein neues Ziel, bricht der Schritt ab und der Baum beginnt mit dem neuen Ziel von vorn.
+  Recovery wie in streng: Costmaps leeren, 5 s warten (kein BackUp, kein Spin).
+-->
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="6" name="NavigateRecovery">
+      <Sequence name="DriveThenTurn">
+        <PipelineSequence name="NavigateWithReplanning">
+          <RateController hz="0.333">
+            <RecoveryNode number_of_retries="1" name="ComputePathThroughPoses">
+              <ReactiveSequence>
+                <RemovePassedGoals input_goals="{goals}" output_goals="{goals}" radius="0.7"/>
+                <ComputePathThroughPoses goals="{goals}" path="{path}" planner_id="GridBased"/>
+              </ReactiveSequence>
+              <ClearEntireCostmap name="ClearGlobalCostmap-Context" service_name="global_costmap/clear_entirely_global_costmap"/>
+            </RecoveryNode>
+          </RateController>
+          <RecoveryNode number_of_retries="1" name="FollowPath">
+            <FollowPath path="{path}" controller_id="FollowPath" goal_checker_id="position_goal_checker"/>
+            <ClearEntireCostmap name="ClearLocalCostmap-Context" service_name="local_costmap/clear_entirely_local_costmap"/>
+          </RecoveryNode>
+        </PipelineSequence>
+        <ReactiveSequence name="TurnToGoalHeading">
+          <Inverter>
+            <GoalUpdated/>
+          </Inverter>
+          <FollowPath name="TurnToGoal" path="{path}" controller_id="RotateToGoal" goal_checker_id="general_goal_checker"/>
+        </ReactiveSequence>
+      </Sequence>
+      <ReactiveFallback name="RecoveryFallback">
+        <GoalUpdated/>
+        <RoundRobin name="RecoveryActions">
+          <Sequence name="ClearingActions">
+            <ClearEntireCostmap name="ClearLocalCostmap-Subtree" service_name="local_costmap/clear_entirely_local_costmap"/>
+            <ClearEntireCostmap name="ClearGlobalCostmap-Subtree" service_name="global_costmap/clear_entirely_global_costmap"/>
+          </Sequence>
+          <Wait wait_duration="5"/>
+        </RoundRobin>
+      </ReactiveFallback>
+    </RecoveryNode>
+  </BehaviorTree>
+</root>

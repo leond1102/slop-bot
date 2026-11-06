@@ -44,6 +44,12 @@ journalctl --user -u slop-web -f       # Ausgabe ansehen
 
 - **Abfolgen** („Navigation komplett“ usw.) starten die Schritte nacheinander und warten jeweils, bis Daten kommen
   (Antrieb: `/wheel/odom`, Kamera: `/camera/obstacles`, Lidar: `/scan`). Was schon läuft, wird übersprungen.
+  „Navigation komplett“ startet vorerst ohne Kamera (Nav2 nutzt nur das Lidar).
+- **Sicherheitsstufe** (Auswahl „Sicherheit“ neben der Karte): `streng` (Standard nach jedem Laden der Seite) oder
+  `locker` (extrem nah an alles, volles Tempo, rückwärts erlaubt, dreht sich erst am Ziel in die Zielrichtung; Details in
+  `slop_navigation/README.md`). Gilt beim Start der Navigation, mit `locker` fragt die Seite vorher nach. Wechseln =
+  Navigation stoppen und neu starten. Die laufende Stufe steht oben („Nav2 locker“, gelb) und neben der Navigation unter
+  „Einzeln“ – auch, wenn die Navigation im Terminal gestartet wurde (aus `safety:=` in dessen Befehlszeile).
 - **Karte erweitern:** Karte wählen → „Karte erweitern komplett“ (Antrieb + slam_toolbox; die Startpose wird beim
   Start am Scan gesucht, Roboter dabei stillstehen lassen; vorher Navigation stoppen) → neue Bereiche abfahren → Name eingeben → „Erweiterte Karte
   speichern“ (speichert unter dem neuen Namen, überträgt Erfahrung und letzte Pose). Vorhandene Kartennamen werden
@@ -71,7 +77,7 @@ journalctl --user -u slop-web -f       # Ausgabe ansehen
 - **RustDesk-Fahrsperre bleibt:** Ohne RustDesk-Sitzung fährt der Roboter auch von der Seite aus nicht (Anzeige
   „Fahrsperre: keine RustDesk-Sitzung“).
 - Der Browser kann nur auslösen, was in `config/web.yaml` steht. Karten müssen in `maps/` existieren, Kartennamen nur
-  aus Buchstaben, Ziffern, `_` und `-`. Websockets von fremden Seiten werden abgewiesen (Origin-Prüfung).
+  aus Buchstaben, Ziffern, `_` und `-`, die Sicherheitsstufe nur `streng` oder `locker`. Websockets von fremden Seiten werden abgewiesen (Origin-Prüfung).
 
 ## DDS-Einstellungen
 
@@ -99,4 +105,7 @@ Aktionen. Danach neu bauen und den Webserver neu starten.
   der Webserver war aus einem Terminal mit alten UDP-Testeinstellungen gestartet worden. Seitdem legt `web.yaml` die
   DDS-Einstellungen fest; nachgestellt (Webserver mit den alten Einstellungen, Antrieb-Attrappe): Seite sieht den
   Antrieb, ein Knoten aus einem normalen Terminal empfängt die Fahrbefehle.
-- **Noch nicht getestet:** Fahren am Roboter über die Seite.
+- 2026-11-06: Fahren am Roboter über die Seite getestet.
+- 2026-11-06 Sicherheitsstufe (Testserver Port 8091, Domäne 84, Attrappe statt Nav2): Start mit `locker` → läuft,
+  Anzeige „locker“; ungültige Stufe abgelehnt; Abfolge ohne Angabe → `streng`; im Terminal gestartete Navigation mit
+  `safety:=locker` erkannt. JavaScript per `gjs` auf Syntax geprüft, die Seite selbst nicht im Browser angesehen.

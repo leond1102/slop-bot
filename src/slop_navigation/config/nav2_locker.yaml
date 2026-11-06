@@ -1,0 +1,95 @@
+# Sicherheitsstufe „locker“ (navigation.launch.py safety:=locker): wird NACH nav2.yaml geladen und überschreibt nur, was
+# hier steht. Extrem nah an alles heran (bekannt oder unbekannt, egal), volles Tempo neben Hindernissen, rückwärts erlaubt.
+# Die Launch startet dazu collision_monitor_dynamic (B) und unknown_obstacles NICHT, A bekommt direkt cmd_vel_smoothed,
+# und bt_navigator bekommt die Bäume behavior_trees/*_locker.xml (erst hinfahren, dann drehen).
+#
+# Physik: Von 0,18 m/s braucht der Roboter ca. 10 cm bis zum Stand (Rampe ≈ 0,2 m/s² + 0,15 s Reaktion). In Fahrtrichtung
+# (vorwärts wie rückwärts) bremst ihn deshalb die Vorausschau ab ca. 11 cm vor dem Hindernis ab und hält ihn ~1 cm davor
+# an. Seitlich darf er mit vollem Tempo 1 cm an etwas vorbei. Unter 0,15 m Höhe sieht er nichts (Kamera aus), hinten wie vorn.
+#
+# Humble-RPP: Rückwärts (allow_reversing) geht nur ohne Drehen auf der Stelle (use_rotate_to_heading), sonst schaltet RPP
+# das Rückwärtsfahren still ab. Deshalb zwei Schritte (Verhaltensbäume behavior_trees/*_locker.xml):
+#   1. FollowPath fährt hin – rückwärts, wenn der Weg hinter dem Roboter liegt, Bögen statt Wenden. Fertig, sobald die
+#      Position stimmt (position_goal_checker).
+#   2. RotateToGoal dreht auf der Stelle in die Zielrichtung (general_goal_checker, ±0,25 rad wie in streng).
+
+controller_server:
+  ros__parameters:
+    controller_plugins: ["FollowPath", "RotateToGoal"]
+    goal_checker_plugins: ["general_goal_checker", "position_goal_checker"]   # Bäume nennen den Checker immer ausdrücklich
+    general_goal_checker:                # Schritt 2: Position und Richtung
+      xy_goal_tolerance: 0.2             # etwas mehr als Schritt 1, damit RPP sicher „am Ziel“ ist und nur noch dreht
+    position_goal_checker:               # Schritt 1: nur die Position
+      plugin: "nav2_controller::SimpleGoalChecker"
+      stateful: True
+      xy_goal_tolerance: 0.15
+      yaw_goal_tolerance: 3.15
+    FollowPath:
+      allow_reversing: true              # Punkt der Vorausschau hinter dem Roboter → rückwärts
+      use_rotate_to_heading: false       # muss aus sein, sonst ignoriert RPP allow_reversing (Humble)
+      use_cost_regulated_linear_velocity_scaling: false   # neben Hindernissen nicht langsamer
+      inflation_cost_scaling_factor: 20.0                 # wie in den Costmaps
+      # use_collision_detection bleibt an: RPP fährt nie in eine belegte Zelle
+    # Schritt 2: am Ziel auf der Stelle in die Zielrichtung drehen (wie FollowPath in streng; steht der Roboter weiter weg
+    # als 0,2 m, fährt er vorwärts dorthin)
+    RotateToGoal:
+      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+      desired_linear_vel: 0.15
+      lookahead_dist: 0.5
+      min_lookahead_dist: 0.3
+      max_lookahead_dist: 0.9
+      lookahead_time: 1.5
+      use_velocity_scaled_lookahead_dist: false
+      rotate_to_heading_angular_vel: 0.5 # rad/s; das Heck schwenkt dabei mit 0,4 m Radius
+      use_rotate_to_heading: true
+      rotate_to_heading_min_angle: 0.6
+      max_angular_accel: 1.0
+      allow_reversing: false
+      transform_tolerance: 0.3
+      min_approach_linear_velocity: 0.03
+      approach_velocity_scaling_dist: 0.5
+      use_collision_detection: true      # prüft auch das Drehen mit dem Footprint gegen die lokale Costmap
+      max_allowed_time_to_collision_up_to_carrot: 1.5
+      use_regulated_linear_velocity_scaling: true
+      use_cost_regulated_linear_velocity_scaling: false
+      regulated_linear_scaling_min_radius: 0.9
+      regulated_linear_scaling_min_speed: 0.05
+      cost_scaling_dist: 0.4
+      cost_scaling_gain: 1.0
+      inflation_cost_scaling_factor: 20.0
+      max_robot_pose_search_dist: 10.0
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      footprint_padding: 0.01            # 1 cm (streng 2 cm); daraus auch die Vorausschau der Collision Monitore
+      inflation_layer:
+        cost_scaling_factor: 20.0        # Kosten fallen wenige cm neben Hindernissen ab (streng 4): Wege dürfen eng vorbei
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      footprint_padding: 0.01
+      inflation_layer:
+        cost_scaling_factor: 20.0        # Planer nimmt den kurzen Weg dicht an der Wand statt der Gangmitte
+
+velocity_smoother:
+  ros__parameters:
+    min_velocity: [-0.18, 0.0, -0.6]     # rückwärts bis zum vollen Tempo (streng: x = 0)
+
+# ---- nur A, ohne Langsam-Zone
+collision_monitor:
+  ros__parameters:
+    cmd_vel_in_topic: "cmd_vel_smoothed" # B läuft nicht
+    polygons: ["LooseStop", "FootprintApproach"]
+    # Stopp: 1 cm um den Körper (vorn, seitlich, hinten), gegen alles, was beim Drehen hineinschwenkt
+    LooseStop:
+      type: "polygon"
+      points: [0.11, 0.17, 0.11, -0.17, -0.41, -0.17, -0.41, 0.17]
+      action_type: "stop"
+      max_points: 2
+      visualize: True
+      polygon_pub_topic: "polygon_stop"
+      enabled: True
+    # FootprintApproach bleibt wie in nav2.yaml (0,6 s bis zur Berührung): kürzer schafft der Antrieb nicht, er käme
+    # frontal nicht mehr vor dem Hindernis zum Stehen. Gilt auch rückwärts.
