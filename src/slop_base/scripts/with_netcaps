@@ -26,6 +26,19 @@ if [ -n "$VIRTUAL_ENV" ]; then
     P=$(echo "$PATH" | tr ':' '\n' | grep -v -x "$VIRTUAL_ENV/bin" | paste -sd:)
 fi
 
+# Ohne Passwort (z. B. Start aus der Weboberfläche slop_web): Ist der Root-Helfer /usr/local/sbin/slop-netcaps
+# installiert und per sudo-Regel ohne Passwort erlaubt (Einrichten: siehe scripts/slop-netcaps), übernimmt er
+# Interrupts und Rechte. Sonst wie bisher mit sudo-Passwort im Terminal.
+HELPER=/usr/local/sbin/slop-netcaps
+USE_HELPER=0
+if [ -x "$HELPER" ] && sudo -n -l "$HELPER" >/dev/null 2>&1; then
+    USE_HELPER=1
+elif ! [ -t 0 ]; then
+    echo "with_netcaps: kein Terminal für das sudo-Passwort und kein Helfer $HELPER –" \
+         "einmalig einrichten, siehe src/slop_base/scripts/slop-netcaps"
+fi
+IRQ_PAIRS=()
+
 # Interrupts verteilen (gilt bis zum Neustart; irqbalance darf nicht laufen, es würde sie wieder verteilen).
 #
 # 1. EtherCAT-Karte auf den Echtzeit-Kern (RT_CPU, gleicher Kern wie rt_cpu in diff_drive.yaml).
@@ -38,6 +51,10 @@ ETHERCAT_IF="${ETHERCAT_IF:-enP8p1s0}"
 RT_CPU="${RT_CPU:-7}"
 USB_IRQ_CPU="${USB_IRQ_CPU:-1}"
 set_irq_cpu() {   # $1 = IRQ, $2 = Kern, $3 = Name fürs Log
+    if [ "$USE_HELPER" = 1 ]; then
+        IRQ_PAIRS+=("$1:$2")          # setzt der Helfer (meldet selbst, ob es geklappt hat)
+        return 0
+    fi
     if sudo sh -c "echo $2 > /proc/irq/$1/smp_affinity_list" 2>/dev/null; then
         echo "with_netcaps: Interrupt $1 ($3) → CPU $2"
         return 0
@@ -59,6 +76,11 @@ fi
 
 # sudo verwirft PATH, LD_LIBRARY_PATH und HOME, deshalb ausdrücklich über env weitergeben.
 # sys_nice: SCHED_FIFO für den EtherCAT-Zyklus und negatives nice (diff_drive.yaml: rt_priority, main_nice)
+if [ "$USE_HELPER" = 1 ]; then
+    exec sudo -n -E "$HELPER" "${IRQ_PAIRS[@]}" -- \
+        env "HOME=$HOME" "PATH=$P" "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}" \
+            "PYTHONPATH=$SITE${PYTHONPATH:+:$PYTHONPATH}" "$@"
+fi
 exec sudo -E setpriv --reuid="$(id -u)" --regid="$(id -g)" --init-groups \
     --inh-caps=+net_raw,+net_admin,+sys_nice --ambient-caps=+net_raw,+net_admin,+sys_nice -- \
     env "HOME=$HOME" "PATH=$P" "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}" \

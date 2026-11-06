@@ -20,6 +20,10 @@ ros2 topic pub --once /safety/stop std_msgs/msg/Bool "data: false"
 ros2 service call /diff_drive/enable std_srvs/srv/SetBool "data: false"
 ros2 service call /diff_drive/enable std_srvs/srv/SetBool "data: true"
 
+## Weboberfläche: alles per Knopf starten, fahren, Notaus (Browser; Handy: …/handy). Einrichten: src/slop_web/README.md
+ros2 run slop_web web
+## dann im Browser: http://100.99.71.126:8080 (Tailnet) oder http://127.0.0.1:8080 (am Jetson), Handy: http://100.99.71.126:8080/handy
+
 # 2. RViz
 
 ## Nur das Modell, ohne Hardware (1 Terminal, Räder per Schieberegler)

@@ -1,0 +1,53 @@
+#!/bin/bash
+# Root-Helfer für with_netcaps: Antrieb ohne sudo-Passwort starten (z. B. aus der Weboberfläche slop_web).
+#
+# Tut als root nur zwei Dinge und startet den Befehl dann wieder als aufrufender Nutzer:
+#   1. Interrupts auf Kerne legen: Argumente IRQ:KERN (nur Zahlen, sonst Abbruch)
+#   2. setpriv → Nutzer (SUDO_UID) mit CAP_NET_RAW + CAP_NET_ADMIN + CAP_SYS_NICE
+# Damit erlaubt die sudo-Regel KEIN beliebiges root, nur „eigenen Befehl mit diesen drei Rechten starten“.
+#
+# Einrichten (einmalig; die Datei muss root gehören und darf für den Nutzer nicht schreibbar sein,
+# sonst könnte er sie ändern und wäre root – deshalb nach /usr/local/sbin kopieren, nicht aus dem Workspace starten):
+#   sudo install -o root -g root -m 0755 ~/slop-bot_ws/src/slop_base/scripts/slop-netcaps /usr/local/sbin/slop-netcaps
+#   echo 'jetson ALL=(root) NOPASSWD:SETENV: /usr/local/sbin/slop-netcaps' | sudo tee /etc/sudoers.d/slop-netcaps
+#   sudo chmod 0440 /etc/sudoers.d/slop-netcaps && sudo visudo -c
+# Nach Änderungen an dieser Datei den install-Befehl wiederholen. Entfernen: beide Dateien löschen.
+#
+# Aufruf (macht with_netcaps selbst): sudo -n -E /usr/local/sbin/slop-netcaps [IRQ:KERN ...] -- befehl [argumente...]
+set -eu
+PATH=/usr/sbin:/usr/bin:/sbin:/bin          # als root nichts aus der Nutzerumgebung ausführen
+
+if [ "$(id -u)" != 0 ]; then
+    echo "slop-netcaps: nur über sudo aufrufen" >&2
+    exit 1
+fi
+uid="${SUDO_UID:-}"
+gid="${SUDO_GID:-}"
+if ! [[ "$uid" =~ ^[1-9][0-9]*$ && "$gid" =~ ^[0-9]+$ ]]; then
+    echo "slop-netcaps: SUDO_UID/SUDO_GID fehlen oder sind root" >&2
+    exit 1
+fi
+
+while [ $# -gt 0 ] && [ "$1" != "--" ]; do
+    if [[ "$1" =~ ^([0-9]{1,5}):([0-9]{1,3})$ ]]; then
+        irq="${BASH_REMATCH[1]}"
+        cpu="${BASH_REMATCH[2]}"
+        if [ -e "/proc/irq/$irq/smp_affinity_list" ] && { echo "$cpu" > "/proc/irq/$irq/smp_affinity_list"; } 2>/dev/null; then
+            echo "with_netcaps: Interrupt $irq → CPU $cpu"
+        else
+            echo "with_netcaps: Interrupt $irq nicht verschoben (PCIe-MSIs bleiben auf dem Orin auf CPU0)"
+        fi
+    else
+        echo "slop-netcaps: ungültiges Argument: $1 (erwartet IRQ:KERN)" >&2
+        exit 1
+    fi
+    shift
+done
+if [ "${1:-}" != "--" ] || [ $# -lt 2 ]; then
+    echo "Aufruf: slop-netcaps [IRQ:KERN ...] -- befehl [argumente...]" >&2
+    exit 1
+fi
+shift
+
+exec setpriv --reuid="$uid" --regid="$gid" --init-groups \
+    --inh-caps=+net_raw,+net_admin,+sys_nice --ambient-caps=+net_raw,+net_admin,+sys_nice -- "$@"

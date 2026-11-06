@@ -22,6 +22,7 @@ Offene Aufgaben: [TODO.md](TODO.md)
 | [slop_navigation](src/slop_navigation) | Karte aufnehmen mit `slam_toolbox` (`mapping.launch.py`), lokalisieren mit `map_server` + AMCL (`localization.launch.py`) und `relocalize` (findet den Roboter nach dem Versetzen selbst wieder), navigieren mit Nav2 (`navigation.launch.py`: Costmaps aus Lidar und Kamera, Collision Monitor, nie rückwärts); Anleitung im README |
 | [slop_safety](src/slop_safety) | `twist_mux`-Konfiguration und `remote_guard`: Fahrsperre, solange keine RustDesk-Sitzung besteht |
 | [slop_teleop](src/slop_teleop) | `keyboard_teleop`: Tastatursteuerung mit Totmann (Taste halten = fahren) |
+| [slop_web](src/slop_web) | Weboberfläche: Programme starten/stoppen, Fahren mit Totmann, Notaus – im Browser und am Handy (Tailnet) |
 | [slop_description](src/slop_description) | URDF/xacro des Roboters (Räder, Schleppräder, Livox, RealSense) und `description.launch.py` mit `robot_state_publisher`. Radmaße, Spur und Gelenknamen liest es aus `diff_drive.yaml` |
 | [slop_sensors](src/slop_sensors) | Launch-Dateien und Configs für Livox Mid-360s und RealSense D435i; `livox_to_cloud` (Livox → PointCloud2) und Einstellungen für den 2D-Scan `/scan` (`pointcloud_to_laserscan`); `depth_obstacles` (Hindernisse aus dem Tiefenbild der RealSense) |
 | `src/third_party` (Git-Submodule) | `Livox-SDK2`, `livox_ros_driver2`, `realsense-ros` 4.58.4, `FAST_LIO` (Branch ROS2, mit `src/third_party/patches/fast_lio.patch`) |
@@ -103,7 +104,7 @@ baut in einer leeren Umgebung, nur mit `/opt/ros/humble`, und umgeht so drei Fal
 Tests (104, ohne Hardware):
 
 ```bash
-source install/setup.bash && colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio slop_navigation && colcon test-result --verbose
+source install/setup.bash && colcon test --packages-select slop_base slop_safety slop_teleop slop_localization slop_calibration slop_lio slop_navigation slop_web && colcon test-result --verbose
 ```
 
 ## Neu aufsetzen
@@ -173,6 +174,7 @@ slop-bot_ws/
 │   ├── slop_safety/     twist_mux + RustDesk-Fahrsperre
 │   ├── slop_sensors/    Sensortreiber-Launch + Configs
 │   ├── slop_teleop/     Tastatursteuerung
+│   ├── slop_web/        Weboberfläche (Browser, Handy)
 │   └── third_party/     Livox-SDK2, livox_ros_driver2, realsense-ros, FAST_LIO (Submodule), patches/
 └── tools/
     ├── diff_motor.py    Motortest ohne ROS

@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#16181d">
+<title>Slop-Bot</title>
+<style>
+  :root {
+    --bg: #f3f4f6; --card: #ffffff; --text: #16181d; --muted: #6b7280; --line: #e2e5ea;
+    --ok: #15803d; --ok-bg: #dcfce7; --warn: #b45309; --warn-bg: #fef3c7; --bad: #b91c1c; --bad-bg: #fee2e2;
+    --info: #1d4ed8; --info-bg: #dbeafe; --btn: #e9ecf1; --btn-hover: #dde1e8; --accent: #1f2937;
+    --stop: #dc2626; --stop-dark: #991b1b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101216; --card: #191c22; --text: #e8eaed; --muted: #9aa1ab; --line: #2a2e36;
+      --ok: #4ade80; --ok-bg: #12301d; --warn: #fbbf24; --warn-bg: #3a2c0b; --bad: #f87171; --bad-bg: #3b1515;
+      --info: #93c5fd; --info-bg: #142640; --btn: #262a33; --btn-hover: #30353f; --accent: #e8eaed;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  button, select, input { font: inherit; color: inherit; }
+  button { background: var(--btn); border: 1px solid var(--line); border-radius: 8px; padding: 7px 12px;
+    cursor: pointer; }
+  button:hover:not(:disabled) { background: var(--btn-hover); }
+  button:disabled { opacity: .45; cursor: default; }
+  button.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  select, input[type=text] { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+
+  header { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    padding: 10px 16px; background: var(--card); border-bottom: 1px solid var(--line); }
+  header h1 { font-size: 18px; margin: 0 8px 0 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+  .chip { padding: 3px 9px; border-radius: 999px; font-size: 13px; background: var(--btn); color: var(--muted);
+    white-space: nowrap; }
+  .chip.ok { background: var(--ok-bg); color: var(--ok); }
+  .chip.warn { background: var(--warn-bg); color: var(--warn); }
+  .chip.bad { background: var(--bad-bg); color: var(--bad); }
+  .chip.info { background: var(--info-bg); color: var(--info); }
+
+  .estop { background: var(--stop); color: #fff; border: 3px solid var(--stop-dark); font-weight: 800;
+    letter-spacing: .06em; border-radius: 12px; padding: 10px 22px; font-size: 17px;
+    box-shadow: 0 2px 0 var(--stop-dark); }
+  .estop:hover:not(:disabled) { background: #ef4444; }
+  .estop:active { transform: translateY(2px); box-shadow: none; }
+  .estop.active { animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { background: var(--stop-dark); } }
+
+  main { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr); gap: 16px; padding: 16px;
+    max-width: 1300px; margin: 0 auto; }
+  .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .card h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .hint { color: var(--muted); font-size: 13px; }
+  label.inline { display: inline-flex; align-items: center; gap: 6px; }
+
+  .seqs { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-top: 10px; }
+  .seqs button { padding: 12px; font-weight: 600; }
+  .seqs .sub { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+
+  .items { display: flex; flex-direction: column; }
+  .item { display: grid; grid-template-columns: 1fr auto auto; gap: 4px 10px; align-items: center; padding: 10px 0;
+    border-top: 1px solid var(--line); }
+  .item:first-child { border-top: 0; }
+  .item .name { font-weight: 600; }
+  .item .last { grid-column: 1 / -1; font: 12px/1.3 ui-monospace, monospace; color: var(--muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .badge { font-size: 12px; padding: 2px 8px; border-radius: 999px; background: var(--btn); color: var(--muted); }
+  .badge.läuft { background: var(--ok-bg); color: var(--ok); }
+  .badge.stoppt { background: var(--warn-bg); color: var(--warn); }
+  .badge.extern { background: var(--info-bg); color: var(--info); }
+  .badge.beendet { background: var(--bad-bg); color: var(--bad); }
+  .item .btns { display: flex; gap: 6px; }
+
+  .actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
+  .mapsave { display: flex; gap: 6px; grid-column: 1 / -1; }
+  .mapsave input { flex: 1; min-width: 0; }
+
+  .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 330px;
+    margin: 4px auto 12px; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .pad button { aspect-ratio: 1; font-size: 30px; border-radius: 14px; padding: 0; touch-action: none;
+    -webkit-touch-callout: none; }
+  .pad button.on { background: var(--accent); color: var(--bg); }
+  .pad .blank { visibility: hidden; }
+  .speed { display: flex; align-items: center; gap: 10px; }
+  .speed input { flex: 1; }
+  .kbd { font: 12px ui-monospace, monospace; background: var(--btn); border: 1px solid var(--line);
+    border-radius: 4px; padding: 0 5px; }
+  .drivestate { margin: 6px 0 0; font-size: 14px; min-height: 1.4em; }
+
+  #toasts { position: fixed; right: 16px; bottom: 16px; z-index: 20; display: flex; flex-direction: column;
+    gap: 8px; max-width: min(460px, calc(100vw - 32px)); }
+  .toast { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--info);
+    border-radius: 8px; padding: 8px 12px; box-shadow: 0 4px 14px rgba(0,0,0,.15); font-size: 14px;
+    word-break: break-word; }
+  .toast.error { border-left-color: var(--bad); }
+
+  dialog { width: min(1000px, calc(100vw - 32px)); max-height: 85vh; border: 1px solid var(--line);
+    border-radius: 12px; background: var(--card); color: var(--text); padding: 0; }
+  dialog::backdrop { background: rgba(0,0,0,.4); }
+  dialog .head { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px;
+    border-bottom: 1px solid var(--line); }
+  dialog pre { margin: 0; padding: 12px 14px; max-height: 70vh; overflow: auto;
+    font: 12px/1.35 ui-monospace, monospace; white-space: pre-wrap; word-break: break-all; }
+
+  /* ---------------- Handy: nur Fahren und Notaus */
+  .handy-only { display: none; }
+  body[data-mode=handy] .desktop-only { display: none !important; }
+  body[data-mode=handy] .handy-only { display: block; }
+  body[data-mode=handy] main { grid-template-columns: 1fr; padding: 12px; gap: 12px; }
+  body[data-mode=handy] header { padding: 8px 12px; }
+  body[data-mode=handy] header h1 { font-size: 16px; }
+  body[data-mode=handy] .bigstop { display: block; width: 100%; font-size: 26px; padding: 22px; }
+  body[data-mode=handy] .pad { max-width: 420px; gap: 10px; }
+  body[data-mode=handy] .pad button { font-size: 38px; }
+  @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-mode="desktop">
+<header>
+  <h1>Slop-Bot</h1>
+  <div class="chips" id="chips"><span class="chip bad">nicht verbunden</span></div>
+  <button class="estop desktop-only" id="estopTop" title="Leertaste">NOTAUS</button>
+  <button class="desktop-only" id="releaseTop" hidden>Notaus aufheben</button>
+</header>
+
+<main>
+  <div class="col desktop-only">
+    <section class="card">
+      <h2>Starten</h2>
+      <div class="row">
+        <label class="inline">Karte <select id="map"></select></label>
+        <label class="inline"><input type="checkbox" id="costs"> weiche Kosten (Erfahrungskarte)</label>
+      </div>
+      <div class="seqs" id="seqs"></div>
+      <div class="row" style="margin-top:10px">
+        <button id="stopAll">Alles stoppen</button>
+        <span class="hint">Stoppen wie Strg+C, Antrieb zuletzt. Im Terminal Gestartetes bleibt unberührt.</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Einzeln</h2>
+      <div class="items" id="items"></div>
+    </section>
+
+    <section class="card">
+      <h2>Aktionen</h2>
+      <div class="actions" id="actions"></div>
+    </section>
+  </div>
+
+  <div class="col">
+    <section class="card handy-only">
+      <button class="estop bigstop" id="estopBig">NOTAUS</button>
+      <div class="row" style="justify-content:space-between;margin-top:10px">
+        <button id="releaseBig" hidden>Notaus aufheben</button>
+        <a href="/?desktop" class="hint">Desktop-Ansicht</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Fahren</h2>
+      <div class="pad" id="pad">
+        <button data-v="1" data-w="1" aria-label="Kurve vorwärts links">↖</button>
+        <button data-v="1" data-w="0" aria-label="vorwärts">↑</button>
+        <button data-v="1" data-w="-1" aria-label="Kurve vorwärts rechts">↗</button>
+        <button data-v="0" data-w="1" aria-label="links drehen">↺</button>
+        <button data-stop aria-label="Stopp">■</button>
+        <button data-v="0" data-w="-1" aria-label="rechts drehen">↻</button>
+        <span class="blank"></span>
+        <button data-v="-1" data-w="0" aria-label="rückwärts">↓</button>
+        <span class="blank"></span>
+      </div>
+      <div class="speed">
+        <span class="hint">Tempo</span>
+        <input type="range" id="scale" min="10" max="100" step="10" value="50">
+        <span id="scaleText" style="min-width:4.5em;text-align:right">50 %</span>
+      </div>
+      <p class="drivestate" id="driveState"></p>
+      <p class="hint desktop-only" style="margin:8px 0 0">
+        Taste halten zum Fahren, loslassen = Stopp:
+        <span class="kbd">W</span>/<span class="kbd">↑</span> vor, <span class="kbd">S</span>/<span class="kbd">↓</span> zurück,
+        <span class="kbd">A</span>/<span class="kbd">←</span> <span class="kbd">D</span>/<span class="kbd">→</span> drehen,
+        <span class="kbd">Q</span>/<span class="kbd">E</span> Kurve, <span class="kbd">+</span>/<span class="kbd">−</span> Tempo,
+        <span class="kbd">Leertaste</span> Notaus.
+      </p>
+      <p class="hint" style="margin:8px 0 0">Der Notaus ist ein Software-Stopp über das Netz (Hand-Stopp-Sperre), kein
+        Not-Halt nach Norm. Fahren nur mit RustDesk-Sitzung.</p>
+      <p class="hint desktop-only" style="margin:4px 0 0"><a href="/handy">Handy-Ansicht</a>
+        · <span id="ddsInfo"></span></p>
+    </section>
+  </div>
+</main>
+
+<div id="toasts"></div>
+<dialog id="logDlg">
+  <div class="head"><strong id="logTitle">Log</strong><button id="logClose">Schließen</button></div>
+  <pre id="logText"></pre>
+</dialog>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+let mode = location.pathname.startsWith('/handy') ? 'handy' : 'desktop';
+if (mode === 'desktop' && !params.has('desktop') && matchMedia('(max-width: 700px)').matches) mode = 'handy';
+document.body.dataset.mode = mode;
+
+let cfg = null, ws = null, status = null, connected = false;
+let scale = 0.5;
+
+// ------------------------------------------------------------------ Verbindung
+function send(msg) {
+  if (ws && ws.readyState === WebSocket.OPEN) { ws.send(JSON.stringify(msg)); return true; }
+  return false;
+}
+function connect() {
+  ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`);
+  ws.onopen = () => { connected = true; render(); };
+  ws.onclose = () => { connected = false; render(); setTimeout(connect, 1000); };
+  ws.onmessage = (e) => {
+    const m = JSON.parse(e.data);
+    if (m.t === 'status') { status = m; render(); }
+    else if (m.t === 'msg') toast(m.text, m.level);
+  };
+}
+
+// ------------------------------------------------------------------ Anzeige
+function toast(text, level) {
+  const el = document.createElement('div');
+  el.className = 'toast' + (level === 'error' ? ' error' : '');
+  el.textContent = text;
+  $('toasts').prepend(el);
+  setTimeout(() => el.remove(), level === 'error' ? 10000 : 5000);
+  while ($('toasts').children.length > 5) $('toasts').lastChild.remove();
+}
+function chip(text, cls) { return `<span class="chip ${cls}">${text}</span>`; }
+function esc(s) { return String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c])); }
+function ago(t) {
+  const s = Math.max(0, Math.round((status ? status.now : Date.now() / 1000) - t));
+  return s < 60 ? `${s} s` : s < 3600 ? `${Math.floor(s / 60)} min` : `${Math.floor(s / 3600)} h ${Math.floor(s % 3600 / 60)} min`;
+}
+
+function render() {
+  const r = status && status.robot;
+  const chips = [];
+  if (!connected) chips.push(chip('nicht verbunden', 'bad'));
+  else if (r) {
+    chips.push(chip('verbunden', 'ok'));
+    if (r.estop) chips.push(chip('NOTAUS aktiv', 'bad'));
+    if (!r.remote_guard) chips.push(chip('Antrieb aus', ''));
+    else if (r.remote_lock) chips.push(chip('Fahrsperre: keine RustDesk-Sitzung', 'warn'));
+    else chips.push(chip('Fahren erlaubt', 'ok'));
+    if (mode !== 'handy') {
+      chips.push(chip(`Lidar ${r.scan ? '✓' : '–'}`, r.scan ? 'ok' : ''));
+      chips.push(chip(`Kamera ${r.camera ? '✓' : '–'}`, r.camera ? 'ok' : ''));
+      if (r.score !== null) chips.push(chip(`Lokalisierung ${Math.round(r.score * 100)} %`, r.score >= 0.8 ? 'ok' : r.score >= 0.6 ? 'warn' : 'bad'));
+    }
+    if (r.speed !== null) chips.push(chip(`${r.speed.toFixed(2)} m/s · ${r.turn.toFixed(2)} rad/s`, 'info'));
+  }
+  $('chips').innerHTML = chips.join('');
+
+  const est = !!(r && r.estop);
+  for (const id of ['estopTop', 'estopBig']) $(id).classList.toggle('active', est);
+  for (const id of ['releaseTop', 'releaseBig']) $(id).hidden = !est;
+
+  let ds = '';
+  if (!connected) ds = 'Keine Verbindung – Fahren nicht möglich.';
+  else if (r && r.estop) ds = 'Notaus aktiv: erst aufheben.';
+  else if (r && !r.remote_guard) ds = 'Antrieb läuft nicht.';
+  else if (r && r.remote_lock) ds = 'Gesperrt: Fahren nur mit offener RustDesk-Sitzung.';
+  else if (r && r.driving) ds = 'fährt …';
+  $('driveState').textContent = ds;
+
+  if (mode === 'desktop' && cfg && status) renderDesktop();
+}
+
+function renderDesktop() {
+  const items = status.items, seq = status.seq || {};
+  $('seqs').innerHTML = cfg.sequences.map(s => {
+    const busy = seq[s.id];
+    const steps = s.steps.map(id => cfg.items.find(i => i.id === id).label.split(' ')[0]).join(' · ');
+    return `<button class="primary" data-seq="${s.id}" ${busy ? 'disabled' : ''}>${esc(s.label)}
+      <span class="sub" style="color:inherit;opacity:.75">${esc(busy || steps)}</span></button>`;
+  }).join('');
+
+  $('items').innerHTML = cfg.items.map(i => {
+    const st = items[i.id] || {state: 'aus'};
+    const state = st.state;
+    let btn;
+    if (state === 'läuft') btn = `<button data-stop="${i.id}">Stopp</button>`;
+    else if (state === 'stoppt') btn = `<button disabled>stoppt …</button>`;
+    else if (state === 'extern') btn = `<button disabled title="im Terminal gestartet – dort mit Strg+C beenden">im Terminal</button>`;
+    else btn = `<button data-start="${i.id}">Start</button>`;
+    let badge = state, cls = state;
+    if (state === 'läuft' && st.started) badge = `läuft ${ago(st.started)}`;
+    // läuft, aber die erwarteten Daten kommen bei der Seite nicht an (z. B. unterschiedliche DDS-Einstellungen)
+    const noData = (state === 'läuft' || state === 'extern') && st.data === false &&
+                   (state === 'extern' || status.now - st.started > 20);
+    if (noData) { badge += ' · keine Daten'; cls = 'stoppt'; }
+    if (state === 'beendet') badge = `beendet${st.exit_code !== null && st.exit_code !== undefined ? ' (' + st.exit_code + ')' : ''}`;
+    const logBtn = st.pid ? `<button data-log="${i.id}">Log</button>` : '';
+    return `<div class="item">
+      <div><div class="name">${esc(i.label)}</div>${i.hint ? `<div class="hint">${esc(i.hint)}</div>` : ''}</div>
+      <span class="badge ${cls}" ${noData ? `title="Die Seite sieht nichts auf ${esc(st.ready)}. Log ansehen; sonst DDS-Einstellungen prüfen (unten)."` : ''}>${esc(badge)}</span>
+      <div class="btns">${btn}${logBtn}</div>
+      ${st.last ? `<div class="last">${esc(st.last)}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  const busy = new Set(status.busy || []);
+  for (const b of $('actions').querySelectorAll('button[data-action]')) {
+    b.disabled = busy.has(b.dataset.action);
+  }
+}
+
+function buildDesktop() {
+  const dds = Object.entries(cfg.dds || {}).map(([k, v]) => `${k}=${v}`).join(', ');
+  $('ddsInfo').textContent = `DDS: ${dds || 'Standard'}`;
+  $('map').innerHTML = cfg.maps.map(m => `<option ${m === cfg.default_map ? 'selected' : ''}>${esc(m)}</option>`).join('');
+  $('actions').innerHTML = cfg.actions.map(a => a.needs_name
+    ? `<div class="mapsave"><input type="text" id="name_${a.id}" placeholder="Kartenname, z. B. office-4" maxlength="40">
+       <button data-action="${a.id}" title="${esc(a.hint || '')}">${esc(a.label)}</button></div>`
+    : `<button data-action="${a.id}" title="${esc(a.hint || '')}">${esc(a.label)}</button>`).join('');
+}
+
+function startParams() {
+  return {map: $('map').value, experience_costs: $('costs').checked};
+}
+
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  if (b.dataset.seq) send({t: 'start', id: b.dataset.seq, params: startParams()});
+  else if (b.dataset.start) send({t: 'start', id: b.dataset.start, params: startParams()});
+  else if (b.dataset.stop !== undefined && b.dataset.stop !== '') send({t: 'stop', id: b.dataset.stop});
+  else if (b.dataset.log) openLog(b.dataset.log);
+  else if (b.dataset.action) {
+    const a = cfg.actions.find(x => x.id === b.dataset.action);
+    if (a.confirm && !confirm(a.confirm)) return;
+    const p = startParams();
+    if (a.needs_name) p.name = $('name_' + a.id).value.trim();
+    send({t: 'action', id: a.id, params: p});
+  }
+});
+$('stopAll').onclick = () => { if (confirm('Alles stoppen, was von hier gestartet wurde?')) send({t: 'stop_all'}); };
+
+// ------------------------------------------------------------------ Notaus
+function estop() { drive.clear(); if (!send({t: 'estop'})) toast('Keine Verbindung – Notaus nicht gesendet!', 'error'); }
+function release() { if (confirm('Notaus aufheben? Danach darf der Roboter wieder fahren.')) send({t: 'release'}); }
+for (const id of ['estopTop', 'estopBig']) $(id).addEventListener('pointerdown', (e) => { e.preventDefault(); estop(); });
+for (const id of ['releaseTop', 'releaseBig']) $(id).onclick = release;
+
+// ------------------------------------------------------------------ Fahren (Totmann: senden nur solange gehalten)
+const drive = {
+  keys: new Set(), pad: null, sending: false,
+  vector() {
+    if (this.pad) return this.pad;
+    const k = this.keys;
+    if (k.has('q')) return [1, 1];
+    if (k.has('e')) return [1, -1];
+    const v = (k.has('w') ? 1 : 0) - (k.has('s') ? 1 : 0);
+    const w = (k.has('a') ? 1 : 0) - (k.has('d') ? 1 : 0);
+    return [v, w];
+  },
+  tick() {
+    const [v, w] = this.vector();
+    if (v || w) { send({t: 'drive', v, w, scale}); this.sending = true; }
+    else if (this.sending) { send({t: 'drive', v: 0, w: 0, scale}); send({t: 'halt'}); this.sending = false; }
+  },
+  clear() {
+    this.keys.clear(); this.pad = null;
+    for (const b of $('pad').querySelectorAll('button')) b.classList.remove('on');
+    this.tick();
+  },
+};
+setInterval(() => drive.tick(), 100);
+
+const KEYMAP = {w: 'w', arrowup: 'w', s: 's', arrowdown: 's', a: 'a', arrowleft: 'a', d: 'd', arrowright: 'd', q: 'q', e: 'e'};
+function typing(e) { return ['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName) && e.target.type !== 'range'; }
+document.addEventListener('keydown', (e) => {
+  if (typing(e) || e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (k === ' ') { e.preventDefault(); if (!e.repeat) estop(); return; }
+  if (k === '+' || k === '-') { setScale(scale * 100 + (k === '+' ? 10 : -10)); return; }
+  if (k === 'escape' || k === 'x') { drive.clear(); return; }
+  const m = KEYMAP[k];
+  if (m) { e.preventDefault(); if (!drive.keys.has(m)) { drive.keys.add(m); drive.tick(); } }
+});
+document.addEventListener('keyup', (e) => {
+  const m = KEYMAP[e.key.toLowerCase()];
+  if (m) { drive.keys.delete(m); drive.tick(); }
+});
+window.addEventListener('blur', () => drive.clear());
+document.addEventListener('visibilitychange', () => { if (document.hidden) drive.clear(); });
+
+for (const b of $('pad').querySelectorAll('button')) {
+  b.addEventListener('contextmenu', (e) => e.preventDefault());
+  b.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    b.setPointerCapture(e.pointerId);
+    if (b.dataset.stop !== undefined) { drive.clear(); return; }
+    drive.pad = [Number(b.dataset.v), Number(b.dataset.w)];
+    b.classList.add('on');
+    drive.tick();
+  });
+  const up = () => { if (b.classList.contains('on')) { b.classList.remove('on'); drive.pad = null; drive.tick(); } };
+  b.addEventListener('pointerup', up);
+  b.addEventListener('pointercancel', up);
+  b.addEventListener('lostpointercapture', up);
+}
+
+function setScale(pct) {
+  pct = Math.max(10, Math.min(100, Math.round(pct / 10) * 10));
+  scale = pct / 100;
+  $('scale').value = pct;
+  const ms = cfg ? (cfg.drive.max_linear || 0.18) * scale : 0.18 * scale;
+  $('scaleText').textContent = `${pct} % · ${ms.toFixed(2)} m/s`;
+  try { localStorage.setItem('slopScale', String(pct)); } catch (_) { /* privat: egal */ }
+}
+$('scale').addEventListener('input', () => setScale(Number($('scale').value)));
+
+// ------------------------------------------------------------------ Log
+let logTimer = null;
+async function openLog(id) {
+  const item = cfg.items.find(i => i.id === id);
+  $('logTitle').textContent = `Log: ${item ? item.label : id}`;
+  const load = async () => {
+    try {
+      const pre = $('logText');
+      const atBottom = pre.scrollTop + pre.clientHeight >= pre.scrollHeight - 20;
+      pre.textContent = await (await fetch(`/api/log/${id}`)).text();
+      if (atBottom) pre.scrollTop = pre.scrollHeight;
+    } catch (_) { /* nächster Versuch */ }
+  };
+  await load();
+  $('logText').scrollTop = $('logText').scrollHeight;
+  $('logDlg').showModal();
+  logTimer = setInterval(load, 2000);
+}
+$('logClose').onclick = () => $('logDlg').close();
+$('logDlg').addEventListener('close', () => clearInterval(logTimer));
+
+// ------------------------------------------------------------------ Start
+(async () => {
+  try { cfg = await (await fetch('/api/config')).json(); } catch (_) { toast('Konfiguration nicht geladen', 'error'); }
+  let saved = null;
+  try { saved = localStorage.getItem('slopScale'); } catch (_) { /* egal */ }
+  setScale(saved ? Number(saved) : Math.round(((cfg && cfg.drive.scale) || 0.5) * 100));
+  if (cfg && mode === 'desktop') buildDesktop();
+  connect();
+})();
+</script>
+</body>
+</html>

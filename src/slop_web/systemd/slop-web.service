@@ -1,0 +1,23 @@
+# Slop-Bot Weboberfläche als systemd-Nutzerdienst (startet mit dem Login des Nutzers jetson, ohne Terminal).
+# Einrichten (einmalig):
+#   mkdir -p ~/.config/systemd/user
+#   cp ~/slop-bot_ws/install/slop_web/share/slop_web/systemd/slop-web.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload && systemctl --user enable --now slop-web
+#   sudo loginctl enable-linger jetson        # optional: auch ohne Anmeldung nach dem Booten starten
+# Ansehen / neu starten:  journalctl --user -u slop-web -f   |   systemctl --user restart slop-web
+[Unit]
+Description=Slop-Bot Weboberfläche (slop_web)
+After=network-online.target tailscaled.service
+
+[Service]
+Type=simple
+# wie in ~/.bashrc: DDS nur auf dem eigenen Rechner (muss zu allen anderen Nodes passen)
+Environment=ROS_LOCALHOST_ONLY=1
+ExecStart=/bin/bash -c 'source /opt/ros/humble/setup.bash && source %h/slop-bot_ws/install/setup.bash && exec ros2 run slop_web web'
+Restart=on-failure
+RestartSec=3
+# Nur den Webserver beenden, nicht die von ihm gestarteten Programme (die laufen weiter und werden übernommen)
+KillMode=process
+
+[Install]
+WantedBy=default.target

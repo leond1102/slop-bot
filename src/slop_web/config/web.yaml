@@ -1,0 +1,115 @@
+# Slop-Bot Weboberfläche: was die Seite starten darf. Befehle wie in STARTBEFEHLE.md, als Liste (kein Shell-Text).
+# Platzhalter: $map (Karte aus maps_dir, im Browser wählbar), $experience_costs (true/false), $name (Kartenname),
+# $maps_dir. Der Browser kann NUR diese Einträge auslösen.
+#
+# items      einzelne Starts; conflicts = darf nicht gleichzeitig laufen (z. B. zwei Lidar-Treiber)
+#            detect = Teil der Befehlszeile, an dem ein im Terminal gestarteter Prozess erkannt wird
+#            ready = Topic, das nach dem Start Daten liefern muss, bevor eine Abfolge weitermacht
+# sequences  Abfolgen „alles für …“: Schritte nacheinander, bereits laufende werden übersprungen
+# actions    kurze Befehle (Dienstaufrufe), laufen höchstens timeout s
+
+port: 8080
+listen: [127.0.0.1, tailscale]       # nur lokal und im Tailnet, nicht im Büro-/Heimnetz
+maps_dir: ~/slop-bot_ws/maps
+default_map: office-3
+workspace_setup: ~/slop-bot_ws/install/setup.bash
+ros_setup: /opt/ros/humble/setup.bash
+
+# DDS wie in ~/.bashrc – gilt für den Webserver UND alles, was er startet, egal aus welchem Terminal er kommt.
+# Wert = setzen, null = entfernen (z. B. alte Testeinstellungen), nicht genannt = vom Terminal übernehmen.
+# Müssen zu Terminals passen, in denen du selbst Nodes startest, sonst sehen sie sich nicht.
+dds:
+  ROS_LOCALHOST_ONLY: '1'
+  FASTRTPS_DEFAULT_PROFILES_FILE: null
+  FASTDDS_DEFAULT_PROFILES_FILE: null
+  RMW_IMPLEMENTATION: null
+  CYCLONEDDS_URI: null
+
+drive:                               # wie slop_teleop/config/keyboard_teleop.yaml
+  max_linear: 0.18                   # m/s bei 100 %
+  max_angular: 0.4                   # rad/s bei 100 %
+  scale: 0.5                         # Start-Tempo (Regler 10…100 %)
+
+items:
+  - id: bringup
+    label: Antrieb + Modell + EKF
+    hint: bestromt die Motoren; Fahren nur mit RustDesk-Sitzung. Braucht die sudo-Regel (slop_web/README.md)
+    cmd: [ros2, run, slop_base, with_netcaps, ros2, launch, slop_bringup, bringup.launch.py]
+    detect: bringup.launch.py
+    ready: /wheel/odom
+    ready_timeout: 40
+
+  - id: camera
+    label: Kamera + Hinderniserkennung
+    cmd: [ros2, launch, slop_sensors, camera.launch.py]
+    detect: camera.launch.py
+    ready: /camera/obstacles
+    ready_timeout: 30
+
+  - id: localization
+    label: Lokalisierung + RViz
+    hint: Lidar, LIO, Karte, AMCL, Relokalisierung, Erfahrungskarte
+    cmd: [ros2, launch, slop_navigation, localization.launch.py, 'map:=$map']
+    uses_map: true
+    detect: localization.launch.py
+    conflicts: [navigation, mapping]
+    ready: /scan
+    ready_timeout: 30
+
+  - id: navigation
+    label: Navigation (Nav2) + Lokalisierung + RViz
+    hint: Ziel in RViz mit „Nav2 Goal“
+    cmd: [ros2, launch, slop_navigation, navigation.launch.py, 'map:=$map', 'experience_costs:=$experience_costs']
+    uses_map: true
+    uses_experience_costs: true
+    detect: navigation.launch.py
+    conflicts: [localization, mapping]
+    ready: /scan
+    ready_timeout: 30
+
+  - id: mapping
+    label: Kartieren (slam_toolbox) + RViz
+    hint: beim Start 2–3 s stillstehen, langsam fahren, zum Schluss zurück zum Start
+    cmd: [ros2, launch, slop_navigation, mapping.launch.py]
+    detect: mapping.launch.py
+    conflicts: [localization, navigation]
+    ready: /scan
+    ready_timeout: 30
+
+sequences:
+  - id: all_navigation
+    label: Navigation komplett
+    steps: [bringup, camera, navigation]
+  - id: all_localization
+    label: Lokalisieren komplett
+    steps: [bringup, localization]
+  - id: all_mapping
+    label: Kartieren komplett
+    steps: [bringup, mapping]
+
+actions:
+  - id: cancel_goal
+    label: Nav-Ziel abbrechen
+    cmds:
+      - [ros2, service, call, /navigate_to_pose/_action/cancel_goal, action_msgs/srv/CancelGoal, '{}']
+      - [ros2, service, call, /navigate_through_poses/_action/cancel_goal, action_msgs/srv/CancelGoal, '{}']
+  - id: relocalize
+    label: Pose in der Karte suchen
+    cmds: [[ros2, service, call, /relocalize, std_srvs/srv/Trigger]]
+  - id: experience_save
+    label: Erfahrung speichern
+    cmds: [[ros2, service, call, /experience/save, std_srvs/srv/Trigger]]
+  - id: map_save
+    label: Karte speichern
+    needs_name: true
+    hint: während „Kartieren“ läuft; speichert $name.yaml/.pgm und den slam_toolbox-Stand in maps/
+    cmds:
+      - [ros2, run, nav2_map_server, map_saver_cli, -f, '$maps_dir/$name', --free, '0.196']
+      - [ros2, service, call, /slam_toolbox/serialize_map, slam_toolbox/srv/SerializePoseGraph, "{filename: '$maps_dir/$name'}"]
+  - id: drive_off
+    label: Endstufen aus
+    confirm: Endstufen ausschalten?
+    cmds: [[ros2, service, call, /diff_drive/enable, std_srvs/srv/SetBool, 'data: false']]
+  - id: drive_on
+    label: Endstufen an / Fehler quittieren
+    cmds: [[ros2, service, call, /diff_drive/enable, std_srvs/srv/SetBool, 'data: true']]
