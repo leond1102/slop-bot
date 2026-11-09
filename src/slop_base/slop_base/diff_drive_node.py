@@ -53,7 +53,7 @@ from tf2_ros import TransformBroadcaster
 
 from slop_base.bus_link import DEFAULT_NAME, BusClient
 from slop_base.cl57e_bus import Cl57eError
-from slop_base.kinematics import Odometry2D, limit_wheel_speeds, wheel_speeds
+from slop_base.kinematics import Odometry2D, Standstill, limit_wheel_speeds, wheel_speeds
 from slop_base.senders import SenderCheck
 
 TWO_PI = 2.0 * math.pi
@@ -106,6 +106,10 @@ class DiffDriveNode(Node):
             ('odom_topic', '/wheel/odom'),  # Rohodometrie der Räder, Eingang des EKF
             ('odom_frame', 'odom'),
             ('base_frame', 'base_footprint'),
+            # Stillstand: Räder so lange unbewegt (Endstufen an) → Odometrie meldet v = 0, w = 0 mit kleiner Varianz.
+            # Sonst dreht der EKF im Stand mit dem Rest-Bias des Gyros weiter (AMCL korrigiert im Stand nicht).
+            ('standstill_hold', 0.3),      # s
+            ('standstill_var', 1e-6),      # (m/s)², (rad/s)²; 0 = aus (immer die Fahrt-Varianzen)
             ('publish_tf', False),         # true nur ohne EKF: sonst zwei Quellen für odom → base_frame
             ('left_joint', 'left_wheel_joint'),
             ('right_joint', 'right_wheel_joint'),
@@ -156,6 +160,7 @@ class DiffDriveNode(Node):
                                f'{info.get("rt_status", "?")}')
 
         self.odom = Odometry2D(self.track)
+        self.standstill = Standstill(self._p('standstill_hold'))
         self.last_update_t = None
         self.timing = {}
         self.last_t = None
@@ -397,10 +402,13 @@ class DiffDriveNode(Node):
         msg.pose.covariance[35] = 0.05
         msg.twist.twist.linear.x = vx
         msg.twist.twist.angular.z = wz
-        msg.twist.covariance[0] = 0.001
+        # Stillstand nur mit bestromten Motoren: ohne Freigabe lässt sich der Roboter schieben, ohne dass der Zähler läuft
+        standing = self.standstill.update(t, any(da != 0.0 for da in d_angle)) and bool(st['enabled'])
+        still_var = self._p('standstill_var')
+        msg.twist.covariance[0] = still_var if standing and still_var > 0 else 0.001
         msg.twist.covariance[7] = msg.twist.covariance[14] = msg.twist.covariance[21] = 1e6
         msg.twist.covariance[28] = 1e6
-        msg.twist.covariance[35] = 0.01
+        msg.twist.covariance[35] = still_var if standing and still_var > 0 else 0.01
         self.odom_pub.publish(msg)
 
         if self.tf_broadcaster is not None:

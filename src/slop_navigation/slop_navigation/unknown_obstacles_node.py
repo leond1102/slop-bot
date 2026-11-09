@@ -31,6 +31,7 @@ from sensor_msgs.msg import LaserScan, PointCloud2, PointField
 from std_msgs.msg import Float32
 from tf2_ros import Buffer, TransformListener
 
+from slop_navigation.footprint import point_in_polygon
 from slop_navigation.safety_core import is_known, known_mask, outside_body, scan_points, transform
 
 
@@ -46,13 +47,19 @@ class UnknownObstacles(Node):
             ('max_range', 3.0),             # m: weiter weg liegt keine Zone
             ('known_dilate', 0.10),         # m: so weit um bekannte Struktur gilt ein Punkt noch als bekannt
             ('z', 0.5),                     # m: Höhe der Ausgabepunkte (Collision Monitor filtert nach Höhe)
-            # Footprint (base_footprint) und Zuschlag: Punkte darin sind Reste des eigenen Körpers
+            # Punkte im Körper sind Reste des eigenen Körpers. body_polygon [x1, y1, x2, y2, …] (base_footprint) setzt
+            # navigation.launch.py aus dem URDF (Footprint + Zuschlag, config/zones.yaml); leer = Rechteck unten
+            ('body_polygon', [0.0]),
             ('body_x_min', -0.40), ('body_x_max', 0.10), ('body_half_width', 0.16), ('body_margin', 0.03),
             # Lokalisierung muss sicher sein, sonst gilt alles als unbekannt
             ('min_score', 0.60), ('score_timeout', 3.0), ('max_pos_std', 0.30), ('max_yaw_std_deg', 10.0),
             ('report_period', 60.0),
         ]:
             self.declare_parameter(name, default)
+        flat = list(self._p('body_polygon'))
+        self.body_polygon = [flat[k:k + 2] for k in range(0, len(flat) - 1, 2)] if len(flat) >= 6 else None
+        if self.body_polygon:
+            self.get_logger().info(f'Körper aus dem URDF: {len(self.body_polygon)} Ecken')
         self.map_msg = None
         self.exp_msg = None
         self.known = None
@@ -116,8 +123,11 @@ class UnknownObstacles(Node):
     def on_scan(self, msg):
         x, y = scan_points(msg.ranges, msg.angle_min, msg.angle_increment, msg.range_min, msg.range_max,
                            self._p('max_range'))
-        keep = outside_body(x, y, self._p('body_x_min'), self._p('body_x_max'), self._p('body_half_width'),
-                            self._p('body_margin'))
+        if self.body_polygon:
+            keep = ~point_in_polygon(x, y, self.body_polygon)
+        else:
+            keep = outside_body(x, y, self._p('body_x_min'), self._p('body_x_max'), self._p('body_half_width'),
+                                self._p('body_margin'))
         x, y = x[keep], y[keep]
 
         reason = self.reason_all_unknown()

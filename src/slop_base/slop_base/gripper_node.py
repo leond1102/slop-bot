@@ -14,7 +14,8 @@ Services (alle blockieren, bis die Fahrt fertig ist):
   gripper/enable  std_srvs/SetBool         false = Endstufen aus (Spindeln selbsthemmend), true = Freigabe
 Topics:
   gripper/status        std_msgs/String         Klartext: nicht gehomt / offen / greift … / Fehler …
-  gripper/joint_states  sensor_msgs/JointState  Backenwege [m] von der Null nach innen (gripper_left/right)
+  /joint_states         sensor_msgs/JointState  Backenwege [m] von der Null nach innen, vor dem Homen 0 (gripper_left/right_jaw_joint,
+                                                wie im URDF; robot_state_publisher bewegt damit die Backen)
   /safety/stop          std_msgs/Bool (Sub)     true = anhalten, keine neuen Fahrten
 
 Open Loop: Die Null merkt sich die Node in state_file (Zähler des Treibers). Nach Aus-/Einschalten des Treibers oder
@@ -76,7 +77,7 @@ class GripperNode(Node):
             ('bus_timeout', 1.0),      # s ohne Status → Fahrt abbrechen
             # nur im Busprozess genutzt (liest dieselbe Datei), hier deklariert, damit ros2 param sie zeigt
             ('units_per_rev', 0), ('loop', 'open'), ('motor_current_ma', 0), ('max_ferr_rev', 1.0),
-            ('grip_timeout', 1.0),
+            ('grip_timeout', 2.0),
         ]:
             self.declare_parameter(name, default)
         p = self._p
@@ -112,7 +113,7 @@ class GripperNode(Node):
         self._load_state()
 
         self.status_pub = self.create_publisher(String, 'gripper/status', 10)
-        self.joint_pub = self.create_publisher(JointState, 'gripper/joint_states', 10)
+        self.joint_pub = self.create_publisher(JointState, '/joint_states', 10)
         cmd = MutuallyExclusiveCallbackGroup()       # immer nur eine Fahrt
         fast = MutuallyExclusiveCallbackGroup()      # stop/Notaus laufen neben einer Fahrt
         self.create_service(Trigger, 'gripper/home', self.srv_home, callback_group=cmd)
@@ -124,6 +125,7 @@ class GripperNode(Node):
         self.create_subscription(Bool, '/safety/stop', self.on_estop, 10, callback_group=fast)
         self.create_timer(1.0 / p('rate'), self.tick, callback_group=MutuallyExclusiveCallbackGroup())
 
+        self.bus.keepalive()      # der Start dauert auf dem Jetson > 1 s; sonst meldet der Busprozess „still“
         ow = p('open_width')
         self.get_logger().info(
             f'Greifer: links Achse {self.axes["links"]}, rechts Achse {self.axes["rechts"]}, '
@@ -161,12 +163,14 @@ class GripperNode(Node):
             self.last_status = text
             (self.get_logger().warn if text.startswith('Fehler') else self.get_logger().info)(f'Greifer: {text}')
         self.status_pub.publish(String(data=text))
-        if self.zero:
-            js = JointState()
-            js.header.stamp = self.get_clock().now().to_msg()
-            js.name = ['gripper_left', 'gripper_right']
-            js.position = [self._pos_m(self.axes[n], st['actual'][self.axes[n]]) for n in ('links', 'rechts')]
-            self.joint_pub.publish(js)
+        # Immer senden, sonst fehlt das TF der Backen (RViz-Fehler). Ohne Null ist die Lage unbekannt → als offen (0)
+        # zeigen; gripper/status sagt dann „nicht gehomt“.
+        js = JointState()
+        js.header.stamp = self.get_clock().now().to_msg()
+        js.name = ['gripper_left_jaw_joint', 'gripper_right_jaw_joint']
+        js.position = ([self._pos_m(self.axes[n], st['actual'][self.axes[n]]) for n in ('links', 'rechts')]
+                       if self.zero else [0.0, 0.0])
+        self.joint_pub.publish(js)
 
     def _status_text(self, st):
         if self.bus.exit_reason:

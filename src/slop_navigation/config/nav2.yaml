@@ -1,7 +1,7 @@
 # Nav2 für den Slop-Bot (navigation.launch.py). Grundlage: nav2_bringup/params/nav2_params.yaml (Humble 1.1).
 #
 # Roboter: Differentialantrieb, Drehpunkt = Antriebsachse = base_footprint. Körper 50 × 32 cm, beginnt 10 cm vor der
-# Achse (Footprint unten, gleiche Maße im URDF). Höchstens 0,18 m/s.
+# Achse, davor der Greifer (21 cm, 20 cm breit). Footprint und Zonen kommen beim Start aus dem URDF. Höchstens 0,18 m/s.
 #
 # Zwei Sicherheitsstufen (navigation.launch.py safety:=streng|locker):
 #   streng (Standard, diese Datei): nie rückwärts (RPP allow_reversing false, velocity_smoother min_velocity x = 0, keine
@@ -129,8 +129,10 @@ controller_server:
       max_robot_pose_search_dist: 10.0
 
 # ---------------------------------------------------------------------------------------------------- Costmaps
-# Footprint (base_footprint, x vorn, y links): 10 cm vor bis 40 cm hinter der Achse, ±16 cm.
-# Innenkreis 0,16 m, Außenkreis (hintere Ecken) 0,43 m.
+# Footprint (base_footprint, x vorn, y links) kommt aus dem URDF (slop_description): navigation.launch.py rechnet ihn
+# beim Start und überschreibt den Wert hier (config/zones.yaml, slop_navigation/footprint.py). T-Form: Körper 10 cm vor
+# bis 40 cm hinter der Achse, ±16 cm; davor der Greifer bis 31 cm vor der Achse, ±10 cm (Backen ±9 cm).
+# Innenkreis 0,14 m, Außenkreis (hintere Ecken) 0,43 m.
 local_costmap:
   local_costmap:
     ros__parameters:
@@ -143,7 +145,7 @@ local_costmap:
       width: 4                           # m, mitfahrendes Fenster um den Roboter
       height: 4
       resolution: 0.05
-      footprint: "[[0.10, 0.16], [0.10, -0.16], [-0.40, -0.16], [-0.40, 0.16]]"
+      footprint: "[[-0.4, -0.16], [0.1, -0.16], [0.1, -0.1], [0.13, -0.1], [0.13, -0.09], [0.31, -0.09], [0.31, 0.09], [0.13, 0.09], [0.13, 0.1], [0.1, 0.1], [0.1, 0.16], [-0.4, 0.16]]"   # aus dem URDF, siehe oben
       footprint_padding: 0.02
       plugins: ["obstacle_layer", "inflation_layer"]
       obstacle_layer:
@@ -199,7 +201,7 @@ global_costmap:
       transform_tolerance: 0.5
       resolution: 0.05
       track_unknown_space: true          # unbekannt bleibt unbekannt (der Planer fährt nicht hinein, allow_unknown)
-      footprint: "[[0.10, 0.16], [0.10, -0.16], [-0.40, -0.16], [-0.40, 0.16]]"
+      footprint: "[[-0.4, -0.16], [0.1, -0.16], [0.1, -0.1], [0.13, -0.1], [0.13, -0.09], [0.31, -0.09], [0.31, 0.09], [0.13, 0.09], [0.13, 0.1], [0.1, 0.1], [0.1, 0.16], [-0.4, 0.16]]"   # aus dem URDF, siehe oben
       footprint_padding: 0.02
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
       static_layer:
@@ -312,7 +314,9 @@ velocity_smoother:
 # alles als unbekannt, dann gelten die größeren Zonen auch für Wände. Wände passiert der Roboter so eng, Menschen mit Abstand.
 # Gilt für safety:=streng. Bei safety:=locker läuft B nicht, A hat andere Zonen (nav2_locker.yaml).
 #
-# Zonen in base_footprint (x vorn, y links); Footprint x -0,40…0,10, y ±0,16. Ein Polygon greift, wenn MEHR als
+# Zonen in base_footprint (x vorn, y links), Footprint siehe Costmaps (T-Form mit Greifer). Die points aller Zonen
+# berechnet navigation.launch.py beim Start aus dem URDF mit den Zuschlägen aus config/zones.yaml (die Werte hier sind
+# nur der Stand dazu, damit die Datei allein gültig ist). Ein Polygon greift, wenn MEHR als
 # max_points Punkte darin liegen.
 # Bremsweg: 0,18 m/s → ca. 7 cm Rampe (≈ 0,2 m/s²) + 0,15 s Reaktion (Scan, Zyklus) ≈ 10 cm; mit 40 % (0,07 m/s) ≈ 2,4 cm.
 # Deshalb sind die 2-cm-Stoppzone und die 10-cm-Langsamzone von A nur zusammen mit dem Approach-Polygon sicher: Es bremst
@@ -340,19 +344,19 @@ collision_monitor_dynamic:
     base_shift_correction: True
     stop_pub_timeout: 2.0
     polygons: ["DynStop", "DynSlow", "DynApproach"]
-    # Stopp: 10 cm vor der Front, 6 cm seitlich
+    # Stopp: 10 cm vor der Front (Greifer bzw. Körperschultern), 6 cm seitlich darüber hinaus
     DynStop:
       type: "polygon"
-      points: [0.20, 0.22, 0.20, -0.22, 0.10, -0.22, 0.10, 0.22]
+      points: [-0.4, -0.16, 0.1, -0.16, 0.1, -0.22, 0.2, -0.22, 0.2, -0.16, 0.23, -0.16, 0.23, -0.09, 0.31, -0.09, 0.31, -0.15, 0.41, -0.15, 0.41, 0.15, 0.31, 0.15, 0.31, 0.09, 0.23, 0.09, 0.23, 0.16, 0.2, 0.16, 0.2, 0.22, 0.1, 0.22, 0.1, 0.16, -0.4, 0.16]
       action_type: "stop"
       max_points: 2
       visualize: True
       polygon_pub_topic: "polygon_dynamic_stop"
       enabled: True
-    # Langsam auf 40 %: 40 cm vor, 15 cm hinter und neben dem Körper (auch beim Drehen, das Heck schwenkt aus)
+    # Langsam auf 40 %: 40 cm vor, 15 cm hinter und neben dem Roboter (auch beim Drehen, das Heck schwenkt aus)
     DynSlow:
       type: "polygon"
-      points: [0.50, 0.31, 0.50, -0.31, -0.55, -0.31, -0.55, 0.31]
+      points: [-0.55, -0.31, 0.5, -0.31, 0.5, -0.25, 0.53, -0.25, 0.53, -0.24, 0.71, -0.24, 0.71, 0.24, 0.53, 0.24, 0.53, 0.25, 0.5, 0.25, 0.5, 0.31, -0.55, 0.31]
       action_type: "slowdown"
       max_points: 3
       slowdown_ratio: 0.4
@@ -363,7 +367,7 @@ collision_monitor_dynamic:
     DynApproach:
       type: "polygon"
       action_type: "approach"
-      points: [0.12, 0.18, 0.12, -0.18, -0.42, -0.18, -0.42, 0.18]    # unter Humble ignoriert, siehe oben
+      points: [-0.42, -0.18, 0.12, -0.18, 0.12, -0.12, 0.15, -0.12, 0.15, -0.11, 0.33, -0.11, 0.33, 0.11, 0.15, 0.11, 0.15, 0.12, 0.12, 0.12, 0.12, 0.18, -0.42, 0.18]    # unter Humble ignoriert, siehe oben
       time_before_collision: 1.0
       simulation_time_step: 0.1
       max_points: 3
@@ -395,19 +399,19 @@ collision_monitor:
     base_shift_correction: True
     stop_pub_timeout: 2.0
     polygons: ["PolygonStop", "PolygonSlow", "FootprintApproach"]
-    # Stopp: 2 cm um den Körper (vorn, seitlich, hinten)
+    # Stopp: 2 cm um den Roboter samt Greifer (vorn, seitlich, hinten)
     PolygonStop:
       type: "polygon"
-      points: [0.12, 0.18, 0.12, -0.18, -0.42, -0.18, -0.42, 0.18]
+      points: [-0.42, -0.18, 0.12, -0.18, 0.12, -0.12, 0.15, -0.12, 0.15, -0.11, 0.33, -0.11, 0.33, 0.11, 0.15, 0.11, 0.15, 0.12, 0.12, 0.12, 0.12, 0.18, -0.42, 0.18]
       action_type: "stop"
       max_points: 2
       visualize: True
       polygon_pub_topic: "polygon_stop"
       enabled: True
-    # Langsam auf 40 %: 10 cm um den Körper
+    # Langsam auf 40 %: 10 cm um den Roboter samt Greifer
     PolygonSlow:
       type: "polygon"
-      points: [0.20, 0.26, 0.20, -0.26, -0.50, -0.26, -0.50, 0.26]
+      points: [-0.5, -0.26, 0.2, -0.26, 0.2, -0.2, 0.23, -0.2, 0.23, -0.19, 0.41, -0.19, 0.41, 0.19, 0.23, 0.19, 0.23, 0.2, 0.2, 0.2, 0.2, 0.26, -0.5, 0.26]
       action_type: "slowdown"
       max_points: 3
       slowdown_ratio: 0.4
@@ -418,7 +422,7 @@ collision_monitor:
     FootprintApproach:
       type: "polygon"
       action_type: "approach"
-      points: [0.12, 0.18, 0.12, -0.18, -0.42, -0.18, -0.42, 0.18]    # unter Humble ignoriert, siehe oben
+      points: [-0.42, -0.18, 0.12, -0.18, 0.12, -0.12, 0.15, -0.12, 0.15, -0.11, 0.33, -0.11, 0.33, 0.11, 0.15, 0.11, 0.15, 0.12, 0.12, 0.12, 0.12, 0.18, -0.42, 0.18]    # unter Humble ignoriert, siehe oben
       time_before_collision: 0.6
       simulation_time_step: 0.1
       max_points: 3

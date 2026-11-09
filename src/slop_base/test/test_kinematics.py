@@ -3,7 +3,7 @@ import math
 
 import pytest
 
-from slop_base.kinematics import Odometry2D, limit_wheel_speeds, wheel_speeds
+from slop_base.kinematics import Odometry2D, Standstill, limit_wheel_speeds, wheel_speeds
 
 TRACK = 0.24
 R = 0.035
@@ -61,3 +61,13 @@ def test_wheel_commands_and_odometry_agree():
     odom = Odometry2D(TRACK)
     ds, dyaw = odom.update(wl * R * dt, wr * R * dt)
     assert ds / dt == pytest.approx(v) and dyaw / dt == pytest.approx(w)
+
+
+def test_standstill_after_hold():
+    s = Standstill(0.3)
+    assert not s.update(0.0, False)             # erster Aufruf: noch nichts bekannt
+    assert not s.update(0.2, False)
+    assert s.update(0.31, False)                # 0,3 s ohne Bewegung → steht
+    assert not s.update(0.32, True)             # Rad bewegt → sofort nicht mehr
+    assert not s.update(0.5, False)
+    assert s.update(0.65, False)

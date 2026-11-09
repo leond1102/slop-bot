@@ -23,6 +23,8 @@ def load(path):
         cfg = yaml.safe_load(f)
     cfg['maps_dir'] = os.path.expanduser(cfg.get('maps_dir', '~/slop-bot_ws/maps'))
     ids = set()
+    if cfg.get('default_safety', SAFETY_LEVELS[0]) not in SAFETY_LEVELS:
+        raise ValueError(f'default_safety: {cfg["default_safety"]!r} gibt es nicht ({" oder ".join(SAFETY_LEVELS)})')
     for kind in ('items', 'sequences', 'actions'):
         for e in cfg.get(kind, []):
             if e['id'] in ids:
@@ -56,7 +58,7 @@ def params(cfg, raw):
             raise ValueError(f'Karte {m!r} gibt es nicht in {cfg["maps_dir"]}')
         out['map'] = os.path.join(cfg['maps_dir'], m + '.yaml')
     out['experience_costs'] = 'true' if raw.get('experience_costs') in (True, 'true', 1) else 'false'
-    safety = raw.get('safety') or SAFETY_LEVELS[0]
+    safety = raw.get('safety') or cfg.get('default_safety') or SAFETY_LEVELS[0]
     if safety not in SAFETY_LEVELS:
         raise ValueError(f'Sicherheitsstufe {safety!r} gibt es nicht ({" oder ".join(SAFETY_LEVELS)})')
     out['safety'] = safety

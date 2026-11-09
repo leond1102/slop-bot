@@ -35,4 +35,4 @@ gripper_node:
     loop: open
     motor_current_ma: 0       # 0 = MaxCurrent nicht prüfen (eingestellt: 1000 mA)
     max_ferr_rev: 1.0
-    grip_timeout: 1.0         # s ohne Nachricht der gripper_node → Greifer hält an
+    grip_timeout: 2.0         # s ohne Nachricht der gripper_node → Greifer hält an (Start der Node dauert > 1 s)

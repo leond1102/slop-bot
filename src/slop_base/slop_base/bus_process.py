@@ -41,7 +41,7 @@ DEFAULTS = {
 
 # Was der Busprozess aus gripper.yaml braucht (Block gripper_node/ros__parameters)
 GRIP_DEFAULTS = {'axis_left': 1, 'axis_right': 2, 'units_per_rev': 0, 'loop': 'open', 'motor_current_ma': 0,
-                 'max_ferr_rev': 1.0, 'grip_timeout': 1.0}
+                 'max_ferr_rev': 1.0, 'grip_timeout': 2.0}
 
 
 def load_grip_config(path):

@@ -83,7 +83,7 @@ robot_state_publisher (URDF) ──► TF base_footprint → base_link → Räde
 |---|---|
 | Rechner | Jetson Orin, 8 Kerne. EtherCAT-Zyklus (Prozess `ethercat_bus`) auf Kern 7 (SCHED_FIFO 80), USB-Interrupts auf CPU1 |
 | Antrieb | CL57E-4A an `enP8p1s0`, Achse 3 = links (Getriebe 1:5,18), Achse 4 = rechts (1:13,73, gespiegelt). Schrittmotoren ohne Encoder (Open Loop) |
-| Greifer | Vorn, zwei gleiche Spindeln Tr6×4 (4 mm/U, 2500 Schritte/mm) mit 28-mm-Steppern (1,0 A) übereinander, Mitte auf der X-Achse, Backen fahren in ±Y, 182 mm Weg, Backen 32 mm breit. Achse 1 oben = linke Backe (von vorne gesehen, schließt negativ), Achse 2 unten = rechte Backe (schließt positiv) |
+| Greifer | Vorn mittig an der Körpervorderkante, 7–13 cm über dem Boden, ragt 21 cm nach vorn, geöffnet 20 cm breit (im URDF: `gripper_link`, Backen als Schubgelenke). Zwei gleiche Spindeln Tr6×4 (4 mm/U, 2500 Schritte/mm) mit 28-mm-Steppern (1,0 A) übereinander, Mitte auf der X-Achse, Backen fahren in ±Y, 182 mm Weg, Backen 32 mm breit. Achse 1 oben = linke Backe (von vorne gesehen, schließt negativ), Achse 2 unten = rechte Backe (schließt positiv) |
 | PDO-Falle | Der CL57E-4A zeigt die Objekte (0x6041 …) nur für Achsen ab der kleinsten zugeordneten. Ordnet ein Master nur 3+4 zu, fehlen Achse 1/2 beim nächsten Start. Darum ordnen `cl57e_bus.py` und `tools/diff_motor.py` immer alle vier PDOs zu |
 | Räder | Ø 7 cm, Spur 24 cm, angetrieben vorn. Schleppräder 34 cm dahinter. Höchstens 50 U/min am Rad → 0,183 m/s, 1,53 rad/s (`max_wheel_rpm` in `diff_drive.yaml`) |
 | `base_footprint` | Boden, Mitte zwischen den angetriebenen Rädern; x vorn, y links, z oben (TF `odom → base_footprint` vom EKF) |
@@ -157,6 +157,10 @@ Weitere Build-Optionen in `colcon.meta`: Livox-SDK2 braucht `-DCMAKE_POLICY_VERS
   mit `tools/diff_motor.py jog --revs 10`) und driftet bei Schlupf oder Schrittverlust. Sie geht als `/wheel/odom` (ohne TF)
   in den EKF, zusammen mit dem Livox-Gyro und der LIO-Geschwindigkeit. Weitere Quellen (z. B. Kamera-IMU) kommen als Block in
   [ekf.yaml](src/slop_localization/config/ekf.yaml). Der EKF ist die einzige Quelle für `odom → base_footprint`.
+  Stehen die Räder 0,3 s (Endstufen an), meldet die Radodometrie „steht“ mit sehr kleiner Varianz (`standstill_var`):
+  Sonst drehte der EKF im Stand mit dem Rest-Bias des Gyros weiter (gemessen 0,5°/min) und AMCL korrigiert im Stand nicht.
+- RViz: Die Zonen der Collision Monitore (rote/gelbe Polygone) sendet Nav2 Humble nur, solange Nav2 Fahrbefehle schickt.
+  Beim Fahren mit Tastatur/Web oder im Stand bleibt das letzte Polygon an seiner alten Stelle stehen (nur Anzeige).
 - **LIO:** Stand, Messwerte und offene Punkte in [src/slop_lio/README.md](src/slop_lio/README.md). Am 2026-11-06 unter Fahrt getestet.
 - **Livox ohne Zeitsynchronisation (kein PTP):** Der Treiber stempelt mit der Empfangszeit des Jetson.
 - Der Livox-Treiber stürzt beim Beenden manchmal ab (exit −11) und ignoriert SIGINT. Harmlos, Reste beendet

@@ -45,11 +45,15 @@ journalctl --user -u slop-web -f       # Ausgabe ansehen
 - **Abfolgen** („Navigation komplett“ usw.) starten die Schritte nacheinander und warten jeweils, bis Daten kommen
   (Antrieb: `/wheel/odom`, Kamera: `/camera/obstacles`, Lidar: `/scan`). Was schon läuft, wird übersprungen.
   „Navigation komplett“ startet vorerst ohne Kamera (Nav2 nutzt nur das Lidar).
-- **Sicherheitsstufe** (Auswahl „Sicherheit“ neben der Karte): `streng` (Standard nach jedem Laden der Seite) oder
-  `locker` (extrem nah an alles, volles Tempo, rückwärts erlaubt, dreht sich erst am Ziel in die Zielrichtung; Details in
-  `slop_navigation/README.md`). Gilt beim Start der Navigation, mit `locker` fragt die Seite vorher nach. Wechseln =
-  Navigation stoppen und neu starten. Die laufende Stufe steht oben („Nav2 locker“, gelb) und neben der Navigation unter
-  „Einzeln“ – auch, wenn die Navigation im Terminal gestartet wurde (aus `safety:=` in dessen Befehlszeile).
+- **Vorauswahl beim Laden der Seite** (`web.yaml`: `default_map`, `default_safety`, `default_experience_costs`): Karte
+  office-4, Sicherheitsstufe `locker`, Haken „weiche Kosten (Erfahrungskarte)“ gesetzt. Die Stufe (`streng`: Abstand,
+  nie rückwärts; `locker`: nah an alles, volles Tempo, rückwärts; Details in `slop_navigation/README.md`) gilt beim Start
+  der Navigation; wechseln = Navigation stoppen und neu starten. Die laufende Stufe steht oben („Nav2 locker“) und neben
+  der Navigation unter „Einzeln“ – auch, wenn die Navigation im Terminal gestartet wurde (aus `safety:=` in dessen
+  Befehlszeile).
+- **Kalibrieren** (unter „Aktionen“): misst 10 s lang Gyro-Bias und Sensorneigung (`ros2 run slop_calibration calibrate
+  all`, Ergebnisse in `calib/`). Roboter muss still und waagrecht stehen (Rückfrage), die Lidar-IMU muss laufen (mit
+  Lokalisierung, Navigation oder Kartieren). Wirkt erst nach dem nächsten Start von Antrieb und Lokalisierung.
 - **Dockingstation** („Andocken komplett“ startet Antrieb, Kamera, Navigation und den Dock-Knoten; einzeln unter „Einzeln“):
   Unter „Aktionen“ **Dock speichern** (Roboter vorher 0,6–1,5 m gerade vor den Marker stellen), **Andocken** (mit
   Rückfrage, der Roboter fährt selbstständig) und **Andocken abbrechen**. Oben steht „Dock: <Stand>“ (bereit, anfahren,

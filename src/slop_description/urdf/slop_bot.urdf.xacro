@@ -2,7 +2,8 @@
 <!-- Slop-Bot: Differentialantrieb, Livox Mid-360s und RealSense D435i.
      Koordinaten (ROS): x vorne, y links, z oben.
 
-     TF-Baum:  odom → base_footprint (diff_drive_node) → base_link → Räder / Schleppräder / livox_frame / camera_link
+     TF-Baum:  odom → base_footprint (diff_drive_node) → base_link → Räder / Schleppräder / livox_frame / camera_link /
+               gripper_link → gripper_left_jaw, gripper_right_jaw
        base_footprint  Boden unter der Mitte der Antriebsachse
        base_link       Drehpunkt = Mitte der Antriebsachse (Radmitte, wheel_radius über dem Boden)
      Die Sensor-Unterframes der RealSense (camera_depth_frame, camera_imu_optical_frame ...) sendet der Treiber
@@ -44,6 +45,22 @@
   <xacro:property name="body_top" value="${lidar_z - lidar_height / 2.0}"/> <!-- Unterseite des Lidars -->
   <xacro:property name="mast_length" value="0.40"/>
   <xacro:property name="mast_radius" value="0.01"/>
+
+  <!-- Greifer (2026-11-09): mittig vorn am Körper, 7–13 cm über dem Boden, ragt 21 cm vor die Vorderkante, geöffnet
+       20 cm breit. Zwei Spindeln übereinander quer zur Fahrtrichtung, die Backen (32 mm breit) fahren in ±Y:
+       obere Spindel = Achse 1 = linke Backe von vorne gesehen, untere = Achse 2 = rechte Backe. Abstand der
+       Backen-Innenflächen in der Null, Weg und Seite stehen in gripper.yaml (gripper_node rechnet damit). -->
+  <xacro:property name="grip" value="${xacro.load_yaml('$(find slop_base)/config/gripper.yaml')['gripper_node']['ros__parameters']}"/>
+  <xacro:property name="grip_bottom" value="0.07"/>                 <!-- über dem Boden -->
+  <xacro:property name="grip_top" value="0.13"/>
+  <xacro:property name="grip_reach" value="0.21"/>                  <!-- vor der Körpervorderkante -->
+  <xacro:property name="grip_width" value="0.20"/>                  <!-- geöffnet, außen -->
+  <xacro:property name="grip_rail_depth" value="0.03"/>             <!-- Spindelträger hinten (geschätzt) -->
+  <xacro:property name="jaw_width" value="0.032"/>
+  <xacro:property name="grip_open_width" value="${grip['open_width'] if grip['open_width'] > 0 else grip_width - 2 * jaw_width}"/>
+  <xacro:property name="grip_travel" value="${grip['stroke'] - grip['home_backoff'] - grip['inner_margin']}"/>
+  <!-- liegt die linke (obere) Backe auf +Y? -->
+  <xacro:property name="left_sign" value="${1 if grip['left_is_plus_y'] else -1}"/>
 
   <!-- Nur fürs Aussehen in RViz (nicht gemessen): Radbreite, Schleppräder -->
   <xacro:property name="wheel_width" value="0.03"/>
@@ -161,5 +178,41 @@
     <child link="camera_link"/>
     <origin xyz="${camera_x} ${camera_y} ${camera_z}" rpy="$(arg camera_roll) $(arg camera_pitch) 0"/>
   </joint>
+
+  <!-- Greifer: gripper_link = Mitte der Vorderkante des Körpers, mittig zwischen den beiden Spindeln (Mitte auf der
+       X-Achse), auf halber Höhe des Greifers. Die Backen-Gelenke: Position = Weg von der Null (offen) nach innen [m],
+       gripper_node sendet sie auf /joint_states. -->
+  <link name="gripper_link">
+    <visual>
+      <origin xyz="${grip_rail_depth / 2.0} 0 0" rpy="0 0 0"/>
+      <geometry><box size="${grip_rail_depth} ${grip_width} ${grip_top - grip_bottom}"/></geometry>
+      <material name="gripper"><color rgba="0.25 0.35 0.55 1"/></material>
+    </visual>
+  </link>
+  <joint name="gripper_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="gripper_link"/>
+    <origin xyz="${body_front} 0 ${(grip_bottom + grip_top) / 2.0 - wheel_radius}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- side = Seite der Backe in der Null (+1 = +Y), level = +1 obere / -1 untere Spindel -->
+  <xacro:macro name="gripper_jaw" params="name side level">
+    <link name="${name}">
+      <visual>
+        <origin xyz="${grip_reach / 2.0} 0 0" rpy="0 0 0"/>
+        <geometry><box size="${grip_reach} ${jaw_width} ${(grip_top - grip_bottom) / 2.0}"/></geometry>
+        <material name="jaw"><color rgba="0.85 0.55 0.1 1"/></material>
+      </visual>
+    </link>
+    <joint name="${name}_joint" type="prismatic">
+      <parent link="gripper_link"/>
+      <child link="${name}"/>
+      <origin xyz="0 ${side * (grip_open_width + jaw_width) / 2.0} ${level * (grip_top - grip_bottom) / 4.0}" rpy="0 0 0"/>
+      <axis xyz="0 ${-side} 0"/>   <!-- positiv = schließen (zur Mitte) -->
+      <limit lower="0.0" upper="${grip_travel}" effort="50" velocity="0.05"/>
+    </joint>
+  </xacro:macro>
+  <xacro:gripper_jaw name="gripper_left_jaw" side="${left_sign}" level="1"/>
+  <xacro:gripper_jaw name="gripper_right_jaw" side="${-left_sign}" level="-1"/>
 
 </robot>

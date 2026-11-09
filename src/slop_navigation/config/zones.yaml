@@ -1,0 +1,29 @@
+# Footprint und Sicherheitszonen aus dem URDF (slop_description). navigation.launch.py rechnet sie beim Start
+# (slop_navigation/footprint.py) und überschreibt damit footprint und points in nav2.yaml / nav2_locker.yaml.
+# Ändert sich der Roboter im URDF (z. B. Greifer), passen sich Costmaps, Collision Monitore und unknown_obstacles
+# beim nächsten Start von selbst an.
+#
+# Footprint = Umriss aller Teile von oben, in base_footprint (x vorn, y links), Greifer offen, Schlitz zwischen den
+# Backen zählt mit. Zonen:
+#   grow: [vorn, hinten, seitlich]   Footprint um so viel vergrößert (m)
+#   band: [tiefe, seitlich]          Footprint + Streifen der Tiefe vor der Front (je y die vorderste Kante),
+#                                    seitlich verbreitert
+# Ein Polygon greift, wenn MEHR als max_points Punkte darin liegen (nav2.yaml). Die approach-Polygone nehmen unter
+# Humble ohnehin local_costmap/published_footprint, ihre points stehen nur der Vollständigkeit halber hier.
+zones:
+  streng:
+    collision_monitor_dynamic:           # B: unbekannte Hindernisse
+      DynStop: {band: [0.10, 0.06]}      # 10 cm vor der Front, 6 cm seitlich darüber hinaus
+      DynSlow: {grow: [0.40, 0.15, 0.15]}   # 40 cm vor, 15 cm hinter und neben dem Roboter (Heck schwenkt beim Drehen)
+      DynApproach: {grow: [0.02, 0.02, 0.02]}
+    collision_monitor:                   # A: alle Punkte, letzte Bremse
+      PolygonStop: {grow: [0.02, 0.02, 0.02]}
+      PolygonSlow: {grow: [0.10, 0.10, 0.10]}
+      FootprintApproach: {grow: [0.02, 0.02, 0.02]}
+  locker:
+    collision_monitor:
+      LooseStop: {grow: [0.01, 0.01, 0.01]}
+      FootprintApproach: {grow: [0.02, 0.02, 0.02]}
+
+# unknown_obstacles: Scanpunkte innerhalb des Footprints + Zuschlag sind Reste des eigenen Körpers
+unknown_obstacles: {grow: [0.03, 0.03, 0.03]}

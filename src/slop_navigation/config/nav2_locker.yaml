@@ -82,10 +82,11 @@ collision_monitor:
   ros__parameters:
     cmd_vel_in_topic: "cmd_vel_smoothed" # B läuft nicht
     polygons: ["LooseStop", "FootprintApproach"]
-    # Stopp: 1 cm um den Körper (vorn, seitlich, hinten), gegen alles, was beim Drehen hineinschwenkt
+    # Stopp: 1 cm um den Roboter samt Greifer, gegen alles, was beim Drehen hineinschwenkt
+    # (points aus dem URDF + config/zones.yaml, navigation.launch.py überschreibt sie beim Start)
     LooseStop:
       type: "polygon"
-      points: [0.11, 0.17, 0.11, -0.17, -0.41, -0.17, -0.41, 0.17]
+      points: [-0.41, -0.17, 0.11, -0.17, 0.11, -0.11, 0.14, -0.11, 0.14, -0.1, 0.32, -0.1, 0.32, 0.1, 0.14, 0.1, 0.14, 0.11, 0.11, 0.11, 0.11, 0.17, -0.41, 0.17]
       action_type: "stop"
       max_points: 2
       visualize: True

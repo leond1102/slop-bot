@@ -25,6 +25,7 @@ Die Zähler liegen in <karte>.experience.npz neben der Karte (alle save_period s
 import array
 import math
 import os
+import signal
 import time
 
 import numpy as np
@@ -63,7 +64,7 @@ class Experience(Node):
             ('p_free', 0.15),               # Beständigkeit darunter: frei
             ('p_fixed', 0.80),              # ab hier: fest
             ('max_cost', 60),               # Maskenwert für „fast fest“ (× 2,54 = Costmap-Kosten; < 100, nie verboten)
-            ('half_life_days', 7.0),        # Vergessen: nach so vielen Tagen zählt eine Beobachtung halb (≤ 0 = nie)
+            ('half_life_days', 14.0),       # Vergessen: nach so vielen Tagen zählt eine Beobachtung halb (≤ 0 = nie)
             ('soft_costs', False),          # Maske an den Planer geben (sonst nur lernen und anzeigen)
             ('live_clear', True),           # in dieser Sitzung zuletzt frei gesehene Zellen ohne Kosten
             # Strahlverfolgung
@@ -289,6 +290,9 @@ class Experience(Node):
         self.counts = dict.fromkeys(self.counts, 0)
 
     def shutdown(self):
+        # Beim Stoppen kommt Strg+C oft zweimal (Prozessgruppe + launch); das zweite brach sonst das Speichern ab
+        # (übrig blieb <karte>.experience.npz.tmp.npz, die alte Datei blieb unverändert)
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
         self.save()
 
 

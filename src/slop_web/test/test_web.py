@@ -241,3 +241,18 @@ def test_shipped_config_has_gripper():
     assert all(float(a.get('timeout', 25)) >= 60 for k, a in acts.items() if k != 'gripper_stop')
     reply = webconfig.trigger_reply("response:\nslop_interfaces.srv.Grip_Response(success=False, message='nicht gehomt')\n")
     assert reply == (False, 'nicht gehomt')
+
+
+def test_shipped_defaults_and_calibrate():
+    real = webconfig.load(os.path.join(os.path.dirname(__file__), '..', 'config', 'web.yaml'))
+    assert real['default_map'] == 'office-4' and real['default_safety'] == 'locker'
+    assert real['default_experience_costs'] is True
+    acts = {a['id']: a for a in real['actions']}
+    assert acts['calibrate']['cmds'] == [['ros2', 'run', 'slop_calibration', 'calibrate', 'all']]
+    assert acts['calibrate'].get('confirm') and float(acts['calibrate']['timeout']) >= 40
+
+
+def test_default_safety_from_config(cfg):
+    cfg = dict(cfg, default_safety='locker')
+    assert webconfig.params(cfg, {})['safety'] == 'locker'
+    assert webconfig.params(cfg, {'safety': 'streng'})['safety'] == 'streng'

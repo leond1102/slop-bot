@@ -57,9 +57,6 @@
   .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .hint { color: var(--muted); font-size: 13px; }
   label.inline { display: inline-flex; align-items: center; gap: 6px; }
-  select.locker { border-color: var(--warn); color: var(--warn); font-weight: 600; }
-  .safetyhint { margin-top: 6px; }
-  .safetyhint.locker { color: var(--warn); }
 
   .seqs { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-top: 10px; }
   .seqs button { padding: 12px; font-weight: 600; }
@@ -141,15 +138,14 @@
       <h2>Starten</h2>
       <div class="row">
         <label class="inline">Karte <select id="map"></select></label>
-        <label class="inline"><input type="checkbox" id="costs"> weiche Kosten (Erfahrungskarte)</label>
+        <label class="inline"><input type="checkbox" id="costs" checked> weiche Kosten (Erfahrungskarte)</label>
         <label class="inline">Sicherheit
           <select id="safety">
-            <option value="streng" selected>streng</option>
-            <option value="locker">locker</option>
+            <option value="streng">streng</option>
+            <option value="locker" selected>locker</option>
           </select>
         </label>
       </div>
-      <div class="hint safetyhint" id="safetyHint"></div>
       <div class="seqs" id="seqs"></div>
       <div class="row" style="margin-top:10px">
         <button id="stopAll">Alles stoppen</button>
@@ -331,7 +327,7 @@ function render() {
       if (r.score !== null) chips.push(chip(`Lokalisierung ${Math.round(r.score * 100)} %`, r.score >= 0.8 ? 'ok' : r.score >= 0.6 ? 'warn' : 'bad'));
     }
     const nav = navSafety();
-    if (nav) chips.push(chip(`Nav2 ${nav}`, nav === 'locker' ? 'warn' : 'info'));
+    if (nav) chips.push(chip(`Nav2 ${nav}`, 'info'));
     // Sensor-Wächter: sperrt Nav2, wenn Lidar oder EKF-Daten ausfallen (Tastatur und Web fahren weiter)
     if (r.sensor && r.sensor.startsWith('gesperrt')) {
       chips.push(`<span class="chip bad" title="${esc(r.sensor)}">Nav2 gesperrt: ${esc(r.sensor.slice(10, 70))}</span>`);
@@ -435,7 +431,8 @@ function buildDesktop() {
   const dds = Object.entries(cfg.dds || {}).map(([k, v]) => `${k}=${v}`).join(', ');
   $('ddsInfo').textContent = `DDS: ${dds || 'Standard'}`;
   $('map').innerHTML = cfg.maps.map(m => `<option ${m === cfg.default_map ? 'selected' : ''}>${esc(m)}</option>`).join('');
-  showSafety();
+  if (cfg.default_safety) $('safety').value = cfg.default_safety;      // Vorauswahl aus web.yaml
+  $('costs').checked = !!cfg.default_experience_costs;
   $('actions').innerHTML = cfg.actions.filter(a => a.group !== 'gripper').map(a => a.needs_name
     ? `<div class="mapsave"><input type="text" id="name_${a.id}" placeholder="Kartenname, z. B. office-4" maxlength="40">
        <button data-action="${a.id}" title="${esc(a.hint || '')}">${esc(a.label)}</button></div>`
@@ -447,17 +444,6 @@ function startParams() {
 }
 
 // ------------------------------------------------------------------ Sicherheitsstufe von Nav2
-const SAFETY_TEXT = {
-  streng: 'streng: Abstand zu Unbekanntem, langsamer nahe an Hindernissen, nie rückwärts.',
-  locker: 'locker: extrem nah an alles, volles Tempo, rückwärts erlaubt; dreht sich erst am Ziel in die Zielrichtung. Nur unter Aufsicht.',
-};
-function showSafety() {
-  const v = $('safety').value;
-  $('safety').classList.toggle('locker', v === 'locker');
-  $('safetyHint').className = 'hint safetyhint' + (v === 'locker' ? ' locker' : '');
-  $('safetyHint').textContent = SAFETY_TEXT[v] + ' Gilt beim Start der Navigation; wechseln = Navigation stoppen und neu starten.';
-}
-$('safety').onchange = showSafety;
 // Stufe der laufenden Navigation (von hier oder im Terminal gestartet), sonst null
 function navSafety() {
   if (!cfg || !status) return null;
@@ -467,20 +453,7 @@ function navSafety() {
   }
   return null;
 }
-// Startet dieser Knopf etwas mit Sicherheitsstufe (Navigation direkt oder in einer Abfolge)?
-function usesSafety(id) {
-  const item = cfg.items.find(i => i.id === id);
-  if (item) return !!item.uses_safety;
-  const seq = cfg.sequences.find(s => s.id === id);
-  return !!seq && seq.steps.some(s => usesSafety(s));
-}
-function startWith(id) {
-  const p = startParams();
-  if (p.safety === 'locker' && usesSafety(id) &&
-      !confirm('Navigation mit Sicherheitsstufe LOCKER starten?\n\nExtrem nah an alles, volles Tempo, rückwärts erlaubt, ' +
-               'erst am Ziel Drehen in die Zielrichtung. Nur unter Aufsicht.')) return;
-  send({t: 'start', id, params: p});
-}
+function startWith(id) { send({t: 'start', id, params: startParams()}); }
 
 // ------------------------------------------------------------------ Kamera-Debug der Dockingstation
 let dbgOn = false;

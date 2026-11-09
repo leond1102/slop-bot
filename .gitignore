@@ -17,3 +17,5 @@ bags/
 # letzte Pose der Lokalisierung (relocalize), ändert sich bei jedem Lauf
 maps/*.last_pose.yaml
 maps/*.last_pose.yaml.tmp
+# halb geschriebene Erfahrungskarte (Speichern abgebrochen)
+maps/*.tmp.npz

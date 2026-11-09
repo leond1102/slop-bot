@@ -15,7 +15,9 @@
 port: 8080
 listen: [127.0.0.1, tailscale]       # nur lokal und im Tailnet, nicht im Büro-/Heimnetz
 maps_dir: ~/slop-bot_ws/maps
-default_map: office-3
+default_map: office-4
+default_safety: locker               # Vorauswahl der Sicherheitsstufe beim Laden der Seite
+default_experience_costs: true       # Haken „weiche Kosten (Erfahrungskarte)“ beim Laden gesetzt
 workspace_setup: ~/slop-bot_ws/install/setup.bash
 state_dir: ~/.ros/slop_web            # welche Programme von hier gestartet wurden (Testserver: eigenen Ordner nehmen!)
 log_dir: ~/.ros/log/slop_web          # Ausgabe der gestarteten Programme und Aktionen
@@ -151,6 +153,13 @@ actions:
       - [ros2, run, nav2_map_server, map_saver_cli, -f, '$maps_dir/$name', --free, '0.196']
       - [ros2, service, call, /slam_toolbox/serialize_map, slam_toolbox/srv/SerializePoseGraph, "{filename: '$maps_dir/$name'}"]
       - [ros2, run, slop_navigation, experience_transfer, '$map', '$maps_dir/$name.yaml']
+  - id: calibrate
+    label: Kalibrieren (Gyro + Neigung)
+    confirm: Roboter steht still und waagrecht? Während der Messung (ca. 10 s) nicht berühren.
+    timeout: 60
+    hint: misst Gyro-Bias und Sensorneigung (calib/). Braucht die Lidar-IMU (läuft mit Lokalisierung/Navigation/Kartieren).
+      Wirkt erst nach dem nächsten Start von Antrieb und Lokalisierung
+    cmds: [[ros2, run, slop_calibration, calibrate, all]]
   - id: dock_save
     label: Dock speichern
     hint: Roboter 0,6–1,5 m gerade vor den Marker stellen (Lokalisierung muss passen); vermerkt den Marker in der Karte

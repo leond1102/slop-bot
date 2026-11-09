@@ -31,9 +31,11 @@
 ## Greifer
 
 - [ ] Am Roboter testen (Node nur in Simulation getestet).
-- [ ] `open_width` nach `gripper/home` messen und in `gripper.yaml` eintragen.
 - [ ] Prüfen, ob die linke Backe auf -Y liegt (`left_is_plus_y`).
-- [ ] Greifer ins URDF (Backen als Schubgelenke).
+- [ ] Navigation mit Greifer am Roboter testen (Footprint/Zonen aus dem URDF).
+- [ ] Hohe Objekte im Greifer (über 0,15 m) sieht der Scan im Footprint → Stopp; dann ausschneiden.
+- [ ] Dock: Haltepunkt (`stop_x`) und Lidar-Wächter liegen noch vor der Körperfront statt vor dem Greifer.
+- [ ] Kamera wieder montiert: prüfen, ob sie die Greiferbacken als Hindernis sieht.
 
 ## Erfahrungskarte
 

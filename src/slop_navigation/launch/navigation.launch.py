@@ -24,8 +24,13 @@ Sicherheitsstufen (safety:=):
 twist_mux: Tastatur 50, Sperren 100, sensor_guard 30. sensor_guard (slop_safety) sperrt Nav2, sobald /scan, /odom oder
 (nur streng) /safety/unknown_points ausfallen oder veraltet sind – die Collision Monitore ignorierten sie sonst still.
 Einstellungen: config/nav2.yaml (+ nav2_locker.yaml), Verhaltensbäume: behavior_trees/ (Recovery ohne Rückwärtsfahren).
+Footprint und Zonen der Collision Monitore kommen aus dem URDF (slop_description) mit den Zuschlägen aus
+config/zones.yaml: Sie werden beim Start berechnet und überschreiben footprint/points aus nav2.yaml.
 """
 import os
+
+import xacro
+import yaml
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -41,6 +46,32 @@ SAFETY_MODES = {
 }
 
 
+def urdf_params(share, mode):
+    """Footprint (Costmaps), Zonen (Collision Monitore) und Körperpolygon (unknown_obstacles) aus dem URDF.
+    Gibt (Pfad einer Parameterdatei, Footprint-Text fürs Log) zurück."""
+    from slop_navigation import footprint as fp
+    urdf = os.path.join(get_package_share_directory('slop_description'), 'urdf', 'slop_bot.urdf.xacro')
+    with open(os.path.join(share, 'config', 'zones.yaml'), encoding='utf-8') as f:
+        zones = yaml.safe_load(f)
+    grid = fp.footprint_grid(xacro.process_file(urdf).toxml())
+    poly = grid.polygon()
+    out = {name: {name: {'ros__parameters': {'footprint': fp.nav2_string(poly)}}}
+           for name in ('local_costmap', 'global_costmap')}
+    for node, polygons in zones['zones'][mode].items():
+        out[node] = {'ros__parameters': {name: {'points': fp.flat(fp.zone(grid, spec))}
+                                         for name, spec in polygons.items()}}
+    out['unknown_obstacles'] = {'ros__parameters': {
+        'body_polygon': fp.flat(fp.zone(grid, zones['unknown_obstacles']))}}
+    folder = os.path.join(os.path.expanduser('~'), '.ros', 'slop_navigation')
+    os.makedirs(folder, exist_ok=True)
+    path = os.path.join(folder, f'footprint_{mode}.yaml')        # wird bei jedem Start neu geschrieben
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write('# Von navigation.launch.py aus dem URDF und config/zones.yaml erzeugt – nicht von Hand ändern.\n')
+        yaml.safe_dump(out, f)
+    inner, outer = fp.radii(poly)
+    return path, f'{fp.nav2_string(poly)} (Innenkreis {inner:.2f} m, Außenkreis {outer:.2f} m)'
+
+
 def nav_nodes(context):
     """Nav2-Knoten je nach Sicherheitsstufe."""
     mode = context.launch_configurations['safety'].strip().lower()
@@ -52,6 +83,8 @@ def nav_nodes(context):
     params = [os.path.join(share, 'config', 'nav2.yaml')]
     if locker:
         params.append(os.path.join(share, 'config', 'nav2_locker.yaml'))     # später geladen = gewinnt
+    footprint_file, footprint_text = urdf_params(share, mode)
+    params.append(footprint_file)                                            # Footprint und Zonen aus dem URDF
     trees = os.path.join(share, 'behavior_trees')
     suffix = '_locker' if locker else ''              # locker: erst hinfahren (auch rückwärts), dann auf der Stelle drehen
     guard_cfg = os.path.join(get_package_share_directory('slop_safety'), 'config', 'sensor_guard.yaml')
@@ -60,6 +93,7 @@ def nav_nodes(context):
 
     nodes = [
         LogInfo(msg=f'Sicherheitsstufe {mode}: {SAFETY_MODES[mode]}'),
+        LogInfo(msg=f'Footprint aus dem URDF: {footprint_text}'),
         Node(package='nav2_controller', executable='controller_server', output='screen',
              parameters=params, remappings=nav_cmd),
         Node(package='nav2_planner', executable='planner_server', name='planner_server', output='screen',
@@ -77,7 +111,8 @@ def nav_nodes(context):
     if not locker:
         # Dynamisches Sicherheitsfeld: Scanpunkte ohne bekannte Struktur → collision_monitor_dynamic (größere Zonen)
         nodes += [
-            Node(package='slop_navigation', executable='unknown_obstacles', name='unknown_obstacles', output='screen'),
+            Node(package='slop_navigation', executable='unknown_obstacles', name='unknown_obstacles', output='screen',
+                 parameters=[footprint_file]),
             Node(package='nav2_collision_monitor', executable='collision_monitor', name='collision_monitor_dynamic',
                  output='screen', parameters=params),
         ]

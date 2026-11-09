@@ -21,6 +21,21 @@ def limit_wheel_speeds(w_left, w_right, w_max):
     return w_left * k, w_right * k, k
 
 
+class Standstill:
+    """Stillstand der Räder: wahr, wenn sich hold Sekunden lang kein Rad bewegt hat.
+    Open Loop: Der Zähler ist der Sollwert, bei bestromten Motoren steht der Roboter dann wirklich (er rutscht nicht weg)."""
+
+    def __init__(self, hold):
+        self.hold = hold
+        self.last_move = None
+
+    def update(self, t, moved):
+        """t [s], moved = ein Rad hat sich seit dem letzten Aufruf bewegt. Gibt zurück, ob der Roboter steht."""
+        if moved or self.last_move is None:
+            self.last_move = t
+        return t - self.last_move >= self.hold
+
+
 class Odometry2D:
     """Integriert Radwege zu Pose (x, y, yaw) im odom-Frame."""
 

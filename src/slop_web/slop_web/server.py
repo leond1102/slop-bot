@@ -327,6 +327,8 @@ class Web:
             'actions': [{k: a.get(k) for k in ('id', 'label', 'hint', 'needs_name', 'needs', 'confirm', 'group')}
                         for a in c.get('actions', [])],
             'maps': webconfig.maps(c['maps_dir']), 'default_map': c.get('default_map'),
+            'default_safety': c.get('default_safety', webconfig.SAFETY_LEVELS[0]),
+            'default_experience_costs': bool(c.get('default_experience_costs', False)),
             'drive': c.get('drive', {}),
             'dds': c.get('dds_effective', {}),
         }

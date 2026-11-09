@@ -170,11 +170,17 @@ Einstellungen: `config/nav2.yaml`, Verhaltensbäume: `behavior_trees/`, RViz: `s
 
 ### Footprint
 
-Körper 50 × 32 cm, symmetrisch, beginnt 10 cm vor der Antriebsachse (= Drehpunkt = `base_footprint`):
-`[[0.10, 0.16], [0.10, -0.16], [-0.40, -0.16], [-0.40, 0.16]]`, dazu 2 cm Zuschlag. Innenkreis 0,16 m, die hinteren Ecken
-liegen 0,43 m vom Drehpunkt: Beim Drehen auf der Stelle schwenkt das Heck weit aus. Dieselben Maße stehen im URDF
-(`slop_bot.urdf.xacro`: `body_front`, `body_length`, `body_width`) und bestimmen den Quader, der den Roboter aus
-Lidar-Wolke und `/scan` schneidet.
+Kommt aus dem URDF (`slop_description`): `navigation.launch.py` rechnet beim Start den Umriss aller Teile von oben
+(`slop_navigation/footprint.py`, Greifer offen, Schlitz zwischen den Backen gefüllt) und setzt damit `footprint` der
+Costmaps, die `points` aller Zonen der Collision Monitore (Zuschläge in `config/zones.yaml`) und den Körper für
+`unknown_obstacles`. Ändert sich der Roboter im URDF, passt sich Nav2 beim nächsten Start an; das Log zeigt
+„Footprint aus dem URDF: …“, die erzeugte Datei liegt in `~/.ros/slop_navigation/footprint_<stufe>.yaml`.
+
+Stand (T-Form): Körper 50 × 32 cm, beginnt 10 cm vor der Antriebsachse (= Drehpunkt = `base_footprint`), davor der
+Greifer bis 31 cm vor der Achse, ±10 cm (Backen ±9 cm). Footprint-Zuschlag 2 cm. Innenkreis 0,14 m, die hinteren Ecken
+liegen 0,43 m vom Drehpunkt: Beim Drehen auf der Stelle schwenkt das Heck weit aus. Die Werte in `nav2.yaml` sind nur der
+Stand dazu (Test `test_footprint.py` prüft, dass sie zum URDF passen). Der Quader, der den Roboter aus Lidar-Wolke und
+`/scan` schneidet, nimmt nur den Körper (`chassis`); der Greifer liegt unter dem Höhenband des Scans (ab 0,15 m).
 
 ### Wie die Costmaps funktionieren
 
@@ -211,7 +217,7 @@ ist, und gibt „vielleicht“ als weiche Kosten an den Planer. Startet mit `loc
   räumten flach streifende Strahlen und kleine Posenfehler die Wandzellen frei – Wände sahen aus wie Stühle (gemessen:
   nur 123 statt 305 Wandzellen „fest“; von 2737 Kartenwänden galten 1111 als „vielleicht“). Dateien, die vor
   2026-11-06 ohne Schutz gelernt wurden (Format 1), legt `experience` beim Start als `….v1.alt` beiseite und beginnt neu.
-- **Vergessen:** Halbwertszeit 7 Tage (`half_life_days`; Baustelle eher 1–2). p bleibt dabei gleich, aber neue
+- **Vergessen:** Halbwertszeit 14 Tage (`half_life_days`; Baustelle eher 1–2). p bleibt dabei gleich, aber neue
   Beobachtungen wiegen mehr: Ein weggeräumter Schrank wird nach einigen Fahrten zu „vielleicht“, dann „frei“.
 - **Lernsperre** (sonst schriebe eine falsche Pose Wände an falsche Stellen): nur bei relocalize-Score ≥ 75 %,
   AMCL-Unsicherheit ≤ 0,2 m / 6°, Drehrate ≤ 0,3 rad/s (Scan sonst verzerrt). Langzeit-Zählung nur nach 0,2 m / 20°

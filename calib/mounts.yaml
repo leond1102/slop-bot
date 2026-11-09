@@ -5,6 +5,6 @@ camera:
   stamp: '2026-11-05T14:11:54'
 livox:
   frame: livox_frame
-  roll: 0.00329
-  pitch: 0.02461
-  stamp: '2026-11-05T14:11:54'
+  roll: 0.00081
+  pitch: 0.01033
+  stamp: '2026-11-09T12:03:32'

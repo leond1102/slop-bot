@@ -108,14 +108,15 @@ def test_locker_reverses_close_and_fast():
 
 
 def test_locker_stop_zone_hugs_footprint():
-    """1 cm um den Footprint, nicht mehr."""
+    """1 cm um den Footprint (samt Greifer), nicht mehr."""
     cfg = modes()['locker']
     pts = p(cfg, 'collision_monitor')['LooseStop']['points']
     xs, ys = pts[0::2], pts[1::2]
-    fp = [[0.10, 0.16], [0.10, -0.16], [-0.40, -0.16], [-0.40, 0.16]]
+    fp = yaml.safe_load(costmap(cfg, 'local_costmap')['footprint'])
     assert max(xs) == pytest.approx(max(x for x, _ in fp) + 0.01)
     assert min(xs) == pytest.approx(min(x for x, _ in fp) - 0.01)
-    assert max(ys) == pytest.approx(0.17) and min(ys) == pytest.approx(-0.17)
+    assert max(ys) == pytest.approx(max(y for _, y in fp) + 0.01)
+    assert min(ys) == pytest.approx(min(y for _, y in fp) - 0.01)
 
 
 def follow_paths(tree):

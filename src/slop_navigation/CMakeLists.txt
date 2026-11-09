@@ -20,6 +20,7 @@ if(BUILD_TESTING)
   ament_add_pytest_test(test_safety test/test_safety.py)
   ament_add_pytest_test(test_map_extend test/test_map_extend.py)
   ament_add_pytest_test(test_safety_modes test/test_safety_modes.py)
+  ament_add_pytest_test(test_footprint test/test_footprint.py)
 endif()
 
 ament_package()
