@@ -1,0 +1,6 @@
+# Objekt greifen: Mitte in Y [m] (Roboterkoordinaten, +Y = links) und Breite in Y [m]
+float64 y
+float64 width
+---
+bool success
+string message

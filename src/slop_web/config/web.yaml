@@ -1,6 +1,7 @@
 # Slop-Bot Weboberfläche: was die Seite starten darf. Befehle wie in STARTBEFEHLE.md, als Liste (kein Shell-Text).
 # Platzhalter: $map (Karte aus maps_dir, im Browser wählbar), $experience_costs (true/false), $safety (streng/locker,
-# Sicherheitsstufe von Nav2), $name (Kartenname), $maps_dir. Der Browser kann NUR diese Einträge auslösen.
+# Sicherheitsstufe von Nav2), $name (Kartenname), $maps_dir, $y/$width (Greifer: im Browser in mm, eingesetzt in m).
+# Der Browser kann NUR diese Einträge auslösen.
 # uses_safety: true = die Seite zeigt an, in welcher Sicherheitsstufe der Eintrag läuft (aus safety:= in der Befehlszeile).
 #
 # items      einzelne Starts; conflicts = darf nicht gleichzeitig laufen (z. B. zwei Lidar-Treiber)
@@ -8,7 +9,8 @@
 #            ready = Topic, das nach dem Start Daten liefern muss, bevor eine Abfolge weitermacht (ready_age: so alt darf
 #            die letzte Nachricht sein, Standard 1 s; ready_timeout: so lange wird gewartet)
 # sequences  Abfolgen „alles für …“: Schritte nacheinander, bereits laufende werden übersprungen
-# actions    kurze Befehle (Dienstaufrufe), laufen höchstens timeout s
+# actions    kurze Befehle (Dienstaufrufe), laufen höchstens timeout s; needs = Pflichtangaben (y, width),
+#            group: gripper = erscheint in der Karte „Greifer“ statt unter „Aktionen“
 
 port: 8080
 listen: [127.0.0.1, tailscale]       # nur lokal und im Tailnet, nicht im Büro-/Heimnetz
@@ -168,3 +170,33 @@ actions:
   - id: drive_on
     label: Endstufen an / Fehler quittieren
     cmds: [[ros2, service, call, /diff_drive/enable, std_srvs/srv/SetBool, 'data: true']]
+  # Greifer (gripper_node startet mit dem Antrieb). Fahrten dauern: 10000 Schritte/s = 4 mm/s
+  - id: gripper_home
+    group: gripper
+    label: Homen
+    hint: beide Backen schnell gegen den äußeren Anschlag, 2 mm zurück = Null. Nur nach dem Einschalten des Treibers nötig
+    timeout: 60
+    cmds: [[ros2, service, call, /gripper/home, std_srvs/srv/Trigger]]
+  - id: gripper_grip
+    group: gripper
+    label: Greifen
+    needs: [y, width]
+    timeout: 120
+    hint: Objekt mit Mitte Y und Breite klemmen (+0,5 mm Quetschung)
+    cmds: [[ros2, service, call, /gripper/grip, slop_interfaces/srv/Grip, '{y: $y, width: $width}']]
+  - id: gripper_move
+    group: gripper
+    label: Verschieben
+    needs: [y]
+    timeout: 120
+    hint: gegriffenes Objekt auf die neue Mitte Y schieben (Breite bleibt)
+    cmds: [[ros2, service, call, /gripper/move, slop_interfaces/srv/Move, '{y: $y}']]
+  - id: gripper_open
+    group: gripper
+    label: Öffnen
+    timeout: 120
+    cmds: [[ros2, service, call, /gripper/open, std_srvs/srv/Trigger]]
+  - id: gripper_stop
+    group: gripper
+    label: Greifer Stopp
+    cmds: [[ros2, service, call, /gripper/stop, std_srvs/srv/Trigger]]

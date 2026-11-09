@@ -6,8 +6,8 @@ import time
 
 import pytest
 
-from slop_base.bus_link import BusClient, BusServer
-from slop_base.bus_process import DEFAULTS, load_config
+from slop_base.bus_link import BusClient, BusServer, GripClient
+from slop_base.bus_process import DEFAULTS, load_config, load_grip_config
 from slop_base.cl57e_bus import Cl57eError
 
 _names = itertools.count()
@@ -22,8 +22,16 @@ class FakeBus:
         self.calls = []
         self.enable_error = enable_error
         self.comm_lost = False
+        self.gaxes = {1: None, 2: None}
+        self.genabled = False
+        self.gmoves = []
 
     def status(self):
+        st = self._status()
+        st['grip'] = self.grip_status()
+        return st
+
+    def _status(self):
         return {'valid': True, 't': time.perf_counter(), 'actual': {3: 100, 4: -200}, 'target': {3: 100, 4: -200},
                 'state': {3: 'OPERATION_ENABLED', 4: 'OPERATION_ENABLED'}, 'enabled': self.enabled,
                 'moving': False, 'watchdog': False, 'error': '', 'comm_lost': self.comm_lost,
@@ -44,6 +52,28 @@ class FakeBus:
 
     def stop(self):
         self.calls.append('stop')
+
+    # Greifer
+    def grip_status(self):
+        return {'actual': {1: 5, 2: -5}, 'target': {1: 5, 2: -5}, 'state': {1: 'OPERATION_ENABLED', 2: 'OPERATION_ENABLED'},
+                'enabled': self.genabled, 'moving': False, 'error': ''}
+
+    def grip_enable(self):
+        self.calls.append('grip_enable')
+        self.genabled = True
+
+    def grip_disable(self):
+        self.calls.append('grip_disable')
+        self.genabled = False
+
+    def grip_move(self, goals, vmax, amax):
+        if not self.genabled:
+            return False
+        self.gmoves.append((goals, vmax, amax))
+        return True
+
+    def grip_stop(self):
+        self.calls.append('grip_stop')
 
 
 @pytest.fixture
@@ -163,3 +193,65 @@ def test_load_config_reads_node_block(tmp_path):
     cfg = load_config(str(p))
     assert cfg['ifname'] == 'eth9' and cfg['right_gear'] == 14.0
     assert 'rate' not in cfg and cfg['cycle_ms'] == DEFAULTS['cycle_ms']
+
+
+# ---------------------------------------------------------------- Greifer
+def test_gripper_connects_beside_wheel_node(link):
+    bus, server, client, _ = link
+    client.connect(2.0)
+    grip = GripClient(server.name)
+    try:
+        grip.connect(2.0)
+        assert _wait(lambda: (grip.poll(), grip.status())[1] is not None)
+        assert grip.status()['actual'] == {1: 5, 2: -5}
+        assert _wait(lambda: (client.poll(), client.status())[1] is not None)
+        assert 'grip' not in client.status()                   # Räder-Node sieht den Greifer nicht
+        grip.enable(2.0)
+        assert bus.genabled and 'enable' not in bus.calls       # Räder nicht freigegeben
+        grip.move({1: 1000, 2: -1000}, 10000, 20000)
+        assert _wait(lambda: bus.gmoves == [({1: 1000.0, 2: -1000.0}, 10000.0, 20000.0)])
+        grip.stop()
+        grip.disable()
+        assert _wait(lambda: bus.calls[-2:] == ['grip_stop', 'grip_disable'])
+        grip.move({1: 0}, 1000, 1000)                           # nicht freigegeben → abgelehnt
+        assert _wait(lambda: (grip.poll(), grip.rejected)[1] != '')
+    finally:
+        grip.close()
+
+
+def test_silent_gripper_stops(link):
+    bus, server, client, logs = link
+    server.grip_timeout = 0.2
+    grip = GripClient(server.name)
+    try:
+        grip.connect(2.0)
+        assert _wait(lambda: 'grip_stop' in bus.calls, timeout=1.0)
+        assert any('gripper_node' in t and 'still' in t for t in logs)
+    finally:
+        grip.close()
+
+
+def test_gripper_rejected_without_grip_axes():
+    name = f'slop_test/{os.getpid()}/{next(_names)}'
+    bus = FakeBus()
+    bus.gaxes = {}
+    server = BusServer(bus, name, {}, log=lambda _: None)
+    stop = threading.Event()
+    thread = threading.Thread(target=lambda: [server.step(0.005) for _ in iter(stop.is_set, True)], daemon=True)
+    thread.start()
+    grip = GripClient(name)
+    try:
+        with pytest.raises(Cl57eError, match='ohne Greifer'):
+            grip.connect(1.0)
+    finally:
+        stop.set()
+        thread.join(1.0)
+        grip.close()
+        server.close()
+
+
+def test_load_grip_config(tmp_path):
+    p = tmp_path / 'g.yaml'
+    p.write_text('gripper_node:\n  ros__parameters:\n    axis_left: 2\n    axis_right: 1\n    speed: 5.0\n')
+    cfg = load_grip_config(str(p))
+    assert cfg['axis_left'] == 2 and cfg['axis_right'] == 1 and 'speed' not in cfg

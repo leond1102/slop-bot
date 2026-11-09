@@ -2,11 +2,12 @@
 """EtherCAT-Busprozess des Slop-Bots: CL57E-4A im 2-ms-Takt, ohne ROS (kein rclpy, kein DDS).
 
     ros2 run slop_base with_netcaps ros2 launch slop_base diff_drive.launch.py      # startet ihn mit der Node
-    ros2 run slop_base with_netcaps ros2 run slop_base ethercat_bus --config <diff_drive.yaml>
+    ros2 run slop_base with_netcaps ros2 run slop_base ethercat_bus --config <diff_drive.yaml> [--gripper-config <gripper.yaml>]
 
 Liest dieselbe Parameterdatei wie diff_drive_node (Block diff_drive_node/ros__parameters), öffnet den Bus, prüft die
 Treiberparameter, fährt ihn in OP und bedient dann genau eine diff_drive_node über bus_link (Unix-Socket).
-Der Zyklus läuft als SCHED_FIFO-Thread (rt_priority) auf Kern rt_cpu; der Hauptthread nimmt nur Socket-Nachrichten an.
+Mit --gripper-config bedient er zusätzlich die zwei Greifer-Achsen (Positionsfahrten, eigene Freigabe) für die
+gripper_node. Der Zyklus läuft als SCHED_FIFO-Thread (rt_priority) auf Kern rt_cpu; der Hauptthread nimmt nur Socket-Nachrichten an.
 
 Sicherheit: Watchdog (keine Sollwerte für cmd_timeout s → bremsen), Node still für node_timeout s → Endstufen aus,
 Fehler an einer Achse → beide aus, EtherCAT-Verbindung verloren → Prozess endet (der Treiber meldet Alarm).
@@ -36,6 +37,21 @@ DEFAULTS = {
     'cmd_vel_timeout': 0.5, 'rt_priority': 80, 'rt_cpu': 7, 'gil_switch_ms': 0.5, 'stats_period': 10.0,
     'node_timeout': 2.0, 'bus_socket': DEFAULT_NAME,
 }
+
+
+# Was der Busprozess aus gripper.yaml braucht (Block gripper_node/ros__parameters)
+GRIP_DEFAULTS = {'axis_left': 1, 'axis_right': 2, 'units_per_rev': 0, 'loop': 'open', 'motor_current_ma': 0,
+                 'max_ferr_rev': 1.0, 'grip_timeout': 1.0}
+
+
+def load_grip_config(path):
+    """Parameter aus gripper.yaml (Block gripper_node/ros__parameters) mit Standardwerten ergänzt."""
+    cfg = dict(GRIP_DEFAULTS)
+    with open(path, encoding='utf-8') as f:
+        data = yaml.safe_load(f) or {}
+    block = data.get('gripper_node', data.get('/**', {})).get('ros__parameters', {})
+    cfg.update({k: v for k, v in block.items() if k in GRIP_DEFAULTS})
+    return cfg
 
 
 def load_config(path):
@@ -90,6 +106,7 @@ def setup_main_thread(cfg):
 def main(argv=None):
     parser = argparse.ArgumentParser(description='EtherCAT-Busprozess (CL57E-4A) für diff_drive_node')
     parser.add_argument('--config', default='', help='diff_drive.yaml (Block diff_drive_node/ros__parameters)')
+    parser.add_argument('--gripper-config', default='', help='gripper.yaml: Greifer-Achsen mit bedienen (Block gripper_node)')
     args, _ = parser.parse_known_args(argv)      # --ros-args von launch_ros ignorieren
     cfg = load_config(args.config)
 
@@ -102,25 +119,45 @@ def main(argv=None):
 
     setup_main_thread(cfg)
     gears = {cfg['left_axis']: cfg['left_gear'], cfg['right_axis']: cfg['right_gear']}
-    bus = Cl57eBus(cfg['ifname'], list(gears), cfg['cycle_ms'] / 1000.0, cfg['dc'],
-                   cmd_timeout_s=min(0.3, cfg['cmd_vel_timeout']), rt_priority=cfg['rt_priority'], rt_cpu=cfg['rt_cpu'])
+    gcfg = load_grip_config(args.gripper_config) if args.gripper_config else None
+    grip_axes = [gcfg['axis_left'], gcfg['axis_right']] if gcfg else []
+    try:
+        bus = Cl57eBus(cfg['ifname'], list(gears), cfg['cycle_ms'] / 1000.0, cfg['dc'],
+                       cmd_timeout_s=min(0.3, cfg['cmd_vel_timeout']), rt_priority=cfg['rt_priority'],
+                       rt_cpu=cfg['rt_cpu'], grip_nums=grip_axes)
+    except ValueError as e:
+        log('ERROR', f'FEHLER: {e} (Räder {list(gears)}, Greifer {grip_axes})')
+        return 1
     server = None
     reason = 'beendet'
     code = 0
     try:
         name = bus.open()
         upr = check_drive_params(bus, cfg, list(gears))
+        grip_upr = {}
+        if gcfg:
+            try:
+                grip_upr = check_drive_params(bus, gcfg, grip_axes)
+            except Cl57eError as e:      # Greifer-Fehler darf die Räder nicht verhindern
+                log('ERROR', f'Greifer abgeschaltet: {e}')
+                bus.gaxes.clear()
+                grip_axes = []
         bus.configure()
         bus.start()
+        for axis in grip_axes:
+            bus.grip_set_limits(axis, amax=20000.0, ferr_limit=gcfg['max_ferr_rev'] * grip_upr[axis])
         for axis, gear in gears.items():
             bus.set_limits(axis, amax=cfg['wheel_acc'] / TWO_PI * gear * upr[axis],
                            ferr_limit=cfg['max_ferr_rev'] * upr[axis])
         info = {'name': name, 'ifname': cfg['ifname'], 'upr': {str(a): u for a, u in upr.items()},
-                'rt_status': bus.rt_status, 'cycle_ms': cfg['cycle_ms']}
+                'rt_status': bus.rt_status, 'cycle_ms': cfg['cycle_ms'],
+                'grip_upr': {str(a): u for a, u in grip_upr.items()}}
         server = BusServer(bus, cfg['bus_socket'], info, node_timeout=cfg['node_timeout'],
-                           log=lambda text: log('INFO', text))
+                           log=lambda text: log('INFO', text),
+                           grip_timeout=gcfg['grip_timeout'] if gcfg else 1.0)
         log('INFO', f'{name} an {cfg["ifname"]} in OP (CSP, {cfg["loop"]} loop), Achsen '
             + ', '.join(f'{a} (1:{g:g}, {upr[a]} Einh./U)' for a, g in gears.items())
+            + (f'; Greifer-Achsen {grip_axes}' if grip_axes else '')
             + f'; Zyklus {cfg["cycle_ms"]:g} ms: {bus.rt_status}. Warte auf diff_drive_node')
         gc.freeze()                    # Angelegtes aus der GC nehmen: kürzere GC-Pausen
         next_stats = time.monotonic() + cfg['stats_period'] if cfg['stats_period'] > 0 else math.inf

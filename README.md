@@ -16,7 +16,7 @@ Offene Aufgaben: [TODO.md](TODO.md)
 
 | Paket | Inhalt |
 |---|---|
-| [slop_base](src/slop_base) | Antrieb in zwei Prozessen: `ethercat_bus` (EtherCAT mit pysoem, CSP, 2-ms-Zyklus als Echtzeit-Thread, **ohne ROS**) und `diff_drive_node` (`/cmd_vel` → Drehzahlen, `/wheel/odom`, `/joint_states`), verbunden über einen lokalen Unix-Socket (`bus_link.py`). `with_netcaps` startet mit den nötigen Rechten. |
+| [slop_base](src/slop_base) | Antrieb in zwei Prozessen: `ethercat_bus` (EtherCAT mit pysoem, CSP, 2-ms-Zyklus als Echtzeit-Thread, **ohne ROS**) und `diff_drive_node` (`/cmd_vel` → Drehzahlen, `/wheel/odom`, `/joint_states`), verbunden über einen lokalen Unix-Socket (`bus_link.py`). Dazu `gripper_node` (Spindelgreifer an Achse 1/2: `gripper/home`, `grip`, `move`, `open`, `stop`; Config `gripper.yaml`), eigene Freigabe im selben Busprozess. `with_netcaps` startet mit den nötigen Rechten. |
 | [slop_localization](src/slop_localization) | EKF (`robot_localization`): bildet `/odom` und das TF `odom → base_footprint` aus allen Odometrie-/IMU-Quellen. Quellen (Radodometrie, Livox-Gyro über `imu_adapter`) stehen in `config/ekf.yaml`, neue Sensoren werden dort als Block ergänzt. Braucht `sudo apt install ros-humble-robot-localization` |
 | [slop_bringup](src/slop_bringup) | `bringup.launch.py`: Antrieb + Sicherheit + Robotermodell + EKF in einem Start (`ekf:=false` ohne EKF) |
 | [slop_calibration](src/slop_calibration) | `calibrate`-Befehl (Gyro-Bias, Sensorneigung) und Speicher für die Ergebnisse im Ordner `calib/` (siehe [calib/README.md](calib/README.md)) |
@@ -26,10 +26,12 @@ Offene Aufgaben: [TODO.md](TODO.md)
 | [slop_teleop](src/slop_teleop) | `keyboard_teleop`: Tastatursteuerung mit Totmann (Taste halten = fahren) |
 | [slop_dock](src/slop_dock) | Dockingstation: ArUco-Marker ID 1 mit der RealSense erkennen (`/dock/save` vermerkt ihn in der Karte: `maps/<karte>.dock.yaml`), `/dock/start` fährt per Nav2 hin und stellt den Roboter mit der Kamera mittig davor; Anleitung im [README](src/slop_dock/README.md) |
 | [slop_web](src/slop_web) | Weboberfläche: Programme starten/stoppen, Fahren mit Totmann, Notaus – im Browser und am Handy (Tailnet) |
+| [slop_interfaces](src/slop_interfaces) | Eigene Service-Typen: `Grip` (Objektmitte y, Breite), `Move` (neue Mitte y) |
 | [slop_description](src/slop_description) | URDF/xacro des Roboters (Räder, Schleppräder, Livox, RealSense) und `description.launch.py` mit `robot_state_publisher`. Radmaße, Spur und Gelenknamen liest es aus `diff_drive.yaml` |
 | [slop_sensors](src/slop_sensors) | Launch-Dateien und Configs für Livox Mid-360s und RealSense D435i; `livox_to_cloud` (Livox → PointCloud2) und Einstellungen für den 2D-Scan `/scan` (`pointcloud_to_laserscan`); `depth_obstacles` (Hindernisse aus dem Tiefenbild der RealSense) |
 | `src/third_party` (Git-Submodule) | `Livox-SDK2`, `livox_ros_driver2`, `realsense-ros` 4.58.4, `FAST_LIO` (Branch ROS2, mit `src/third_party/patches/fast_lio.patch`) |
 | [tools/diff_motor.py](tools/diff_motor.py) | Motortest ohne ROS (Parameter lesen, Achsen zuordnen, Getriebe prüfen), CSV-Logs in `tools/logs/` |
+| [tools/stepper_test.py](tools/stepper_test.py), [tools/gripper_test.py](tools/gripper_test.py), [tools/probe_axes.py](tools/probe_axes.py) | Greifer ohne ROS testen (nur wenn `ethercat_bus` nicht läuft); `probe_axes` zeigt nur lesend, welche Achsen der Treiber anbietet |
 
 ## Datenfluss
 
@@ -81,6 +83,8 @@ robot_state_publisher (URDF) ──► TF base_footprint → base_link → Räde
 |---|---|
 | Rechner | Jetson Orin, 8 Kerne. EtherCAT-Zyklus (Prozess `ethercat_bus`) auf Kern 7 (SCHED_FIFO 80), USB-Interrupts auf CPU1 |
 | Antrieb | CL57E-4A an `enP8p1s0`, Achse 3 = links (Getriebe 1:5,18), Achse 4 = rechts (1:13,73, gespiegelt). Schrittmotoren ohne Encoder (Open Loop) |
+| Greifer | Vorn, zwei gleiche Spindeln Tr6×4 (4 mm/U, 2500 Schritte/mm) mit 28-mm-Steppern (1,0 A) übereinander, Mitte auf der X-Achse, Backen fahren in ±Y, 182 mm Weg, Backen 32 mm breit. Achse 1 oben = linke Backe (von vorne gesehen, schließt negativ), Achse 2 unten = rechte Backe (schließt positiv) |
+| PDO-Falle | Der CL57E-4A zeigt die Objekte (0x6041 …) nur für Achsen ab der kleinsten zugeordneten. Ordnet ein Master nur 3+4 zu, fehlen Achse 1/2 beim nächsten Start. Darum ordnen `cl57e_bus.py` und `tools/diff_motor.py` immer alle vier PDOs zu |
 | Räder | Ø 7 cm, Spur 24 cm, angetrieben vorn. Schleppräder 34 cm dahinter. Höchstens 50 U/min am Rad → 0,183 m/s, 1,53 rad/s (`max_wheel_rpm` in `diff_drive.yaml`) |
 | `base_footprint` | Boden, Mitte zwischen den angetriebenen Rädern; x vorn, y links, z oben (TF `odom → base_footprint` vom EKF) |
 | Lidar | Livox **Mid-360s** (SDK-Typ 35, eigene Config `MID360s_config.json`), IP `192.168.1.162`; Jetson `192.168.1.50/24` am USB-LAN-Adapter (NetworkManager `livox-mid360`). 4 Scanlinien, ~20 000 Punkte je Scan bei 10 Hz, davon ~18 % Nullpunkte (kein Echo) |
@@ -181,6 +185,7 @@ slop-bot_ws/
 │   ├── slop_calibration/ Kalibrierbefehl + Speicher
 │   ├── slop_description/ URDF + robot_state_publisher
 │   ├── slop_dock/       Dockingstation (ArUco-Marker, mittig davor halten)
+│   ├── slop_interfaces/ eigene Service-Typen (Greifer)
 │   ├── slop_localization/ EKF (robot_localization)
 │   ├── slop_lio/        FAST-LIO2 + Brücke zu TF und EKF
 │   ├── slop_navigation/ Karte, Lokalisierung, Erfahrungskarte, Nav2
@@ -191,6 +196,7 @@ slop-bot_ws/
 │   └── third_party/     Livox-SDK2, livox_ros_driver2, realsense-ros, FAST_LIO (Submodule), patches/
 └── tools/
     ├── diff_motor.py    Motortest ohne ROS
+    ├── stepper_test.py, gripper_test.py, probe_axes.py  Greifer-Tests ohne ROS
     ├── make_aruco_marker.py  ArUco-Marker zum Ausdrucken
     └── logs/            CSV-Logs der Motortests
 ```

@@ -311,14 +311,22 @@ class Bus:
 
     # ---------------------------------------------------------------- PDO / Zustände
     def configure(self):
-        """PDOs der gewählten Achsen zuordnen, Mapping lesen, CSP setzen (PRE-OP)."""
-        rx_pdos = [0x1600 + (a.num - 1) * PDO_OFFSET for a in self.axes]
-        tx_pdos = [0x1A00 + (a.num - 1) * PDO_OFFSET for a in self.axes]
-        for assign, pdos in ((0x1C12, rx_pdos), (0x1C13, tx_pdos)):
-            self.sdo_w(assign, 0, 0, '<B')
-            for i, pdo in enumerate(pdos, 1):
-                self.sdo_w(assign, i, pdo, '<H')
-            self.sdo_w(assign, 0, len(pdos), '<B')
+        """Alle vier PDOs zuordnen, Mapping lesen, CSP setzen (PRE-OP).
+
+        Immer alle vier (ab Achse 1): Der Treiber zeigt die CiA-402-Objekte nur für Achsen ab der kleinsten
+        zugeordneten. Wer nur 3+4 zuordnet, versteckt Achse 1 und 2 für den nächsten Start (wie src/slop_base/cl57e_bus.py).
+        """
+        self._assign_all()
+        try:
+            self.sdo_r(0x1600, 0, '<B')
+        except Exception:      # von einem früheren Master versteckt: INIT → PRE-OP, Treiber baut neu auf
+            print('  Achse 1/2 versteckt → Bus neu initialisieren')
+            self.master.state = pysoem.INIT_STATE
+            self.master.write_state()
+            time.sleep(0.3)
+            self.master.config_init()
+            self.slave = next(s for s in self.master.slaves if s.man == VENDOR_ID and s.id == PRODUCT_CODE)
+            self._assign_all()
         self.rx_size = self._build_map(self._read_assign(0x1C12), 'rx')
         self.tx_size = self._build_map(self._read_assign(0x1C13), 'tx')
         for a in self.axes:
@@ -327,6 +335,13 @@ class Bus:
                 if need not in where:
                     raise AbortTest(f'Objekt 0x{need + a.ax:04X} fehlt im PDO-Mapping von {a.label}')
             self.sdo_w(0x6060 + a.ax, 0, MODE_CSP, '<b')
+
+    def _assign_all(self):
+        for assign, base in ((0x1C12, 0x1600), (0x1C13, 0x1A00)):
+            self.sdo_w(assign, 0, 0, '<B')
+            for i in range(4):
+                self.sdo_w(assign, i + 1, base + i * PDO_OFFSET, '<H')
+            self.sdo_w(assign, 0, 4, '<B')
 
     def _read_assign(self, assign):
         n = self.sdo_r(assign, 0, '<B')

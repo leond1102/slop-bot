@@ -69,7 +69,9 @@ def test_maps_and_params(cfg):
 
 @pytest.mark.parametrize('raw', [{'map': '../../etc/passwd'}, {'map': 'gibtsnicht'}, {'name': 'a b'},
                                  {'name': '$(reboot)'}, {'name': 'x' * 41}, {'name': 5},
-                                 {'safety': 'aus'}, {'safety': 'locker; reboot'}, {'safety': ['locker']}])
+                                 {'safety': 'aus'}, {'safety': 'locker; reboot'}, {'safety': ['locker']},
+                                 {'y': '1; reboot'}, {'y': 'nan'}, {'y': 'inf'}, {'y': 500}, {'width': 0},
+                                 {'width': None}])
 def test_params_reject_bad_input(cfg, raw):
     with pytest.raises(ValueError):
         webconfig.params(cfg, raw)
@@ -223,3 +225,19 @@ def test_shipped_config_has_dock():
     for name, svc in (('dock_save', '/dock/save'), ('dock_start', '/dock/start'), ('dock_cancel', '/dock/cancel')):
         assert svc in acts[name]['cmds'][0]
     assert acts['dock_start'].get('confirm')                 # fährt selbstständig → Rückfrage
+
+
+def test_gripper_params_mm_to_m(cfg):
+    v = webconfig.params(cfg, {'y': '-25', 'width': 40.5})
+    assert v['y'] == '-0.0250' and v['width'] == '0.0405'
+    assert webconfig.argv(['{y: $y, width: $width}'], v) == ['{y: -0.0250, width: 0.0405}']
+
+
+def test_shipped_config_has_gripper():
+    real = webconfig.load(os.path.join(os.path.dirname(__file__), '..', 'config', 'web.yaml'))
+    acts = {a['id']: a for a in real['actions'] if a.get('group') == 'gripper'}
+    assert set(acts) == {'gripper_home', 'gripper_grip', 'gripper_move', 'gripper_open', 'gripper_stop'}
+    assert acts['gripper_grip']['needs'] == ['y', 'width'] and '/gripper/grip' in acts['gripper_grip']['cmds'][0]
+    assert all(float(a.get('timeout', 25)) >= 60 for k, a in acts.items() if k != 'gripper_stop')
+    reply = webconfig.trigger_reply("response:\nslop_interfaces.srv.Grip_Response(success=False, message='nicht gehomt')\n")
+    assert reply == (False, 'nicht gehomt')

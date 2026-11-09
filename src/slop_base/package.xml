@@ -3,7 +3,7 @@
 <package format="3">
   <name>slop_base</name>
   <version>0.1.0</version>
-  <description>Slop-Bot Plattform: Differentialantrieb mit zwei Schrittmotoren am EtherCAT-Treiber CL57E-4A (pysoem, CSP), /cmd_vel → Räder, /odom</description>
+  <description>Slop-Bot Plattform: Differentialantrieb mit zwei Schrittmotoren und Spindelgreifer am EtherCAT-Treiber CL57E-4A (pysoem, CSP), /cmd_vel → Räder, /odom, gripper/*</description>
   <maintainer email="leodresel11@gmail.com">Leon</maintainer>
   <license>Apache-2.0</license>
 
@@ -17,6 +17,7 @@
   <exec_depend>tf2_ros</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>std_srvs</exec_depend>
+  <exec_depend>slop_interfaces</exec_depend>
   <exec_depend>ament_index_python</exec_depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>

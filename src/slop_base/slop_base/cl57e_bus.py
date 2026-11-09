@@ -8,6 +8,13 @@ Ablauf: open() → configure() → start() → enable() → set_velocity() ... �
 Ein Thread schickt jeden Zyklus Controlword und Sollposition aller Achsen. Die Sollposition
 entsteht aus einer Drehzahlvorgabe mit begrenzter Beschleunigung (VelRamp).
 
+Räder (Drehzahl) und Greifer (Position) laufen in einem Master, weil pro Port nur einer möglich ist. Die Greifer-Achsen
+(grip_nums) haben eigene Freigabe, eigenen Fehlerzustand und eigene Sollwertrampe (PosRamp): ein Fehler am Greifer
+schaltet die Räder nicht ab und umgekehrt.
+
+PDO-Zuordnung: Der Treiber zeigt die CiA-402-Objekte nur für Achsen ab der KLEINSTEN zugeordneten (Zuordnung nur 3+4 →
+Achse 1 und 2 verschwinden bis zum nächsten Neustart des Mappings). Darum werden immer alle vier PDOs zugeordnet.
+
 Sicherheit:
 - Fehler oder Schleppfehler an EINER Achse schaltet ALLE ab (sonst dreht der Roboter).
 - Watchdog: kommt länger als cmd_timeout_s kein set_velocity(), bremsen alle Achsen auf 0.
@@ -15,6 +22,7 @@ Sicherheit:
 - Stirbt der ganze Prozess, kommen keine Frames mehr und der Treiber meldet nach SyncCnt
   verlorenen Frames einen Alarm.
 """
+import math
 import os
 import struct
 import threading
@@ -90,6 +98,37 @@ class VelRamp:
         return self.v_cmd == 0.0 and self.vel == 0.0
 
 
+class PosRamp:
+    """Trapezrampe auf eine Zielposition (Einheiten)."""
+
+    def __init__(self, pos, goal, vmax, amax):
+        self.pos = float(pos)
+        self.vel = 0.0
+        self.goal = float(goal)
+        self.vmax = float(vmax)
+        self.amax = float(amax)
+
+    def step(self, dt):
+        d = self.goal - self.pos
+        if d == 0 and self.vel == 0.0:
+            return self.pos
+        v_des = math.copysign(min(self.vmax, math.sqrt(2.0 * self.amax * abs(d))), d)
+        self.vel += max(-self.amax * dt, min(self.amax * dt, v_des - self.vel))
+        step = self.vel * dt
+        if abs(d) <= abs(step):
+            self.pos, self.vel = self.goal, 0.0
+        else:
+            self.pos += step
+        return self.pos
+
+    def stop_here(self):
+        """Ziel auf das Ende des Bremswegs legen (mit Rampe anhalten)."""
+        self.goal = float(round(self.pos + self.vel * abs(self.vel) / (2.0 * self.amax)))
+
+    def done(self):
+        return self.pos == self.goal and self.vel == 0.0
+
+
 class _Axis:
     """Zustand einer Achse. Felder ab cw werden unter Cl57eBus._lock geändert."""
 
@@ -110,13 +149,23 @@ class _Axis:
 class Cl57eBus:
     """Ein EtherCAT-Master, ein CL57E-4A, mehrere Achsen im CSP-Modus mit Drehzahlvorgabe."""
 
-    def __init__(self, ifname, axis_nums, cycle_s=0.002, dc=False, cmd_timeout_s=0.3, rt_priority=0, rt_cpu=-1):
+    def __init__(self, ifname, axis_nums, cycle_s=0.002, dc=False, cmd_timeout_s=0.3, rt_priority=0, rt_cpu=-1,
+                 grip_nums=()):
         """rt_priority > 0: Zyklus-Thread mit SCHED_FIFO dieser Priorität (braucht CAP_SYS_NICE).
         rt_cpu >= 0: Zyklus-Thread auf diesen Kern festlegen."""
         if not axis_nums or len(set(axis_nums)) != len(axis_nums) or any(n not in (1, 2, 3, 4) for n in axis_nums):
             raise ValueError('axis_nums: verschiedene Achsen aus 1..4')
+        grip_nums = list(grip_nums)
+        if len(set(grip_nums)) != len(grip_nums) or any(n not in (1, 2, 3, 4) for n in grip_nums) \
+                or set(grip_nums) & set(axis_nums):
+            raise ValueError('grip_nums: verschiedene Achsen aus 1..4, nicht zugleich Räder')
         self.ifname = ifname
         self.axes = {n: _Axis(n) for n in axis_nums}
+        self.gaxes = {n: _Axis(n) for n in grip_nums}     # Greifer: Positionsfahrten
+        self._genabled = False
+        self._gerror = ''
+        for a in self.gaxes.values():
+            a.amax = 20000.0
         self.cycle = cycle_s
         self.dc = dc
         self.cmd_timeout = cmd_timeout_s
@@ -182,24 +231,52 @@ class Cl57eBus:
 
     def read_param(self, num, index_axis1, fmt='<H'):
         """Objekt der Achse num lesen (Index von Achse 1 angeben)."""
-        return self.sdo_r(index_axis1 + self.axes[num].ax, 0, fmt)
+        axis = self.axes.get(num) or self.gaxes[num]
+        return self.sdo_r(index_axis1 + axis.ax, 0, fmt)
 
     # ---------------------------------------------------------------- Konfiguration
+    def _all_axes(self):
+        return list(self.axes.values()) + list(self.gaxes.values())
+
     def configure(self):
-        """PDOs der Achsen zuordnen, Mapping lesen, Betriebsart CSP setzen (PRE-OP)."""
-        nums = list(self.axes)
+        """Alle vier PDOs zuordnen (ab Achse 1, siehe Modul-Docstring), Mapping lesen, Betriebsart CSP setzen (PRE-OP)."""
+        nums = [1, 2, 3, 4]
+        self._assign_all(nums)
+        try:
+            first = self.sdo_r(0x1600, 0, '<B')
+        except Exception:
+            first = None
+        if first is None:      # Achse 1/2 vom letzten Master versteckt: Mapping neu aufbauen lassen (INIT → PRE-OP)
+            self._reinit()
+            self._assign_all(nums)
+        self.rx_size = self._build_map(self._read_assign(0x1C12), 'rx')
+        self.tx_size = self._build_map(self._read_assign(0x1C13), 'tx')
+        for a in self._all_axes():
+            for need, where in ((0x6040, a.rx), (0x607A, a.rx), (0x6041, a.tx), (0x6064, a.tx)):
+                if need not in where:
+                    raise Cl57eError(f'Objekt 0x{need + a.ax:04X} fehlt im PDO-Mapping von Achse {a.num}')
+            self.sdo_w(0x6060 + a.ax, 0, MODE_CSP, '<b')
+
+    def _assign_all(self, nums):
         for assign, base in ((0x1C12, 0x1600), (0x1C13, 0x1A00)):
             self.sdo_w(assign, 0, 0, '<B')
             for i, n in enumerate(nums, 1):
                 self.sdo_w(assign, i, base + (n - 1) * PDO_OFFSET, '<H')
             self.sdo_w(assign, 0, len(nums), '<B')
-        self.rx_size = self._build_map(self._read_assign(0x1C12), 'rx')
-        self.tx_size = self._build_map(self._read_assign(0x1C13), 'tx')
-        for a in self.axes.values():
-            for need, where in ((0x6040, a.rx), (0x607A, a.rx), (0x6041, a.tx), (0x6064, a.tx)):
-                if need not in where:
-                    raise Cl57eError(f'Objekt 0x{need + a.ax:04X} fehlt im PDO-Mapping von Achse {a.num}')
-            self.sdo_w(0x6060 + a.ax, 0, MODE_CSP, '<b')
+
+    def _reinit(self):
+        """INIT und wieder PRE-OP: der Treiber baut sein Objektverzeichnis nach der gespeicherten Zuordnung neu."""
+        pysoem = self._pysoem
+        self._master.state = pysoem.INIT_STATE
+        self._master.write_state()
+        time.sleep(0.3)
+        if self._master.config_init() <= 0:
+            raise Cl57eError('Kein EtherCAT-Slave nach dem Neuinitialisieren')
+        for s in self._master.slaves:
+            if s.man == VENDOR_ID and s.id == PRODUCT_CODE:
+                self._slave = s
+                return
+        raise Cl57eError('Kein CL57E-4A nach dem Neuinitialisieren')
 
     def _read_assign(self, assign):
         n = self.sdo_r(assign, 0, '<B')
@@ -211,7 +288,7 @@ class Cl57eBus:
         for pdo in pdos:
             for i in range(1, self.sdo_r(pdo, 0, '<B') + 1):
                 entry = self.sdo_r(pdo, i, '<I')
-                for a in self.axes.values():
+                for a in self._all_axes():
                     key = (entry >> 16) - a.ax
                     if key in PDO_TYPES and bit % 8 == 0:
                         getattr(a, which)[key] = (bit // 8, PDO_TYPES[key])
@@ -252,7 +329,7 @@ class Cl57eBus:
                 break
         if not self._op:
             self._raise_al('OP nicht erreicht' + ('' if self.dc else ' (evtl. dc: true nötig)'))
-        for a in self.axes.values():
+        for a in self._all_axes():
             mode = self.sdo_r(0x6061 + a.ax, 0, '<b')
             if mode != MODE_CSP:
                 raise Cl57eError(f'Achse {a.num}: CSP nicht aktiv (0x6061 = {mode})')
@@ -298,7 +375,7 @@ class Cl57eBus:
             while not self._stop.is_set():
                 with self._lock:
                     self._step_setpoints(time.monotonic())
-                    for a in self.axes.values():
+                    for a in self._all_axes():
                         struct.pack_into('<H', out, a.rx[0x6040][0], a.cw)
                         struct.pack_into('<i', out, a.rx[0x607A][0], a.target)
                         if 0x60FF in a.rx:
@@ -313,7 +390,7 @@ class Cl57eBus:
                     wkc_bad = 0
                     data = self._slave.input
                     with self._lock:
-                        for a in self.axes.values():
+                        for a in self._all_axes():
                             a.inp = {k: struct.unpack_from(f, data, o)[0] for k, (o, f) in a.tx.items()}
                         self._inp_valid = True
                         self._t_inp = now
@@ -354,12 +431,40 @@ class Cl57eBus:
                 self._watchdog = True
                 for a in self.axes.values():
                     a.ramp.v_cmd = 0.0
-        for a in self.axes.values():
+        for a in self._all_axes():
             if a.ramp is not None:
                 a.target = int(round(a.ramp.step(self.cycle)))
 
+    def _supervise_grip(self):
+        """Läuft unter self._lock: Greifer überwachen. Ein Fehler hier schaltet nur den Greifer ab."""
+        if not self.gaxes:
+            return
+        if not self._genabled:
+            for a in self.gaxes.values():
+                a.target = a.inp[0x6064]
+            return
+        for a in self.gaxes.values():
+            sw = a.inp[0x6041]
+            st = drive_state(sw)
+            if st != 'OPERATION_ENABLED':
+                self._drop_grip(f'Greifer-Achse {a.num}: Treiber nicht mehr freigegeben ({st}, SW 0x{sw:04X})')
+                return
+            ferr = a.target - a.inp[0x6064]
+            if abs(ferr) > a.ferr_limit:
+                self._drop_grip(f'Greifer-Achse {a.num}: Schleppfehler {ferr} > {a.ferr_limit} Einheiten')
+                return
+
+    def _drop_grip(self, msg):
+        self._genabled = False
+        for a in self.gaxes.values():
+            a.ramp = None
+            a.target = a.inp.get(0x6064, a.target)
+            a.cw = CW_DISABLE_VOLTAGE if drive_state(a.inp.get(0x6041, 0)) == 'FAULT' else CW_SHUTDOWN
+        self._gerror = msg
+
     def _supervise(self):
         """Läuft unter self._lock. Nicht freigegeben: Soll folgt Ist. Freigegeben: überwachen."""
+        self._supervise_grip()
         if not self._enabled:
             for a in self.axes.values():
                 a.target = a.inp[0x6064]
@@ -468,31 +573,148 @@ class Cl57eBus:
         return False
 
     def status(self):
-        """Momentaufnahme: Istpositionen, Zustände, Fehler. 't' = Empfangszeit (perf_counter)."""
+        """Momentaufnahme: Istpositionen, Zustände, Fehler. 't' = Empfangszeit (perf_counter).
+        Mit Greifer-Achsen steht darin zusätzlich 'grip' (siehe grip_status)."""
         with self._lock:
-            return {
-                'valid': self._inp_valid,
-                't': self._t_inp,
-                'actual': {n: a.inp.get(0x6064, 0) for n, a in self.axes.items()},
-                'target': {n: a.target for n, a in self.axes.items()},
-                'state': {n: drive_state(a.inp.get(0x6041, 0)) for n, a in self.axes.items()},
-                'enabled': self._enabled,
-                'moving': self._enabled and not all(a.ramp.stopped() for a in self.axes.values()),
-                'watchdog': self._watchdog,
-                'error': self._error,
-                'comm_lost': self.comm_lost,
-                'thread_error': self._thread_error,
-            }
+            st = self._status_locked()
+            if self.gaxes:
+                st['grip'] = self._grip_status_locked()
+            return st
+
+    def _status_locked(self):
+        return {
+            'valid': self._inp_valid,
+            't': self._t_inp,
+            'actual': {n: a.inp.get(0x6064, 0) for n, a in self.axes.items()},
+            'target': {n: a.target for n, a in self.axes.items()},
+            'state': {n: drive_state(a.inp.get(0x6041, 0)) for n, a in self.axes.items()},
+            'enabled': self._enabled,
+            'moving': self._enabled and not all(a.ramp.stopped() for a in self.axes.values()),
+            'watchdog': self._watchdog,
+            'error': self._error,
+            'comm_lost': self.comm_lost,
+            'thread_error': self._thread_error,
+        }
+
+    def _grip_status_locked(self):
+        return {
+            'actual': {n: a.inp.get(0x6064, 0) for n, a in self.gaxes.items()},
+            'target': {n: a.target for n, a in self.gaxes.items()},
+            'state': {n: drive_state(a.inp.get(0x6041, 0)) for n, a in self.gaxes.items()},
+            'enabled': self._genabled,
+            'moving': self._genabled and not all(a.ramp is None or a.ramp.done() for a in self.gaxes.values()),
+            'error': self._gerror,
+        }
+
+    # ---------------------------------------------------------------- Greifer (Positionsfahrten)
+    def grip_enable(self, timeout=5.0):
+        """Fault-Reset und Zustandsmaschine bis OPERATION_ENABLED für die Greifer-Achsen. Blockiert einige Sekunden,
+        die Räder bleiben unberührt (nicht aus dem Bus-Hauptthread aufrufen, sonst bremst der Watchdog der Räder)."""
+        if not self.gaxes:
+            raise Cl57eError('Keine Greifer-Achsen konfiguriert')
+        with self._lock:
+            self._gerror = ''
+            self._genabled = False
+            for a in self.gaxes.values():
+                a.ramp = None
+        t_end = time.monotonic() + timeout
+        last_toggle = 0.0
+        while True:
+            if self.comm_lost:
+                raise Cl57eError('EtherCAT-Kommunikation verloren')
+            toggle = time.monotonic() - last_toggle > 0.1
+            with self._lock:
+                states = {a.num: drive_state(a.inp.get(0x6041, 0)) for a in self.gaxes.values()}
+                for a in self.gaxes.values():
+                    self._advance_state(a, states[a.num], toggle)
+            if toggle:
+                last_toggle = time.monotonic()
+            if all(st == 'OPERATION_ENABLED' for st in states.values()):
+                break
+            if time.monotonic() > t_end:
+                bad = ', '.join(f'Achse {n}: {st}' for n, st in states.items() if st != 'OPERATION_ENABLED')
+                raise Cl57eError(f'Greifer-Freigabe fehlgeschlagen ({bad})')
+            time.sleep(0.02)
+        time.sleep(self.settle_s)
+        with self._lock:
+            for a in self.gaxes.values():
+                sw = a.inp.get(0x6041, 0)
+                if drive_state(sw) != 'OPERATION_ENABLED':
+                    for b in self.gaxes.values():
+                        b.cw = CW_SHUTDOWN
+                    raise Cl57eError(f'Greifer-Achse {a.num} nach der Lock-Phase nicht mehr freigegeben (SW 0x{sw:04X})')
+            for a in self.gaxes.values():
+                a.target = a.inp[0x6064]
+                a.ramp = PosRamp(a.target, a.target, 1.0, a.amax)
+            self._genabled = True
+
+    @staticmethod
+    def _advance_state(a, st, toggle):
+        """Controlword für den nächsten Schritt Richtung OPERATION_ENABLED (läuft unter _lock)."""
+        if st == 'FAULT':
+            if toggle:   # steigende Flanke an Bit 7
+                a.cw = CW_DISABLE_VOLTAGE if a.cw == CW_FAULT_RESET else CW_FAULT_RESET
+        elif st in ('SWITCH_ON_DISABLED', 'NOT_READY'):
+            a.cw = CW_SHUTDOWN
+        elif st == 'READY_TO_SWITCH_ON':
+            a.cw = CW_SWITCH_ON
+        elif st == 'SWITCHED_ON':
+            a.cw = CW_ENABLE
+        elif st == 'QUICK_STOP_ACTIVE':
+            a.cw = CW_DISABLE_VOLTAGE
+
+    def grip_disable(self):
+        """Greifer-Endstufen aus (Shutdown). Die Spindeln halten sich selbst (selbsthemmend)."""
+        with self._lock:
+            self._genabled = False
+            for a in self.gaxes.values():
+                a.ramp = None
+                a.cw = CW_SHUTDOWN
+
+    def grip_move(self, goals, vmax, amax):
+        """Greifer-Achsen auf absolute Zähler [Einheiten] fahren: goals {Achse: Ziel}. vmax [Einh./s], amax [Einh./s²].
+        Achsen ohne Eintrag bleiben stehen. Nur wenn der Greifer freigegeben ist, sonst False."""
+        if not (vmax > 0 and amax > 0):
+            raise ValueError('grip_move: vmax und amax müssen > 0 sein')
+        with self._lock:
+            if not self._genabled:
+                return False
+            for n, goal in goals.items():
+                a = self.gaxes[n]
+                a.ramp = PosRamp(a.ramp.pos, goal, vmax, amax)
+            return True
+
+    def grip_stop(self):
+        """Mit Rampe anhalten (Ziel = Ende des Bremswegs)."""
+        with self._lock:
+            for a in self.gaxes.values():
+                if a.ramp is not None:
+                    a.ramp.stop_here()
+
+    def grip_status(self):
+        with self._lock:
+            return self._grip_status_locked()
+
+    def grip_set_limits(self, num, amax, ferr_limit):
+        with self._lock:
+            a = self.gaxes[num]
+            a.amax, a.ferr_limit = float(amax), int(ferr_limit)
 
     def close(self):
         """Abbremsen, Endstufen aus, Thread stoppen, Bus auf INIT, Interface schließen. Immer aufrufen."""
         if self._thread is not None and self._thread.is_alive():
+            if self.gaxes and not self.comm_lost:
+                self.grip_stop()
+                t_end = time.monotonic() + 3.0
+                while time.monotonic() < t_end and self._genabled and self.grip_status()['moving']:
+                    time.sleep(0.01)
+            self.grip_disable()
             if not self.comm_lost:
                 self.stop()
             self.disable()
             time.sleep(0.1)
             with self._lock:
-                for a in self.axes.values():
+                for a in self._all_axes():
                     a.cw = CW_DISABLE_VOLTAGE
             time.sleep(0.05)
             self._stop.set()

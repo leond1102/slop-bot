@@ -255,6 +255,9 @@ class Web:
             raise ValueError(f'{action["label"]} läuft noch')
         if action.get('needs_name') and not raw.get('name'):
             raise ValueError('Bitte einen Namen angeben')
+        for key in action.get('needs', []):
+            if raw.get(key) in (None, ''):
+                raise ValueError(f'{action["label"]}: Angabe fehlt ({key})')
         values = webconfig.params(self.cfg, raw)
         argvs = [webconfig.argv(c, values) for c in action['cmds']]
         self.busy_actions.add(id)
@@ -321,7 +324,7 @@ class Web:
                       for i in c.get('items', [])],
             'safety_levels': list(webconfig.SAFETY_LEVELS),
             'sequences': [{'id': s['id'], 'label': s['label'], 'steps': s['steps']} for s in c.get('sequences', [])],
-            'actions': [{k: a.get(k) for k in ('id', 'label', 'hint', 'needs_name', 'confirm')}
+            'actions': [{k: a.get(k) for k in ('id', 'label', 'hint', 'needs_name', 'needs', 'confirm', 'group')}
                         for a in c.get('actions', [])],
             'maps': webconfig.maps(c['maps_dir']), 'default_map': c.get('default_map'),
             'drive': c.get('drive', {}),

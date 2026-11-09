@@ -53,6 +53,12 @@
         "-DPython3_EXECUTABLE=/usr/bin/python3"
       ]
     },
+    "slop_interfaces": {
+      "cmake-args": [
+        "-DPython3_EXECUTABLE=/usr/bin/python3",
+        "-DPYTHON_EXECUTABLE=/usr/bin/python3"
+      ]
+    },
     "slop_safety": {
       "cmake-args": [
         "-DPython3_EXECUTABLE=/usr/bin/python3"

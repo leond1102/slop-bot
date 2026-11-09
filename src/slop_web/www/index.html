@@ -28,7 +28,7 @@
   button:hover:not(:disabled) { background: var(--btn-hover); }
   button:disabled { opacity: .45; cursor: default; }
   button.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-  select, input[type=text] { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+  select, input[type=text], input[type=number] { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
 
   header { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
     padding: 10px 16px; background: var(--card); border-bottom: 1px solid var(--line); }
@@ -82,6 +82,10 @@
   .actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
   .mapsave { display: flex; gap: 6px; grid-column: 1 / -1; }
   .mapsave input { flex: 1; min-width: 0; }
+  .grip { display: flex; flex-direction: column; gap: 10px; }
+  .grip input[type=number] { width: 6.5em; }
+  .gripstate { font-weight: 600; }
+  .gripstate.bad { color: var(--bad); } .gripstate.warn { color: var(--warn); } .gripstate.ok { color: var(--ok); }
 
   .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 330px;
     margin: 4px auto 12px; touch-action: none; user-select: none; -webkit-user-select: none; }
@@ -161,6 +165,30 @@
     <section class="card">
       <h2>Aktionen</h2>
       <div class="actions" id="actions"></div>
+    </section>
+
+    <section class="card">
+      <h2>Greifer</h2>
+      <div class="grip">
+        <div class="gripstate" id="gripState">–</div>
+        <div class="row">
+          <label class="inline">Mitte Y <input type="number" id="gripY" value="0" step="1" min="-200" max="200"> mm</label>
+          <label class="inline">Breite <input type="number" id="gripW" value="40" step="1" min="1" max="250"> mm</label>
+          <button class="primary" data-gaction="gripper_grip">Greifen</button>
+        </div>
+        <div class="row">
+          <label class="inline">neue Mitte Y <input type="number" id="gripTo" value="0" step="1" min="-200" max="200"> mm</label>
+          <button data-gaction="gripper_move">Verschieben</button>
+        </div>
+        <div class="row">
+          <button data-gaction="gripper_home">Homen</button>
+          <button data-gaction="gripper_open">Öffnen</button>
+          <button data-gaction="gripper_stop">Stopp</button>
+        </div>
+        <p class="hint" style="margin:0">Y in Roboterkoordinaten: 0 = Mitte, + = links (in Fahrtrichtung gesehen).
+          Fahrten mit 4 mm/s, ganz zu/auf dauert bis 45 s; die Antwort kommt als Meldung. Homen nur nach dem
+          Einschalten des Treibers. Der Greifer startet mit dem Antrieb.</p>
+      </div>
     </section>
 
     <section class="card">
@@ -313,6 +341,10 @@ function render() {
       const cls = st === 'fertig' ? 'ok' : st === 'fehler' ? 'bad' : st === 'abgebrochen' ? 'warn' : st === 'bereit' ? '' : 'info';
       chips.push(`<span class="chip ${cls}" title="${esc(r.dock)}">Dock: ${esc(r.dock.slice(0, 80))}</span>`);
     }
+    if (mode !== 'handy' && r.gripper) {
+      const g = gripClass(r.gripper);
+      chips.push(`<span class="chip ${g}" title="${esc(r.gripper)}">Greifer: ${esc(r.gripper.slice(0, 60))}</span>`);
+    }
     if (r.speed !== null) chips.push(chip(`${r.speed.toFixed(2)} m/s · ${r.turn.toFixed(2)} rad/s`, 'info'));
   }
   $('chips').innerHTML = chips.join('');
@@ -370,6 +402,33 @@ function renderDesktop() {
   for (const b of $('actions').querySelectorAll('button[data-action]')) {
     b.disabled = busy.has(b.dataset.action);
   }
+  renderGripper(busy);
+}
+
+// ------------------------------------------------------------------ Greifer
+function gripClass(text) {
+  if (text.startsWith('Fehler') || text.startsWith('Notaus')) return 'bad';
+  if (text === 'nicht gehomt') return 'warn';
+  if (text === 'fährt') return 'info';
+  return 'ok';
+}
+function renderGripper(busy) {
+  const g = status.robot && status.robot.gripper;
+  const el = $('gripState');
+  el.textContent = g || 'gripper_node läuft nicht (startet mit dem Antrieb, gripper:=true)';
+  el.className = 'gripstate ' + (g ? gripClass(g) : '');
+  const moving = ['gripper_home', 'gripper_grip', 'gripper_move', 'gripper_open'].some(id => busy.has(id));
+  for (const b of document.querySelectorAll('button[data-gaction]')) {
+    const id = b.dataset.gaction;
+    b.disabled = !g || (id === 'gripper_stop' ? busy.has(id) : moving);
+  }
+}
+function gripAction(id) {
+  const p = startParams();
+  if (id === 'gripper_grip') { p.y = $('gripY').value; p.width = $('gripW').value; }
+  if (id === 'gripper_move') p.y = $('gripTo').value;
+  if (id === 'gripper_grip') $('gripTo').value = $('gripY').value;      // Verschieben startet von der Greifmitte
+  send({t: 'action', id, params: p});
 }
 
 function buildDesktop() {
@@ -377,7 +436,7 @@ function buildDesktop() {
   $('ddsInfo').textContent = `DDS: ${dds || 'Standard'}`;
   $('map').innerHTML = cfg.maps.map(m => `<option ${m === cfg.default_map ? 'selected' : ''}>${esc(m)}</option>`).join('');
   showSafety();
-  $('actions').innerHTML = cfg.actions.map(a => a.needs_name
+  $('actions').innerHTML = cfg.actions.filter(a => a.group !== 'gripper').map(a => a.needs_name
     ? `<div class="mapsave"><input type="text" id="name_${a.id}" placeholder="Kartenname, z. B. office-4" maxlength="40">
        <button data-action="${a.id}" title="${esc(a.hint || '')}">${esc(a.label)}</button></div>`
     : `<button data-action="${a.id}" title="${esc(a.hint || '')}">${esc(a.label)}</button>`).join('');
@@ -451,6 +510,7 @@ document.addEventListener('click', (e) => {
   else if (b.dataset.start) startWith(b.dataset.start);
   else if (b.dataset.stop !== undefined && b.dataset.stop !== '') send({t: 'stop', id: b.dataset.stop});
   else if (b.dataset.log) openLog(b.dataset.log);
+  else if (b.dataset.gaction) gripAction(b.dataset.gaction);
   else if (b.dataset.action) {
     const a = cfg.actions.find(x => x.id === b.dataset.action);
     if (a.confirm && !confirm(a.confirm)) return;

@@ -1,8 +1,9 @@
 """Was die Seite starten kann (config/web.yaml) – ohne ROS, damit testbar.
 
-Befehle sind Listen (kein Shell-Text). Platzhalter $map, $name, $experience_costs, $safety, $maps_dir werden nur mit
-geprüften Werten ersetzt: map muss eine vorhandene Karte in maps_dir sein, name nur Buchstaben/Ziffern/_/-, experience_costs
-true/false, safety eine der SAFETY_LEVELS. So kann vom Browser aus nichts anderes ausgeführt werden als hier steht.
+Befehle sind Listen (kein Shell-Text). Platzhalter $map, $name, $experience_costs, $safety, $maps_dir, $y, $width werden nur
+mit geprüften Werten ersetzt: map muss eine vorhandene Karte in maps_dir sein, name nur Buchstaben/Ziffern/_/-, experience_costs
+true/false, safety eine der SAFETY_LEVELS, y/width Zahlen in mm aus GRIP_RANGES (eingesetzt in Metern, für den Greifer).
+So kann vom Browser aus nichts anderes ausgeführt werden als hier steht.
 """
 import glob
 import os
@@ -14,6 +15,7 @@ import yaml
 NAME_RE = re.compile(r'^[A-Za-z0-9_-]{1,40}$')
 SAFETY_LEVELS = ('streng', 'locker')            # navigation.launch.py safety:=…, die erste ist der Standard
 SAFETY_RE = re.compile(r'(?:^|\s)safety:=(\S+)')
+GRIP_RANGES = {'y': (-200.0, 200.0), 'width': (1.0, 250.0)}   # mm; die genauen Grenzen prüft gripper_node
 
 
 def load(path):
@@ -66,6 +68,15 @@ def params(cfg, raw):
             raise ValueError(f'Karte „{raw["name"]}“ gibt es schon – neuen Namen wählen (map_saver überschreibt ohne '
                              'Rückfrage)')
         out['name'] = raw['name']
+    for key, (lo, hi) in GRIP_RANGES.items():          # Greifer: Eingabe in mm, Befehl in m
+        if key in raw:
+            try:
+                mm = float(raw[key])
+            except (TypeError, ValueError):
+                raise ValueError(f'{key}: Zahl in mm angeben') from None
+            if not lo <= mm <= hi:                     # schließt auch nan/inf aus
+                raise ValueError(f'{key}: {lo:g} … {hi:g} mm')
+            out[key] = f'{mm / 1000.0:.4f}'
     return out
 
 

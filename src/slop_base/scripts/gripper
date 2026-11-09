@@ -1,0 +1,4 @@
+#!/usr/bin/python3
+from slop_base.gripper_node import main
+
+main()

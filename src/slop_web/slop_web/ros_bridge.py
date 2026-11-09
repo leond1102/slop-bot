@@ -10,6 +10,7 @@
   dock/image              sensor_msgs/Image     Sub  Debug-Bild der Dockingstation (Overlay) – NUR solange eine Seite es anschaut
   /safety/sensor_status   std_msgs/String       Sub  Sensor-Wächter: „frei“ oder „gesperrt: …“ (Anzeige, alle 1 s)
   /dock/status            std_msgs/String       Sub  Dockingstation: „zustand: text“ (Anzeige, nur bei Änderung gesendet)
+  /gripper/status         std_msgs/String       Sub  Greifer: „offen“, „greift y=…“, „nicht gehomt“, „Fehler: …“ (20 Hz)
 
 Notaus: setzt die Hand-Stopp-Sperre (/safety/stop true) und bricht laufende Nav2-Ziele ab, damit der Roboter nach dem
 Aufheben nicht einfach weiterfährt. Solange er aktiv ist, wird true alle 0,5 s wiederholt (überlebt einen Neustart von
@@ -55,6 +56,7 @@ class Bridge(Node):
         latched = QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL)
         self.create_subscription(String, '/safety/sensor_status', lambda m: self._seen('/safety/sensor_status', m.data), 10)
         self.create_subscription(String, '/dock/status', lambda m: self._seen('/dock/status', m.data), latched)
+        self.create_subscription(String, '/gripper/status', lambda m: self._seen('/gripper/status', m.data), 10)
         self.viewers = 0                # Seiten, die das Dock-Debug-Bild gerade ansehen
         self.dock_sub = None
         self.dock_frame_data = None     # (bgr8-Bytes, Breite, Höhe, Zähler, monotone Zeit)
@@ -179,4 +181,5 @@ class Bridge(Node):
             'sensor': val('/safety/sensor_status', 3.0),    # Wächter sendet jede Sekunde; verstummt er, ist es None
             'dock_image': self.dock_frame_data is not None and now - self.dock_frame_data[4] < 2.0,
             'dock': (seen.get('/dock/status') or (None,))[0],   # nur bei Änderung gesendet → bleibt stehen
+            'gripper': val('/gripper/status', 1.5),         # None = gripper_node läuft nicht
         }

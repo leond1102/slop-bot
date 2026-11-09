@@ -1,0 +1,5 @@
+# Gegriffenes Objekt auf eine neue Mitte in Y [m] verschieben (Breite bleibt)
+float64 y
+---
+bool success
+string message

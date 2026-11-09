@@ -1,0 +1,38 @@
+# Slop-Bot: Greifer vorne, zwei gleiche Spindeln (Tr6x4, 28-mm-Stepper, Open Loop) übereinander am CL57E-4A.
+# Die Mitte der beiden Spindeln liegt auf der X-Achse des Roboters, die Backen fahren in ±Y.
+# Diese Datei lesen zwei Prozesse: gripper_node (ROS) und der Busprozess ethercat_bus (axis_left/right, units_per_rev,
+# loop, motor_current_ma, max_ferr_rev, grip_timeout). Beide startet diff_drive.launch.py (gripper:=true).
+gripper_node:
+  ros__parameters:
+    axis_left: 1              # linke Backe (von vorne auf den Roboter gesehen), obere Spindel
+    axis_right: 2             # rechte Backe, untere Spindel
+    left_close_dir: -1        # Zählrichtung beim Schließen (gemessen mit tools/gripper_test.py)
+    right_close_dir: 1
+    # Liegt die linke Backe auf der +Y-Seite (Roboter-links)? Von vorne gesehen ist "links" Roboter-rechts (-Y),
+    # deshalb false. Prüfen: grip mit y: +0.03 → das Objekt muss auf der linken Roboterseite (+Y) gehalten werden.
+    left_is_plus_y: false
+    lead: 0.004               # m pro Spindelumdrehung (Tr6x4, gemessen: 200000 Schritte = 80 mm)
+    stroke: 0.182             # m Schlittenweg Anschlag–Anschlag
+    inner_margin: 0.002       # m, so nah kommt keine Fahrt an den inneren Anschlag
+    # Abstand der beiden Backen-Innenflächen nach gripper/home (beide Backen in der Null), IN METERN.
+    # 0 = Greifen/Verschieben gesperrt, nur home/open.
+    open_width: 0.112         # m (gemessen 112 mm)
+    squeeze: 0.0005           # m Gesamtquetschung beim Greifen (je Backe die Hälfte)
+
+    speed: 10000.0            # Schritte/s greifen, verschieben, öffnen (viel Kraft)
+    acc: 20000.0              # Schritte/s²
+    home_speed: 50000.0       # Schritte/s homen (schnell, rutscht am Anschlag durch)
+    home_acc: 100000.0
+    home_extra: 0.003         # m über den Anschlag hinaus
+    home_backoff: 0.002       # m zurück vom Anschlag = Null (damit nichts klemmt)
+
+    state_file: ~/.ros/slop_gripper.json   # gemerkte Null (Zähler des Treibers)
+    rate: 20.0
+    bus_timeout: 1.0
+
+    # Busprozess
+    units_per_rev: 0          # 0 = aus Treiber (DivSet, aktuell 10000)
+    loop: open
+    motor_current_ma: 0       # 0 = MaxCurrent nicht prüfen (eingestellt: 1000 mA)
+    max_ferr_rev: 1.0
+    grip_timeout: 1.0         # s ohne Nachricht der gripper_node → Greifer hält an

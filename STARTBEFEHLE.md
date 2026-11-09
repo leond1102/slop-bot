@@ -20,6 +20,14 @@ ros2 topic pub --once /safety/stop std_msgs/msg/Bool "data: false"
 ros2 service call /diff_drive/enable std_srvs/srv/SetBool "data: false"
 ros2 service call /diff_drive/enable std_srvs/srv/SetBool "data: true"
 
+## Greifer (startet mit dem Antrieb, aus mit gripper:=false; alle Befehle warten, bis die Fahrt fertig ist)
+ros2 service call /gripper/home std_srvs/srv/Trigger
+ros2 service call /gripper/grip slop_interfaces/srv/Grip "{y: 0.0, width: 0.04}"
+ros2 service call /gripper/move slop_interfaces/srv/Move "{y: 0.03}"
+ros2 service call /gripper/open std_srvs/srv/Trigger
+ros2 service call /gripper/stop std_srvs/srv/Trigger
+ros2 topic echo /gripper/status
+
 ## Weboberfläche: alles per Knopf starten, fahren, Notaus (Browser; Handy: …/handy). Einrichten: src/slop_web/README.md
 ros2 run slop_web web
 ## dann im Browser: http://100.99.71.126:8080 (Tailnet) oder http://127.0.0.1:8080 (am Jetson), Handy: http://100.99.71.126:8080/handy

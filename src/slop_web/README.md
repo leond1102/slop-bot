@@ -54,6 +54,10 @@ journalctl --user -u slop-web -f       # Ausgabe ansehen
   Unter „Aktionen“ **Dock speichern** (Roboter vorher 0,6–1,5 m gerade vor den Marker stellen), **Andocken** (mit
   Rückfrage, der Roboter fährt selbstständig) und **Andocken abbrechen**. Oben steht „Dock: <Stand>“ (bereit, anfahren,
   feinfahren, fertig, fehler …), das Ergebnis kommt zusätzlich als Meldung. Details: `slop_dock/README.md`.
+- **Greifer** (Karte „Greifer“, die `gripper_node` startet mit dem Antrieb): **Homen** (nur nach dem Einschalten des
+  Treibers), **Greifen** mit Mitte Y und Breite in mm, **Verschieben** auf eine neue Mitte Y, **Öffnen**, **Stopp**.
+  Y in Roboterkoordinaten (0 = Mitte, + = links). Fahrten mit 4 mm/s dauern bis 45 s, das Ergebnis kommt als Meldung;
+  oben steht „Greifer: <Stand>“. Ohne laufende `gripper_node` sind die Knöpfe gesperrt.
 - **Kamera-Debug (Dockingstation):** Karte „Kamera-Debug“ → „Debug-Bild anzeigen“: Kamerabild mit Overlay (erkannte Marker
   mit ID, verworfene Kandidaten, Pose, Hinweis auf ein falsches Wörterbuch). Läuft nur, solange es offen ist; Dock-Knoten und
   Kamera müssen laufen (die Karte sagt es, wenn nicht). Der Server liefert es als Videostrom unter `/api/dock/stream`.

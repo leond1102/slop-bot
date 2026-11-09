@@ -28,6 +28,13 @@
 
 - [ ] `motor_current_ma` vom Typenschild in `diff_drive.yaml` eintragen.
 
+## Greifer
+
+- [ ] Am Roboter testen (Node nur in Simulation getestet).
+- [ ] `open_width` nach `gripper/home` messen und in `gripper.yaml` eintragen.
+- [ ] Prüfen, ob die linke Backe auf -Y liegt (`left_is_plus_y`).
+- [ ] Greifer ins URDF (Backen als Schubgelenke).
+
 ## Erfahrungskarte
 
 - [ ] Kamera als zweite Quelle (sieht auch flache Dinge).
